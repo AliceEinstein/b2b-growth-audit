@@ -1,0 +1,128 @@
+{
+  "primary_model": "multi_motion",
+  "overall_confidence": 63,
+  "patterns": [
+    {
+      "journey_type": "inbound_new_business",
+      "exists": true,
+      "confidence_score": 57,
+      "confidence_label": "medium",
+      "evidence_components": {
+        "field_signal": 10,
+        "object_path_evidence": 20,
+        "volume_materiality": 7,
+        "temporal_consistency": 10,
+        "pipeline_alignment": 0,
+        "association_coherence": 10,
+        "reviewer_adjustment": 0,
+        "contradiction_penalty": 0
+      },
+      "supporting_evidence": [
+        "2 journey keyword signal(s) in active fields/values",
+        "object-path strength 100.0%"
+      ],
+      "contradicting_evidence": [],
+      "human_confirmation_needed": [],
+      "audit_level": "confidence_capped"
+    },
+    {
+      "journey_type": "outbound_sales_led",
+      "exists": true,
+      "confidence_score": 57,
+      "confidence_label": "medium",
+      "evidence_components": {
+        "field_signal": 15,
+        "object_path_evidence": 15,
+        "volume_materiality": 7,
+        "temporal_consistency": 10,
+        "pipeline_alignment": 0,
+        "association_coherence": 10,
+        "reviewer_adjustment": 0,
+        "contradiction_penalty": 0
+      },
+      "supporting_evidence": [
+        "3 journey keyword signal(s) in active fields/values",
+        "object-path strength 75.0%"
+      ],
+      "contradicting_evidence": [],
+      "human_confirmation_needed": [],
+      "audit_level": "confidence_capped"
+    },
+    {
+      "journey_type": "abm_account_based",
+      "exists": false,
+      "confidence_score": 0,
+      "confidence_label": "insufficient",
+      "evidence_components": {
+        "field_signal": 0,
+        "object_path_evidence": 0,
+        "volume_materiality": 0,
+        "temporal_consistency": 0,
+        "pipeline_alignment": 0,
+        "association_coherence": 0,
+        "reviewer_adjustment": 0,
+        "contradiction_penalty": 0
+      },
+      "supporting_evidence": [],
+      "contradicting_evidence": [],
+      "human_confirmation_needed": [
+        "Confirm whether abm_account_based is represented by an unmapped custom field"
+      ],
+      "audit_level": "not_detected"
+    },
+    {
+      "journey_type": "partner_led",
+      "exists": false,
+      "confidence_score": 0,
+      "confidence_label": "insufficient",
+      "evidence_components": {
+        "field_signal": 0,
+        "object_path_evidence": 0,
+        "volume_materiality": 0,
+        "temporal_consistency": 0,
+        "pipeline_alignment": 0,
+        "association_coherence": 0,
+        "reviewer_adjustment": 0,
+        "contradiction_penalty": 0
+      },
+      "supporting_evidence": [],
+      "contradicting_evidence": [],
+      "human_confirmation_needed": [
+        "Confirm whether partner_led is represented by an unmapped custom field"
+      ],
+      "audit_level": "not_detected"
+    },
+    {
+      "journey_type": "expansion_renewal",
+      "exists": true,
+      "confidence_score": 74,
+      "confidence_label": "high",
+      "evidence_components": {
+        "field_signal": 15,
+        "object_path_evidence": 20,
+        "volume_materiality": 4,
+        "temporal_consistency": 10,
+        "pipeline_alignment": 15,
+        "association_coherence": 10,
+        "reviewer_adjustment": 0,
+        "contradiction_penalty": 0
+      },
+      "supporting_evidence": [
+        "3 journey keyword signal(s) in active fields/values",
+        "3 journey keyword signal(s) in pipeline/stage labels",
+        "object-path strength 100.0%"
+      ],
+      "contradicting_evidence": [],
+      "human_confirmation_needed": [],
+      "audit_level": "full"
+    }
+  ],
+  "ambiguous_areas": [
+    "Activity-level handoff evidence unavailable",
+    "Stage-entry timestamps unavailable; journey paths are inferred from record creation order only"
+  ],
+  "human_confirmation_needed": [
+    "Confirm whether abm_account_based is represented by an unmapped custom field",
+    "Confirm whether partner_led is represented by an unmapped custom field"
+  ]
+}

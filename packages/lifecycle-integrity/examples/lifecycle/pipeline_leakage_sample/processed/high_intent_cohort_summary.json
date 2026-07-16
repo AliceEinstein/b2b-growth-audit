@@ -1,0 +1,21 @@
+{
+  "definition": "Contacts with a qualified pre-deal lifecycle stage or a positive high-intent HubSpot property signal. This identifies a review population, not guaranteed pipeline.",
+  "total": 6,
+  "with_owner": 4,
+  "without_owner": 2,
+  "with_associated_deal": 3,
+  "without_associated_deal": 3,
+  "deal_association_available": true,
+  "by_journey": {
+    "inbound_new_business": {
+      "total": 6,
+      "with_owner": 4,
+      "without_owner": 2,
+      "with_associated_deal": 3,
+      "without_associated_deal": 3,
+      "deal_association_available": true
+    }
+  },
+  "currency_amount_available": false,
+  "contains_raw_values": false
+}

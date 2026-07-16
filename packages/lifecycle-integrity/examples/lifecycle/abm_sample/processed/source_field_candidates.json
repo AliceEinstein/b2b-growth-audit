@@ -1,0 +1,21 @@
+{
+  "contacts": [
+    {
+      "field": "hs_analytics_source",
+      "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Original Source",
+      "hubspot_defined": true,
+      "stats": {
+        "total": 8,
+        "non_empty": 0,
+        "fill_rate": 0.0,
+        "empty_rate": 100.0,
+        "fill_rate_older_half": 0.0,
+        "fill_rate_recent_half": 0.0,
+        "distinct_count": 0,
+        "top_values": null
+      }
+    }
+  ],
+  "companies": [],
+  "deals": []
+}

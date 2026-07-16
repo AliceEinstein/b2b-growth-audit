@@ -1,0 +1,25 @@
+[
+  {
+    "module": "attribution_trust",
+    "id": "closedwon_deals_without_source_trace",
+    "expect": {
+      "denominator": 2,
+      "affected_records": 0
+    }
+  },
+  {
+    "module": "pipeline_hygiene",
+    "id": "deals_in_unknown_pipeline",
+    "expect": {
+      "affected_records": 0
+    }
+  },
+  {
+    "module": "pipeline_hygiene",
+    "id": "open_deals_past_close_date",
+    "expect": {
+      "denominator": 3,
+      "affected_records": 1
+    }
+  }
+]

@@ -1,0 +1,9 @@
+{
+  "started_at": "2026-07-15T17:10:02.370897+00:00",
+  "finished_at": "2026-07-15T17:10:02.370903+00:00",
+  "run_config": {
+    "synthetic_dataset": "partner_led_sample"
+  },
+  "events": [],
+  "warnings": []
+}

@@ -1,0 +1,8 @@
+{
+  "definition_visibility": "output_and_activation_only",
+  "score_candidates": [],
+  "limitations": [
+    "Full score-model criteria, weights, status, and version history are not read from the public API.",
+    "A single snapshot cannot prove that an unchanged score property is active or stale."
+  ]
+}

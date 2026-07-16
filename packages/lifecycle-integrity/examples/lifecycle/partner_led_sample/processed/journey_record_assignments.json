@@ -1,0 +1,29 @@
+[
+  {
+    "record_id_hash": "3e6140b6044d8d12440d8f77f2c39e5813db93392675afcc4da09a3aa89cfa1a",
+    "object_type": "deals",
+    "assigned_journey": "partner_led",
+    "assignment_confidence": 75,
+    "evidence": [
+      "matched journey terms: partner, referral"
+    ]
+  },
+  {
+    "record_id_hash": "acb2cfc32ae46125aefcaf088fedce7522bbf1d35c8d21811f9df5efb16208ab",
+    "object_type": "deals",
+    "assigned_journey": "partner_led",
+    "assignment_confidence": 75,
+    "evidence": [
+      "matched journey terms: partner, referral"
+    ]
+  },
+  {
+    "record_id_hash": "fed1cc7dd4456760b6650cf1c79219732f441f6cc8ba24fe3cfbc11b75108fde",
+    "object_type": "deals",
+    "assigned_journey": "partner_led",
+    "assignment_confidence": 75,
+    "evidence": [
+      "matched journey terms: partner, referral"
+    ]
+  }
+]

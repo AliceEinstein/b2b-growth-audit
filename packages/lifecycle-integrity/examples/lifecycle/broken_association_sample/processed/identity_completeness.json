@@ -1,0 +1,73 @@
+{
+  "object_type": "contacts",
+  "record_count": 6,
+  "fields": {
+    "email": {
+      "property_exists": true,
+      "observed_in_snapshot": false,
+      "total": 6,
+      "present": 0,
+      "missing": 6,
+      "fill_rate": 0.0,
+      "valid_format": 0,
+      "invalid_format": 0,
+      "valid_format_rate_among_present": null
+    },
+    "firstname": {
+      "property_exists": true,
+      "observed_in_snapshot": false,
+      "total": 6,
+      "present": 0,
+      "missing": 6,
+      "fill_rate": 0.0,
+      "valid_format": 0,
+      "invalid_format": 0,
+      "valid_format_rate_among_present": null
+    },
+    "hs_additional_emails": {
+      "property_exists": false,
+      "observed_in_snapshot": false,
+      "total": 6,
+      "present": 0,
+      "missing": 6,
+      "fill_rate": 0.0,
+      "valid_format": 0,
+      "invalid_format": 0,
+      "valid_format_rate_among_present": null
+    },
+    "lastname": {
+      "property_exists": true,
+      "observed_in_snapshot": false,
+      "total": 6,
+      "present": 0,
+      "missing": 6,
+      "fill_rate": 0.0,
+      "valid_format": 0,
+      "invalid_format": 0,
+      "valid_format_rate_among_present": null
+    },
+    "mobilephone": {
+      "property_exists": false,
+      "observed_in_snapshot": false,
+      "total": 6,
+      "present": 0,
+      "missing": 6,
+      "fill_rate": 0.0,
+      "valid_format": 0,
+      "invalid_format": 0,
+      "valid_format_rate_among_present": null
+    },
+    "phone": {
+      "property_exists": true,
+      "observed_in_snapshot": false,
+      "total": 6,
+      "present": 0,
+      "missing": 6,
+      "fill_rate": 0.0,
+      "valid_format": 0,
+      "invalid_format": 0,
+      "valid_format_rate_among_present": null
+    }
+  },
+  "raw_values_in_artifact": false
+}

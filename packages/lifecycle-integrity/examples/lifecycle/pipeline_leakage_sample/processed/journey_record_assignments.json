@@ -1,0 +1,107 @@
+[
+  {
+    "record_id_hash": "5f1a4e15972558cbbb306411f5db270ac4924576ae9065166fe876d0009d1d0d",
+    "object_type": "deals",
+    "assigned_journey": "inbound_new_business",
+    "assignment_confidence": 75,
+    "evidence": [
+      "matched journey terms: inbound, organic"
+    ]
+  },
+  {
+    "record_id_hash": "15bcf3af7696da4ef65353b6a1b827dbb1135601a275914c7424bd5fe67d36d1",
+    "object_type": "deals",
+    "assigned_journey": "inbound_new_business",
+    "assignment_confidence": 75,
+    "evidence": [
+      "matched journey terms: inbound, organic"
+    ]
+  },
+  {
+    "record_id_hash": "d37330eae68bb5600ecdff32c17977278cde1c231fc811f3652d7a18b0ac5db2",
+    "object_type": "deals",
+    "assigned_journey": "inbound_new_business",
+    "assignment_confidence": 75,
+    "evidence": [
+      "matched journey terms: inbound, organic"
+    ]
+  },
+  {
+    "record_id_hash": "e5f02d4e8236fbe3226b47924beef9d1d3a5895fbc4944be01c9c5009a870f1d",
+    "object_type": "contacts",
+    "assigned_journey": "inbound_new_business",
+    "assignment_confidence": 60,
+    "evidence": [
+      "matched contact journey terms: organic",
+      "lifecycle stage marketingqualifiedlead"
+    ],
+    "high_intent": true,
+    "has_owner": true,
+    "has_associated_deal": true
+  },
+  {
+    "record_id_hash": "e235c3241d60b52964cddf35579f4ea24dfa363eb2661cf7e9e0da9ed96a0562",
+    "object_type": "contacts",
+    "assigned_journey": "inbound_new_business",
+    "assignment_confidence": 60,
+    "evidence": [
+      "matched contact journey terms: paid",
+      "lifecycle stage marketingqualifiedlead"
+    ],
+    "high_intent": true,
+    "has_owner": false,
+    "has_associated_deal": false
+  },
+  {
+    "record_id_hash": "74644e807acacaea9cb7a49e7c7c5b24a636a89f7c2cfd0e3832cdc1d571ea1b",
+    "object_type": "contacts",
+    "assigned_journey": "inbound_new_business",
+    "assignment_confidence": 70,
+    "evidence": [
+      "matched contact journey terms: paid, demo",
+      "positive signal in demo_request_status"
+    ],
+    "high_intent": true,
+    "has_owner": false,
+    "has_associated_deal": false
+  },
+  {
+    "record_id_hash": "e9dbc03f090b462dcae925ff05cc9b4feac66379bd47ed08f06a0a13b6250c44",
+    "object_type": "contacts",
+    "assigned_journey": "inbound_new_business",
+    "assignment_confidence": 60,
+    "evidence": [
+      "matched contact journey terms: organic",
+      "lifecycle stage salesqualifiedlead"
+    ],
+    "high_intent": true,
+    "has_owner": true,
+    "has_associated_deal": true
+  },
+  {
+    "record_id_hash": "321873d9eed8f0eb6d3fd8314aac3203836e2b528480830d4e700ebaaaee080d",
+    "object_type": "contacts",
+    "assigned_journey": "inbound_new_business",
+    "assignment_confidence": 60,
+    "evidence": [
+      "matched contact journey terms: organic",
+      "lifecycle stage marketingqualifiedlead"
+    ],
+    "high_intent": true,
+    "has_owner": true,
+    "has_associated_deal": false
+  },
+  {
+    "record_id_hash": "e05a2e0f6283de7524e50c4b57f7778307ec1e5c1b0a0f678b8da702144fd18a",
+    "object_type": "contacts",
+    "assigned_journey": "inbound_new_business",
+    "assignment_confidence": 70,
+    "evidence": [
+      "matched contact journey terms: organic, demo",
+      "positive signal in demo_request_status"
+    ],
+    "high_intent": true,
+    "has_owner": true,
+    "has_associated_deal": true
+  }
+]

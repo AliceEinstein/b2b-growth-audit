@@ -1,0 +1,28 @@
+{
+  "pipelines": [
+    {
+      "pipeline_id": "inbound",
+      "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Inbound New Business",
+      "stage_count": 3,
+      "deal_count": 3,
+      "stages": [
+        {
+          "stage_id": "qualified",
+          "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Sales Qualified",
+          "deal_count": 1
+        },
+        {
+          "stage_id": "proposal",
+          "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Proposal",
+          "deal_count": 1
+        },
+        {
+          "stage_id": "won",
+          "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Closed Won",
+          "deal_count": 1
+        }
+      ]
+    }
+  ],
+  "deals_in_unknown_pipeline": 0
+}

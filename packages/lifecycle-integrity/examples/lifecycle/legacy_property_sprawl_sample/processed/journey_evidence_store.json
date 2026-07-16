@@ -1,0 +1,346 @@
+{
+  "run_id": "legacy_property_sprawl_sample",
+  "date_window_days": null,
+  "full_history": true,
+  "object_counts": {
+    "contacts": 8,
+    "companies": 0,
+    "deals": 0
+  },
+  "candidate_fields": {
+    "lifecycle": [
+      {
+        "object_type": "contacts",
+        "field": "lifecyclestage",
+        "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Lifecycle Stage",
+        "hubspot_defined": true,
+        "fill_rate": 100.0,
+        "fill_rate_recent_half": 100.0,
+        "distinct_count": 1,
+        "top_values": [
+          {
+            "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] lead",
+            "count": 8
+          }
+        ]
+      },
+      {
+        "object_type": "contacts",
+        "field": "old_lifecycle_2021",
+        "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Old Lifecycle 2021",
+        "hubspot_defined": false,
+        "fill_rate": 50.0,
+        "fill_rate_recent_half": 0.0,
+        "distinct_count": 1,
+        "top_values": [
+          {
+            "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] mql",
+            "count": 4
+          }
+        ]
+      },
+      {
+        "object_type": "companies",
+        "field": "lifecyclestage",
+        "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Lifecycle Stage",
+        "hubspot_defined": true,
+        "fill_rate": null,
+        "fill_rate_recent_half": null,
+        "distinct_count": null,
+        "top_values": null
+      },
+      {
+        "object_type": "deals",
+        "field": "dealstage",
+        "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Deal Stage",
+        "hubspot_defined": true,
+        "fill_rate": null,
+        "fill_rate_recent_half": null,
+        "distinct_count": null,
+        "top_values": null
+      }
+    ],
+    "source": [
+      {
+        "object_type": "contacts",
+        "field": "hs_analytics_source",
+        "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Original Source",
+        "hubspot_defined": true,
+        "fill_rate": 100.0,
+        "fill_rate_recent_half": 100.0,
+        "distinct_count": 1,
+        "top_values": [
+          {
+            "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ORGANIC_SEARCH",
+            "count": 8
+          }
+        ]
+      },
+      {
+        "object_type": "contacts",
+        "field": "hs_object_source",
+        "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Record source",
+        "hubspot_defined": true,
+        "fill_rate": null,
+        "fill_rate_recent_half": null,
+        "distinct_count": null,
+        "top_values": null
+      },
+      {
+        "object_type": "contacts",
+        "field": "lead_source_backup",
+        "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Lead Source Backup",
+        "hubspot_defined": false,
+        "fill_rate": 50.0,
+        "fill_rate_recent_half": 0.0,
+        "distinct_count": 1,
+        "top_values": [
+          {
+            "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] google",
+            "count": 4
+          }
+        ]
+      },
+      {
+        "object_type": "contacts",
+        "field": "utm_campaign_legacy",
+        "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] UTM Campaign Legacy",
+        "hubspot_defined": false,
+        "fill_rate": 37.5,
+        "fill_rate_recent_half": 0.0,
+        "distinct_count": 1,
+        "top_values": [
+          {
+            "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] old",
+            "count": 3
+          }
+        ]
+      }
+    ],
+    "deal_type": [],
+    "account_tier": [],
+    "partner": [],
+    "expansion": [],
+    "high_intent": []
+  },
+  "pipeline_structure": {
+    "pipelines": [
+      {
+        "pipeline_id": "default",
+        "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Sales Pipeline",
+        "stage_count": 3,
+        "deal_count": 0,
+        "stages": [
+          {
+            "stage_id": "appointmentscheduled",
+            "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Appointment",
+            "deal_count": 0
+          },
+          {
+            "stage_id": "closedwon",
+            "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Closed Won",
+            "deal_count": 0
+          },
+          {
+            "stage_id": "closedlost",
+            "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Closed Lost",
+            "deal_count": 0
+          }
+        ]
+      }
+    ],
+    "deals_in_unknown_pipeline": 0
+  },
+  "association_summary": {
+    "contacts_to_companies": {
+      "available": true,
+      "total": 8,
+      "with_association": 0,
+      "coverage_pct": 0.0,
+      "distribution": {
+        "0": 8,
+        "1": 0,
+        "2+": 0
+      }
+    },
+    "deals_to_companies": {
+      "available": true,
+      "total": 0,
+      "with_association": 0,
+      "coverage_pct": null,
+      "distribution": {
+        "0": 0,
+        "1": 0,
+        "2+": 0
+      }
+    },
+    "deals_to_contacts": {
+      "available": true,
+      "total": 0,
+      "with_association": 0,
+      "coverage_pct": null,
+      "distribution": {
+        "0": 0,
+        "1": 0,
+        "2+": 0
+      }
+    }
+  },
+  "owner_coverage": {
+    "contacts": {
+      "total": 8,
+      "with_owner": 8,
+      "coverage_pct": 100.0
+    },
+    "companies": {
+      "total": 0,
+      "with_owner": 0,
+      "coverage_pct": null
+    },
+    "deals": {
+      "total": 0,
+      "with_owner": 0,
+      "coverage_pct": null
+    }
+  },
+  "activity_summary": {
+    "available": false,
+    "metadata_only": true,
+    "objects": {},
+    "limitation": "Activity metadata was not requested or unavailable."
+  },
+  "relationship_signals": {
+    "contact_before_deal": 0,
+    "contact_deal_pairs_with_dates": 0,
+    "deals_without_mql_plus_contact": 0,
+    "companies_with_multiple_contacts": 0,
+    "companies_with_prior_won_and_new_deal": 0
+  },
+  "stage_transition_summary": {
+    "available": false,
+    "contacts": {
+      "total": 8,
+      "with_stage_timestamps": 0,
+      "multi_stage_paths": 0,
+      "ranked_multi_stage_paths": 0,
+      "ordered_progressions": 0,
+      "mql_progressions": 0,
+      "stage_regressions": 0,
+      "customers_total": 0,
+      "customers_without_timestamped_path": 0
+    },
+    "companies": {
+      "total": 0,
+      "with_stage_timestamps": 0,
+      "multi_stage_paths": 0,
+      "ranked_multi_stage_paths": 0,
+      "ordered_progressions": 0,
+      "mql_progressions": 0,
+      "stage_regressions": 0,
+      "customers_total": 0,
+      "customers_without_timestamped_path": 0
+    },
+    "deals": {
+      "total": 0,
+      "with_stage_timestamps": 0,
+      "multi_stage_paths": 0
+    },
+    "limitation": "No stage-entry timestamps in this snapshot; journey paths are inferred from record creation order only. Re-run the acquisition pass with the current connector to capture hs_v2_date_entered_* properties."
+  },
+  "journey_signals": {
+    "inbound_new_business": {
+      "field_keyword_hits": 1,
+      "pipeline_keyword_hits": 0,
+      "path_strength_pct": 100.0,
+      "material_records": 8,
+      "temporal_coverage_pct": 100.0,
+      "association_coverage_pct": 0.0,
+      "contradiction_count": 0,
+      "supporting_evidence": [
+        "1 journey keyword signal(s) in active fields/values",
+        "object-path strength 100.0%"
+      ],
+      "contradicting_evidence": [],
+      "human_confirmation_needed": []
+    },
+    "outbound_sales_led": {
+      "field_keyword_hits": 0,
+      "pipeline_keyword_hits": 0,
+      "path_strength_pct": 0,
+      "material_records": 0,
+      "temporal_coverage_pct": 0,
+      "association_coverage_pct": 0,
+      "contradiction_count": 0,
+      "supporting_evidence": [],
+      "contradicting_evidence": [],
+      "human_confirmation_needed": [
+        "Confirm whether outbound_sales_led is represented by an unmapped custom field"
+      ]
+    },
+    "abm_account_based": {
+      "field_keyword_hits": 0,
+      "pipeline_keyword_hits": 0,
+      "path_strength_pct": 0,
+      "material_records": 0,
+      "temporal_coverage_pct": 0,
+      "association_coverage_pct": 0,
+      "contradiction_count": 0,
+      "supporting_evidence": [],
+      "contradicting_evidence": [],
+      "human_confirmation_needed": [
+        "Confirm whether abm_account_based is represented by an unmapped custom field"
+      ]
+    },
+    "partner_led": {
+      "field_keyword_hits": 0,
+      "pipeline_keyword_hits": 0,
+      "path_strength_pct": 0,
+      "material_records": 0,
+      "temporal_coverage_pct": 0,
+      "association_coverage_pct": 0,
+      "contradiction_count": 0,
+      "supporting_evidence": [],
+      "contradicting_evidence": [],
+      "human_confirmation_needed": [
+        "Confirm whether partner_led is represented by an unmapped custom field"
+      ]
+    },
+    "expansion_renewal": {
+      "field_keyword_hits": 0,
+      "pipeline_keyword_hits": 0,
+      "path_strength_pct": 0,
+      "material_records": 0,
+      "temporal_coverage_pct": 0,
+      "association_coverage_pct": 0,
+      "contradiction_count": 0,
+      "supporting_evidence": [],
+      "contradicting_evidence": [],
+      "human_confirmation_needed": [
+        "Confirm whether expansion_renewal is represented by an unmapped custom field"
+      ]
+    }
+  },
+  "assignment_counts": {},
+  "assignment_counts_by_object": {
+    "deals": {},
+    "high_intent_contacts": {}
+  },
+  "high_intent_summary": {
+    "definition": "Contacts with a qualified pre-deal lifecycle stage or a positive high-intent HubSpot property signal. This identifies a review population, not guaranteed pipeline.",
+    "total": 0,
+    "with_owner": 0,
+    "without_owner": 0,
+    "with_associated_deal": 0,
+    "without_associated_deal": 0,
+    "deal_association_available": true,
+    "by_journey": {},
+    "currency_amount_available": false,
+    "contains_raw_values": false
+  },
+  "ambiguous_areas": [
+    "Activity-level handoff evidence unavailable",
+    "Stage-entry timestamps unavailable; journey paths are inferred from record creation order only"
+  ],
+  "warnings": [],
+  "contains_raw_pii": false
+}

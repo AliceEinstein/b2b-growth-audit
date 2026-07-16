@@ -1,0 +1,66 @@
+{
+  "contacts": [
+    {
+      "record_id_hash": "10a0fc1f56b639efe70c8f3e61f34966706bd8500f91d434e1a513e188c8248a",
+      "properties": {
+        "createdate": "[PRESENT]",
+        "lifecyclestage": "[PRESENT]",
+        "hs_analytics_source": "[PRESENT]",
+        "hubspot_owner_id": "[PRESENT]",
+        "old_lifecycle_2021": "[PRESENT]",
+        "lead_source_backup": "[PRESENT]",
+        "utm_campaign_legacy": "[PRESENT]"
+      }
+    },
+    {
+      "record_id_hash": "01aca5d7ef320ff2a3b82369db317fb901169b737940045866b8b9964dd226ea",
+      "properties": {
+        "createdate": "[PRESENT]",
+        "lifecyclestage": "[PRESENT]",
+        "hs_analytics_source": "[PRESENT]",
+        "hubspot_owner_id": "[PRESENT]",
+        "old_lifecycle_2021": "[PRESENT]",
+        "lead_source_backup": "[PRESENT]",
+        "utm_campaign_legacy": "[PRESENT]"
+      }
+    },
+    {
+      "record_id_hash": "a92e05070b3ac5cb9cdfd1fa49c4414672e1293b189ff8f60802cde6ec5b94a5",
+      "properties": {
+        "createdate": "[PRESENT]",
+        "lifecyclestage": "[PRESENT]",
+        "hs_analytics_source": "[PRESENT]",
+        "hubspot_owner_id": "[PRESENT]",
+        "old_lifecycle_2021": "[PRESENT]",
+        "lead_source_backup": "[PRESENT]",
+        "utm_campaign_legacy": "[PRESENT]"
+      }
+    },
+    {
+      "record_id_hash": "5426e5839cc5e27847cbed729e8ac66a8d4aadd8b6dd72c487acaa52337335a9",
+      "properties": {
+        "createdate": "[PRESENT]",
+        "lifecyclestage": "[PRESENT]",
+        "hs_analytics_source": "[PRESENT]",
+        "hubspot_owner_id": "[PRESENT]",
+        "old_lifecycle_2021": "[PRESENT]",
+        "lead_source_backup": "[PRESENT]",
+        "utm_campaign_legacy": "[MISSING]"
+      }
+    },
+    {
+      "record_id_hash": "a7683dccfd2719961b5c16a45c9259a56375a1a71c6fb4be4ecb3b9de5830919",
+      "properties": {
+        "createdate": "[PRESENT]",
+        "lifecyclestage": "[PRESENT]",
+        "hs_analytics_source": "[PRESENT]",
+        "hubspot_owner_id": "[PRESENT]",
+        "old_lifecycle_2021": "[MISSING]",
+        "lead_source_backup": "[MISSING]",
+        "utm_campaign_legacy": "[MISSING]"
+      }
+    }
+  ],
+  "companies": [],
+  "deals": []
+}

@@ -1,0 +1,18 @@
+{
+  "pipelines": [
+    {
+      "pipeline_id": "abm",
+      "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ABM Named Accounts",
+      "stage_count": 1,
+      "deal_count": 2,
+      "stages": [
+        {
+          "stage_id": "open",
+          "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Engaged Account",
+          "deal_count": 2
+        }
+      ]
+    }
+  ],
+  "deals_in_unknown_pipeline": 0
+}

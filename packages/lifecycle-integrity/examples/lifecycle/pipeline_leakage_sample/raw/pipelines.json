@@ -1,0 +1,32 @@
+[
+  {
+    "id": "inbound",
+    "label": "Inbound New Business",
+    "stages": [
+      {
+        "id": "qualified",
+        "label": "Sales Qualified",
+        "metadata": {
+          "isClosed": "false",
+          "probability": "0.3"
+        }
+      },
+      {
+        "id": "proposal",
+        "label": "Proposal",
+        "metadata": {
+          "isClosed": "false",
+          "probability": "0.6"
+        }
+      },
+      {
+        "id": "won",
+        "label": "Closed Won",
+        "metadata": {
+          "isClosed": "true",
+          "probability": "1.0"
+        }
+      }
+    ]
+  }
+]

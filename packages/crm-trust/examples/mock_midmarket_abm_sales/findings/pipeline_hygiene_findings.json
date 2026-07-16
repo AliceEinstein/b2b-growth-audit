@@ -1,0 +1,73 @@
+{
+  "module": "pipeline_hygiene",
+  "findings": [
+    {
+      "id": "open_deals_past_close_date",
+      "module": "pipeline_hygiene",
+      "severity": "medium",
+      "confidence": "high",
+      "object_type": "deals",
+      "measurement_id": "open_deals_past_close_date",
+      "field_name": "closedate",
+      "denominator": 20,
+      "affected_records": 3,
+      "affected_percentage": 15.0,
+      "evidence_file": "evidence/pipeline_hygiene.csv",
+      "business_impact": "Open deals whose close date is already past can make the pipeline used for marketing-to-revenue reporting appear more current or more attainable than the CRM supports.",
+      "recommendation_type": "do_not_auto_fix",
+      "auto_fix_allowed": false,
+      "review_status": "approved"
+    },
+    {
+      "id": "deals_without_amount",
+      "module": "pipeline_hygiene",
+      "severity": "medium",
+      "confidence": "high",
+      "object_type": "deals",
+      "measurement_id": "deals_without_amount",
+      "field_name": "amount",
+      "denominator": 36,
+      "affected_records": 6,
+      "affected_percentage": 16.7,
+      "evidence_file": "evidence/pipeline_hygiene.csv",
+      "business_impact": "Deals without amount cannot contribute a complete value-weighted view of marketing-sourced pipeline.",
+      "recommendation_type": "needs_business_rule_confirmation",
+      "auto_fix_allowed": false,
+      "review_status": "approved"
+    },
+    {
+      "id": "deals_without_owner",
+      "module": "pipeline_hygiene",
+      "severity": "medium",
+      "confidence": "high",
+      "object_type": "deals",
+      "measurement_id": "deals_without_owner",
+      "field_name": "hubspot_owner_id",
+      "denominator": 36,
+      "affected_records": 4,
+      "affected_percentage": 11.1,
+      "evidence_file": "evidence/pipeline_hygiene.csv",
+      "business_impact": "Unowned deals weaken accountability and make pipeline segmentation by sales owner incomplete.",
+      "recommendation_type": "safe_operational_actions",
+      "auto_fix_allowed": false,
+      "review_status": "approved"
+    },
+    {
+      "id": "deals_in_unknown_pipeline",
+      "module": "pipeline_hygiene",
+      "severity": "medium",
+      "confidence": "high",
+      "object_type": "deals",
+      "measurement_id": "deals_in_unknown_pipeline",
+      "field_name": "pipeline",
+      "denominator": 36,
+      "affected_records": 2,
+      "affected_percentage": 5.6,
+      "evidence_file": "evidence/pipeline_hygiene.csv",
+      "business_impact": "Deals referencing an undefined pipeline can fall outside standard pipeline rollups and distort marketing-to-revenue reporting.",
+      "recommendation_type": "do_not_auto_fix",
+      "auto_fix_allowed": false,
+      "review_status": "approved"
+    }
+  ]
+}

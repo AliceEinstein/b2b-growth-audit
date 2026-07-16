@@ -1,0 +1,4 @@
+interface:
+  display_name: "HubSpot CRM Trust Audit"
+  short_description: "Audit HubSpot data trust for pipeline decisions"
+  default_prompt: "Use $hubspot-crm-trust-audit to run a read-only audit of HubSpot data trust, hygiene, and marketing-to-pipeline traceability."

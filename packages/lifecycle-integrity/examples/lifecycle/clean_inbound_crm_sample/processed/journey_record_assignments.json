@@ -1,0 +1,38 @@
+[
+  {
+    "record_id_hash": "de5fbcd6bf9642f3a21be17534ba6d4810668b0439c33b03b1e7aef1b60fd776",
+    "object_type": "deals",
+    "assigned_journey": "inbound_new_business",
+    "assignment_confidence": 65,
+    "evidence": [
+      "matched journey terms: organic"
+    ]
+  },
+  {
+    "record_id_hash": "c8cc4b07f961ae02cf3f6530a46bef85ca50843237bc8817f58ad25c0864b01b",
+    "object_type": "deals",
+    "assigned_journey": "inbound_new_business",
+    "assignment_confidence": 65,
+    "evidence": [
+      "matched journey terms: paid"
+    ]
+  },
+  {
+    "record_id_hash": "79224c4b116c9b2bb44cddd1580fdfa1f0c5a0966a43cbfa5d10933834f27877",
+    "object_type": "deals",
+    "assigned_journey": "inbound_new_business",
+    "assignment_confidence": 65,
+    "evidence": [
+      "matched journey terms: organic"
+    ]
+  },
+  {
+    "record_id_hash": "90a818f1492d4006b71caa7c2984c29c7f4bf5cd126ecc3d6c24ee31b9ec2887",
+    "object_type": "deals",
+    "assigned_journey": "inbound_new_business",
+    "assignment_confidence": 65,
+    "evidence": [
+      "matched journey terms: paid"
+    ]
+  }
+]

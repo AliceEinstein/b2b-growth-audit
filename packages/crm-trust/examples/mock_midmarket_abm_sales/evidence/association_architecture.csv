@@ -1,0 +1,74 @@
+finding_id,object_type,record_id_hash,field_name,issue_type,current_value_redacted,confidence,recommended_review
+contacts_without_company,contacts,a135d772ff1acb07,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,6769e16ed08d9656,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,68c29b9d380d208c,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,9ed7cf8171c342dc,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,bb3ed378012b7dd9,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,02091805f773d4a0,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,0d6b0ad4a9d8e73d,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,32e10b5bb796ec25,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,a0d366d4cb9b9138,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,662ae06b87bb012a,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,3d8d8aa356ea54cb,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,b4b8656a46ea2ce5,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,550bc38ea2ccebaf,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,861df49a88fef886,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,27a46010b4daae20,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,998f66afbdaf8fbe,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,6a2c23ab9ac080d7,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,339f702a60ddc99a,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,894218dbdc59bac5,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,f0a255c898424a60,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,56f8341d2d6e0d71,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,0765fbcd4606ba7f,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,1296032a6d43bf9a,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,ee99f62af1bef528,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,cdf945408959aed9,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,087566889f7673fb,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,49fa1aa9e74e785d,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,444ef1617610811f,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,399be9fd49db5ee6,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,911a8bc9e64caf4e,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,3459133a1263dbc8,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,48683a321e61ba35,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,01a07306e52c5790,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,6ad560cd418cba93,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,d8cde86e50b0d3f9,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,2ac634948c446357,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,8ca715d5fb5fdaf1,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,e62a76ccf1a0b89c,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,6ef200d0601bca6a,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,83f80ba65c0d5aab,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,d996bcdcd98f852a,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,7fd3677bb32ff425,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,33f970956b45269a,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,347883c8db3dda97,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,245bdfc1fc70b888,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,e461117d06681105,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,96f9ce14efca3f5d,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,3b9c8573aca33119,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,6c8bea12f5ce48ca,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,5e3c10b6b9aeb77a,,missing_association,,high,review whether this record should be linked
+deals_without_company,deals,8ddae5101f61c00b,,missing_association,,high,review whether this record should be linked
+deals_without_company,deals,f31f57ba4a0b4220,,missing_association,,high,review whether this record should be linked
+deals_without_company,deals,06a1faee778195e0,,missing_association,,high,review whether this record should be linked
+deals_without_company,deals,e8cb01971b6478af,,missing_association,,high,review whether this record should be linked
+deals_without_contact,deals,1363a8020fee41bb,,missing_association,,high,review whether this record should be linked
+deals_without_contact,deals,39db7cb29a8290ad,,missing_association,,high,review whether this record should be linked
+deals_without_contact,deals,8ddae5101f61c00b,,missing_association,,high,review whether this record should be linked
+deals_without_contact,deals,f31f57ba4a0b4220,,missing_association,,high,review whether this record should be linked
+deals_without_contact,deals,06a1faee778195e0,,missing_association,,high,review whether this record should be linked
+deals_without_contact,deals,e8cb01971b6478af,,missing_association,,high,review whether this record should be linked
+duplicate_company_domain_candidates,companies,fbbe9fe39de101fa,domain,duplicate_domain_candidate,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] shared-account.example.test,high,human review — never merge automatically
+duplicate_company_domain_candidates,companies,9c5ff8eb2d2db2a0,domain,duplicate_domain_candidate,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] shared-account.example.test,high,human review — never merge automatically
+duplicate_company_domain_candidates,companies,82cde9682a44c5c4,domain,duplicate_domain_candidate,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] shared-account.example.test,high,human review — never merge automatically
+duplicate_company_domain_candidates,companies,13df8e6835b0bbd5,domain,duplicate_domain_candidate,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] shared-account.example.test,high,human review — never merge automatically
+duplicate_company_domain_candidates,companies,375e52c21e20955b,domain,duplicate_domain_candidate,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] regional-account.example.test,high,human review — never merge automatically
+duplicate_company_domain_candidates,companies,f83b435dbbc52c7b,domain,duplicate_domain_candidate,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] regional-account.example.test,high,human review — never merge automatically
+duplicate_company_domain_candidates,companies,12e9c7b08262cf7a,domain,duplicate_domain_candidate,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] regional-account.example.test,high,human review — never merge automatically
+duplicate_company_domain_candidates,companies,b72f8765da6d6e5a,domain,duplicate_domain_candidate,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] regional-account.example.test,high,human review — never merge automatically
+companies_without_domain,companies,fc74354c04a43eb5,domain,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,review whether this company should have a domain
+companies_without_domain,companies,16d3575242f31865,domain,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,review whether this company should have a domain
+companies_without_domain,companies,21b36186b8761ae4,domain,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,review whether this company should have a domain
+companies_without_domain,companies,a36d4f8958ec579f,domain,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,review whether this company should have a domain
+companies_without_domain,companies,1cefbe7ab8f988f2,domain,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,review whether this company should have a domain

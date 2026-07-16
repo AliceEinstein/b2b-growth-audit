@@ -1,0 +1,51 @@
+{
+  "object_type": "contacts",
+  "record_count": 360,
+  "fields": {
+    "email": {
+      "property_exists": true,
+      "observed_in_snapshot": true,
+      "total": 360,
+      "present": 360,
+      "missing": 0,
+      "fill_rate": 100.0,
+      "valid_format": 360,
+      "invalid_format": 0,
+      "valid_format_rate_among_present": 100.0
+    },
+    "firstname": {
+      "property_exists": true,
+      "observed_in_snapshot": true,
+      "total": 360,
+      "present": 360,
+      "missing": 0,
+      "fill_rate": 100.0,
+      "valid_format": 360,
+      "invalid_format": 0,
+      "valid_format_rate_among_present": 100.0
+    },
+    "lastname": {
+      "property_exists": true,
+      "observed_in_snapshot": true,
+      "total": 360,
+      "present": 339,
+      "missing": 21,
+      "fill_rate": 94.2,
+      "valid_format": 339,
+      "invalid_format": 0,
+      "valid_format_rate_among_present": 100.0
+    },
+    "phone": {
+      "property_exists": true,
+      "observed_in_snapshot": true,
+      "total": 360,
+      "present": 270,
+      "missing": 90,
+      "fill_rate": 75.0,
+      "valid_format": 270,
+      "invalid_format": 0,
+      "valid_format_rate_among_present": 100.0
+    }
+  },
+  "raw_values_in_artifact": false
+}

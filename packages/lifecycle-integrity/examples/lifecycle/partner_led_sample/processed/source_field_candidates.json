@@ -1,0 +1,47 @@
+{
+  "contacts": [
+    {
+      "field": "hs_analytics_source",
+      "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Original Source",
+      "hubspot_defined": true,
+      "stats": {
+        "total": 5,
+        "non_empty": 5,
+        "fill_rate": 100.0,
+        "empty_rate": 0.0,
+        "fill_rate_older_half": 100.0,
+        "fill_rate_recent_half": 100.0,
+        "distinct_count": 1,
+        "top_values": [
+          {
+            "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] REFERRALS",
+            "count": 5
+          }
+        ]
+      }
+    }
+  ],
+  "companies": [],
+  "deals": [
+    {
+      "field": "partner_source",
+      "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Partner Source",
+      "hubspot_defined": false,
+      "stats": {
+        "total": 3,
+        "non_empty": 3,
+        "fill_rate": 100.0,
+        "empty_rate": 0.0,
+        "fill_rate_older_half": null,
+        "fill_rate_recent_half": null,
+        "distinct_count": 1,
+        "top_values": [
+          {
+            "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Referral Partner",
+            "count": 3
+          }
+        ]
+      }
+    }
+  ]
+}

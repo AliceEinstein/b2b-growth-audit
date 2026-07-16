@@ -1,0 +1,107 @@
+audit_focus: lifecycle_integrity
+primary_journey_model: single_motion
+mapping_confidence: 44
+canonical_fields:
+  lifecycle_stage:
+    object: contact
+    field: lifecyclestage
+    confidence: high
+    requires_confirmation: false
+    evidence: HubSpot-defined lifecycle field present in the snapshot
+  original_source:
+    object: contact
+    field: hs_analytics_source
+    confidence: high
+    requires_confirmation: false
+    evidence: HubSpot-defined original source field present in the snapshot
+candidate_fields:
+  lifecycle:
+  - object_type: contacts
+    field: lifecyclestage
+    label: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Lifecycle Stage'
+    hubspot_defined: true
+    fill_rate: 100.0
+    fill_rate_recent_half: 100.0
+    distinct_count: 1
+    top_values:
+    - value: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] lead'
+      count: 8
+  - object_type: contacts
+    field: old_lifecycle_2021
+    label: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Old Lifecycle 2021'
+    hubspot_defined: false
+    fill_rate: 50.0
+    fill_rate_recent_half: 0.0
+    distinct_count: 1
+    top_values:
+    - value: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] mql'
+      count: 4
+  - object_type: companies
+    field: lifecyclestage
+    label: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Lifecycle Stage'
+    hubspot_defined: true
+    fill_rate: null
+    fill_rate_recent_half: null
+    distinct_count: null
+    top_values: null
+  - object_type: deals
+    field: dealstage
+    label: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Deal Stage'
+    hubspot_defined: true
+    fill_rate: null
+    fill_rate_recent_half: null
+    distinct_count: null
+    top_values: null
+  source:
+  - object_type: contacts
+    field: hs_analytics_source
+    label: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Original Source'
+    hubspot_defined: true
+    fill_rate: 100.0
+    fill_rate_recent_half: 100.0
+    distinct_count: 1
+    top_values:
+    - value: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ORGANIC_SEARCH'
+      count: 8
+  - object_type: contacts
+    field: hs_object_source
+    label: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Record source'
+    hubspot_defined: true
+    fill_rate: null
+    fill_rate_recent_half: null
+    distinct_count: null
+    top_values: null
+  - object_type: contacts
+    field: lead_source_backup
+    label: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Lead Source Backup'
+    hubspot_defined: false
+    fill_rate: 50.0
+    fill_rate_recent_half: 0.0
+    distinct_count: 1
+    top_values:
+    - value: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] google'
+      count: 4
+  - object_type: contacts
+    field: utm_campaign_legacy
+    label: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] UTM Campaign Legacy'
+    hubspot_defined: false
+    fill_rate: 37.5
+    fill_rate_recent_half: 0.0
+    distinct_count: 1
+    top_values:
+    - value: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] old'
+      count: 3
+  deal_type: []
+  account_tier: []
+  partner: []
+  expansion: []
+  high_intent: []
+suspected_legacy_fields:
+- lead_source_backup
+- old_lifecycle_2021
+- utm_campaign_legacy
+manual_confirmation_needed:
+- Confirm whether outbound_sales_led is represented by an unmapped custom field
+- Confirm whether abm_account_based is represented by an unmapped custom field
+- Confirm whether partner_led is represented by an unmapped custom field
+- Confirm whether expansion_renewal is represented by an unmapped custom field

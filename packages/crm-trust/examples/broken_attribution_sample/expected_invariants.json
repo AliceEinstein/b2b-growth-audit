@@ -1,0 +1,36 @@
+[
+  {
+    "module": "attribution_trust",
+    "id": "contacts_missing_original_source",
+    "expect": {
+      "denominator": 12,
+      "affected_records": 6,
+      "affected_percentage": 50.0
+    }
+  },
+  {
+    "module": "attribution_trust",
+    "id": "recent_half_contacts_missing_original_source",
+    "expect": {
+      "denominator": 6,
+      "affected_records": 6,
+      "affected_percentage": 100.0
+    }
+  },
+  {
+    "module": "attribution_trust",
+    "id": "closedwon_deals_without_source_trace",
+    "expect": {
+      "denominator": 2,
+      "affected_records": 2
+    }
+  },
+  {
+    "module": "attribution_trust",
+    "id": "imported_contacts_missing_source",
+    "expect": {
+      "denominator": 2,
+      "affected_records": 2
+    }
+  }
+]

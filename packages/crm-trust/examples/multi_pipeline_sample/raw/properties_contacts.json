@@ -1,0 +1,27 @@
+[
+  {
+    "name": "createdate",
+    "label": "Create Date",
+    "hubspotDefined": true
+  },
+  {
+    "name": "lifecyclestage",
+    "label": "Lifecycle Stage",
+    "hubspotDefined": true
+  },
+  {
+    "name": "hs_analytics_source",
+    "label": "Original Source",
+    "hubspotDefined": true
+  },
+  {
+    "name": "hubspot_owner_id",
+    "label": "Contact owner",
+    "hubspotDefined": true
+  },
+  {
+    "name": "hs_object_source",
+    "label": "Record source",
+    "hubspotDefined": true
+  }
+]

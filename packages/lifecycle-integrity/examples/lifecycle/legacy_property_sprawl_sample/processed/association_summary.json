@@ -1,0 +1,35 @@
+{
+  "contacts_to_companies": {
+    "available": true,
+    "total": 8,
+    "with_association": 0,
+    "coverage_pct": 0.0,
+    "distribution": {
+      "0": 8,
+      "1": 0,
+      "2+": 0
+    }
+  },
+  "deals_to_companies": {
+    "available": true,
+    "total": 0,
+    "with_association": 0,
+    "coverage_pct": null,
+    "distribution": {
+      "0": 0,
+      "1": 0,
+      "2+": 0
+    }
+  },
+  "deals_to_contacts": {
+    "available": true,
+    "total": 0,
+    "with_association": 0,
+    "coverage_pct": null,
+    "distribution": {
+      "0": 0,
+      "1": 0,
+      "2+": 0
+    }
+  }
+}

@@ -1,0 +1,38 @@
+[
+  {
+    "id": "default",
+    "label": "New Business",
+    "stages": [
+      {
+        "id": "appointmentscheduled",
+        "label": "Open",
+        "metadata": {
+          "isClosed": "false",
+          "probability": "0.2"
+        }
+      }
+    ]
+  },
+  {
+    "id": "renewal",
+    "label": "Expansion Renewal",
+    "stages": [
+      {
+        "id": "open",
+        "label": "Open",
+        "metadata": {
+          "isClosed": "false",
+          "probability": "0.5"
+        }
+      },
+      {
+        "id": "won",
+        "label": "Won",
+        "metadata": {
+          "isClosed": "true",
+          "probability": "1.0"
+        }
+      }
+    ]
+  }
+]

@@ -1,0 +1,23 @@
+{
+  "pipelines": [
+    {
+      "pipeline_id": "renewal",
+      "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Expansion and Renewal",
+      "stage_count": 2,
+      "deal_count": 3,
+      "stages": [
+        {
+          "stage_id": "open",
+          "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Renewal Open",
+          "deal_count": 2
+        },
+        {
+          "stage_id": "won",
+          "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Renewed",
+          "deal_count": 1
+        }
+      ]
+    }
+  ],
+  "deals_in_unknown_pipeline": 0
+}

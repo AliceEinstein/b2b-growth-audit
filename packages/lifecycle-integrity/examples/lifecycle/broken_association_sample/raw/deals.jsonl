@@ -1,0 +1,3 @@
+{"id": "d1", "properties": {"createdate": "2026-03-15T00:00:00Z", "pipeline": "default", "dealstage": "appointmentscheduled", "amount": "1000", "hubspot_owner_id": "901", "closedate": ""}}
+{"id": "d2", "properties": {"createdate": "2026-04-15T00:00:00Z", "pipeline": "default", "dealstage": "appointmentscheduled", "amount": "1000", "hubspot_owner_id": "901", "closedate": ""}}
+{"id": "d3", "properties": {"createdate": "2026-05-15T00:00:00Z", "pipeline": "default", "dealstage": "appointmentscheduled", "amount": "1000", "hubspot_owner_id": "901", "closedate": ""}}

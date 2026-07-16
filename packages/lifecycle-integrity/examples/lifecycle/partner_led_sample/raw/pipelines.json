@@ -1,0 +1,16 @@
+[
+  {
+    "id": "partner",
+    "label": "Partner Referral",
+    "stages": [
+      {
+        "id": "open",
+        "label": "Partner Qualified",
+        "metadata": {
+          "isClosed": "false",
+          "probability": "0.3"
+        }
+      }
+    ]
+  }
+]

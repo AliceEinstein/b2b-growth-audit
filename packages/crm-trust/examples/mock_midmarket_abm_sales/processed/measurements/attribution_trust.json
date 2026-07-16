@@ -1,0 +1,61 @@
+{
+  "module": "attribution_trust",
+  "evidence_file": "evidence/attribution_trust.csv",
+  "evidence_rows": 80,
+  "snapshot_coverage": {
+    "days": null,
+    "full_history": true,
+    "truncated": {
+      "contacts": false,
+      "companies": false,
+      "deals": false
+    },
+    "relationship_measurements_complete": true
+  },
+  "measurements": [
+    {
+      "id": "contacts_missing_original_source",
+      "object_type": "contacts",
+      "field_name": "hs_analytics_source",
+      "denominator": 360,
+      "affected_records": 40,
+      "affected_percentage": 11.1,
+      "available": true,
+      "note": null,
+      "description": "contacts with empty hs_analytics_source"
+    },
+    {
+      "id": "recent_half_contacts_missing_original_source",
+      "object_type": "contacts",
+      "field_name": "hs_analytics_source",
+      "denominator": 180,
+      "affected_records": 40,
+      "affected_percentage": 22.2,
+      "available": true,
+      "note": null,
+      "description": "contacts in the recent half (created after median createdate) with empty hs_analytics_source"
+    },
+    {
+      "id": "closedwon_deals_without_source_trace",
+      "object_type": "deals",
+      "field_name": "hs_analytics_source",
+      "denominator": 12,
+      "affected_records": 0,
+      "affected_percentage": 0.0,
+      "available": true,
+      "note": null,
+      "description": "closed-won deals with no associated contact having non-empty hs_analytics_source"
+    },
+    {
+      "id": "imported_contacts_missing_source",
+      "object_type": "contacts",
+      "field_name": "hs_analytics_source",
+      "denominator": 0,
+      "affected_records": 0,
+      "affected_percentage": null,
+      "available": true,
+      "note": null,
+      "description": "contacts created via IMPORT with empty hs_analytics_source"
+    }
+  ]
+}

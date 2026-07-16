@@ -1,0 +1,9 @@
+{
+  "started_at": "2026-07-15T17:10:02.330358+00:00",
+  "finished_at": "2026-07-15T17:10:02.330366+00:00",
+  "run_config": {
+    "synthetic_dataset": "clean_inbound_crm_sample"
+  },
+  "events": [],
+  "warnings": []
+}

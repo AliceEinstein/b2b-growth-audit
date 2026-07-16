@@ -1,0 +1,2 @@
+outlier_id,journey_pattern,object_type,record_id_hash,outlier_type,classification,confidence,reason,recommended_review
+15bcf3af7696da4ef65353b6a1b827dbb1135601a275914c7424bd5fe67d36d1-missing_company_association,inbound_new_business,deals,15bcf3af7696da4ef65353b6a1b827dbb1135601a275914c7424bd5fe67d36d1,missing_company_association,missing_data,90,Deal has no company association in the completed snapshot.,Review the deal-company association requirement for this journey.

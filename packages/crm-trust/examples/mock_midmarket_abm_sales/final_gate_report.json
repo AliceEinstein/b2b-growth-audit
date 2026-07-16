@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "problems": {},
+  "hard_leaks": [],
+  "uncleared_phrases": [],
+  "cleared_phrases": 12,
+  "deliverable_hashes": {
+    "crm_trust_report.md": "2cb88497989535c2363711bddcefcf1df926d1036172c47fd6d5e29fae3d2e5b",
+    "agent_handoff.md": "4840ba8f3929ce053cf688e0846279b5cd0473b65166d937beee525590f2258e",
+    "findings.json": "0c5f22831a9a30b53be24205a89981142916e9cb3ea46110bfca61dd681536f9",
+    "evidence.csv": "3e834c4c54c350342f1400d21112c6dd8747e353910c62e78a68ecc9cff754d2",
+    "crm_context.yaml": "b83e29f5c800000cb34b2787420329b2aa959e163b788092441428a3d77fda63",
+    "schema_discovery_report.md": "137419d0e50ed768d1d895d0fcdb586566b6e15363116eaa412f9a97402a8023",
+    "audit_log.json": "99f87239856c20549ac27fb979562fef19264ffa4fd48f9107c3ee30d2be4b02",
+    "score.json": "04bede2a98862119b214aaac603a16196bbeb9c02f60aa67822d4e938ba8551c",
+    "recommendations.json": "4d3222998a3a8fccdef100a0fb701e04c5a20c9293f4b631e80dc47e78476a01",
+    "manifest.json": "270abdbdbcdd4560612b96a8a62e5f84308446d75057894d89f21b3ba2b4f6ea"
+  },
+  "safety_clearance_sha256": "704fc4dafb7a43e8fdd08c14c4e10369799c31759316f7c0218c9e298cc1c101",
+  "generated_at": "2026-07-14T10:29:08.843058+00:00"
+}

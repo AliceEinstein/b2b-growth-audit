@@ -1,0 +1,6 @@
+{"id": "d1", "properties": {"createdate": "2026-02-15T00:00:00Z", "pipeline": "sales", "dealstage": "s_new", "amount": "1000", "hubspot_owner_id": "901", "closedate": "2026-03-15T00:00:00Z"}}
+{"id": "d2", "properties": {"createdate": "2026-03-15T00:00:00Z", "pipeline": "sales", "dealstage": "s_won", "amount": "1000", "hubspot_owner_id": "901", "closedate": "2026-05-15T00:00:00Z"}}
+{"id": "d3", "properties": {"createdate": "2026-04-15T00:00:00Z", "pipeline": "sales", "dealstage": "s_lost", "amount": "1000", "hubspot_owner_id": "901", "closedate": "2026-05-15T00:00:00Z"}}
+{"id": "d4", "properties": {"createdate": "2026-04-15T00:00:00Z", "pipeline": "onboarding", "dealstage": "ob_done", "amount": "1000", "hubspot_owner_id": "901", "closedate": "2026-06-15T00:00:00Z"}}
+{"id": "d5", "properties": {"createdate": "2026-05-15T00:00:00Z", "pipeline": "onboarding", "dealstage": "ob_open", "amount": "1000", "hubspot_owner_id": "901", "closedate": "2027-01-15T00:00:00Z"}}
+{"id": "d6", "properties": {"createdate": "2026-06-15T00:00:00Z", "pipeline": "sales", "dealstage": "s_new", "amount": "1000", "hubspot_owner_id": "901", "closedate": ""}}

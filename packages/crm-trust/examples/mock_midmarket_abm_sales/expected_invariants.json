@@ -1,0 +1,72 @@
+[
+  {
+    "module": "association_architecture",
+    "id": "contacts_without_company",
+    "expect": {
+      "affected_records": 80
+    }
+  },
+  {
+    "module": "association_architecture",
+    "id": "deals_without_company",
+    "expect": {
+      "affected_records": 4
+    }
+  },
+  {
+    "module": "association_architecture",
+    "id": "deals_without_contact",
+    "expect": {
+      "affected_records": 6
+    }
+  },
+  {
+    "module": "association_architecture",
+    "id": "companies_without_domain",
+    "expect": {
+      "affected_records": 5
+    }
+  },
+  {
+    "module": "pipeline_hygiene",
+    "id": "deals_in_unknown_pipeline",
+    "expect": {
+      "affected_records": 2
+    }
+  },
+  {
+    "module": "pipeline_hygiene",
+    "id": "deals_without_amount",
+    "expect": {
+      "affected_records": 6
+    }
+  },
+  {
+    "module": "pipeline_hygiene",
+    "id": "deals_without_owner",
+    "expect": {
+      "affected_records": 4
+    }
+  },
+  {
+    "module": "pipeline_hygiene",
+    "id": "open_deals_past_close_date",
+    "expect": {
+      "affected_records": 3
+    }
+  },
+  {
+    "module": "property_governance",
+    "id": "decayed_source_fields",
+    "expect": {
+      "affected_records": 3
+    }
+  },
+  {
+    "module": "property_governance",
+    "id": "similar_name_field_groups",
+    "expect": {
+      "affected_records": 11
+    }
+  }
+]

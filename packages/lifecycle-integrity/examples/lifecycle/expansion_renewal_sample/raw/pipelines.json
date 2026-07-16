@@ -1,0 +1,24 @@
+[
+  {
+    "id": "renewal",
+    "label": "Expansion and Renewal",
+    "stages": [
+      {
+        "id": "open",
+        "label": "Renewal Open",
+        "metadata": {
+          "isClosed": "false",
+          "probability": "0.5"
+        }
+      },
+      {
+        "id": "won",
+        "label": "Renewed",
+        "metadata": {
+          "isClosed": "true",
+          "probability": "1.0"
+        }
+      }
+    ]
+  }
+]

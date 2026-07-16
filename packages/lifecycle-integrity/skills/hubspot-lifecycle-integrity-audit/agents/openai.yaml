@@ -1,0 +1,4 @@
+interface:
+  display_name: "HubSpot Lifecycle Integrity Audit"
+  short_description: "Audit HubSpot revenue journey integrity safely"
+  default_prompt: "Use $hubspot-lifecycle-integrity-audit to run a read-only audit of HubSpot revenue journeys and lifecycle trust."

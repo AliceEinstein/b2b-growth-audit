@@ -1,0 +1,52 @@
+[
+  {
+    "name": "createdate",
+    "label": "Create Date",
+    "hubspotDefined": true
+  },
+  {
+    "name": "email",
+    "label": "Email",
+    "hubspotDefined": true
+  },
+  {
+    "name": "firstname",
+    "label": "First Name",
+    "hubspotDefined": true
+  },
+  {
+    "name": "lastname",
+    "label": "Last Name",
+    "hubspotDefined": true
+  },
+  {
+    "name": "phone",
+    "label": "Phone",
+    "hubspotDefined": true
+  },
+  {
+    "name": "lifecyclestage",
+    "label": "Lifecycle Stage",
+    "hubspotDefined": true
+  },
+  {
+    "name": "hs_analytics_source",
+    "label": "Original Source",
+    "hubspotDefined": true
+  },
+  {
+    "name": "hubspot_owner_id",
+    "label": "Contact owner",
+    "hubspotDefined": true
+  },
+  {
+    "name": "hs_object_source",
+    "label": "Record source",
+    "hubspotDefined": true
+  },
+  {
+    "name": "demo_request_status",
+    "label": "Synced Demo Request Status",
+    "hubspotDefined": false
+  }
+]

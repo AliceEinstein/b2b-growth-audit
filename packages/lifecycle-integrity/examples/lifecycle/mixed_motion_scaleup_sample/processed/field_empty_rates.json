@@ -1,0 +1,76 @@
+{
+  "contacts": {
+    "createdate": {
+      "empty_rate": 0.0,
+      "total": 4
+    },
+    "lifecyclestage": {
+      "empty_rate": 0.0,
+      "total": 4
+    },
+    "hs_analytics_source": {
+      "empty_rate": 50.0,
+      "total": 4
+    },
+    "hubspot_owner_id": {
+      "empty_rate": 0.0,
+      "total": 4
+    },
+    "hs_object_source": {
+      "empty_rate": 50.0,
+      "total": 4
+    }
+  },
+  "companies": {
+    "createdate": {
+      "empty_rate": 0.0,
+      "total": 1
+    },
+    "domain": {
+      "empty_rate": 0.0,
+      "total": 1
+    },
+    "name": {
+      "empty_rate": 0.0,
+      "total": 1
+    },
+    "lifecyclestage": {
+      "empty_rate": 0.0,
+      "total": 1
+    }
+  },
+  "deals": {
+    "createdate": {
+      "empty_rate": 0.0,
+      "total": 4
+    },
+    "pipeline": {
+      "empty_rate": 0.0,
+      "total": 4
+    },
+    "dealstage": {
+      "empty_rate": 0.0,
+      "total": 4
+    },
+    "amount": {
+      "empty_rate": 0.0,
+      "total": 4
+    },
+    "hubspot_owner_id": {
+      "empty_rate": 0.0,
+      "total": 4
+    },
+    "closedate": {
+      "empty_rate": 100.0,
+      "total": 4
+    },
+    "sales_motion": {
+      "empty_rate": 75.0,
+      "total": 4
+    },
+    "dealtype": {
+      "empty_rate": 50.0,
+      "total": 4
+    }
+  }
+}

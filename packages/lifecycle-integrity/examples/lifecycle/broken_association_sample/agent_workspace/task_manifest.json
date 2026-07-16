@@ -1,0 +1,585 @@
+{
+  "version": 2,
+  "run_id": "broken_association_sample",
+  "repo_root": ".",
+  "instruction_paths_relative_to": "repo_root",
+  "execution_model": "artifact_based_no_free_chat",
+  "code_owned_artifacts_must_not_be_edited": [
+    "processed/journey_evidence_store.json",
+    "processed/lifecycle_integrity_measurements.json",
+    "processed/high_intent_cohort_summary.json",
+    "evidence.csv",
+    "outlier_registry.csv",
+    "journey_pattern_registry.json",
+    "lifecycle_score.json",
+    "processed/automation_coverage.json",
+    "processed/workflow_inventory.json",
+    "processed/workflow_dependency_graph.json",
+    "processed/workflow_performance_summary.json",
+    "processed/scoring_activation_summary.json",
+    "processed/automation_scoring_measurements.json",
+    "automation_evidence.csv"
+  ],
+  "global_rules": {
+    "read_only": true,
+    "raw_access_allowed": false,
+    "hubspot_api_allowed": false,
+    "auto_fix_allowed": false
+  },
+  "tasks": [
+    {
+      "role": "schema_discovery_agent",
+      "instruction": "skills/hubspot-lifecycle-integrity-audit/subagents/schema_discovery_agent.md",
+      "phase": "analysis",
+      "inputs": [
+        "manifest.json",
+        "processed/journey_evidence_store.json",
+        "crm_context.yaml",
+        "processed/property_usage_summary.json",
+        "processed/field_empty_rates.json",
+        "processed/source_field_candidates.json",
+        "processed/pipeline_summary.json"
+      ],
+      "output": "agent_workspace/analysis/schema_discovery_agent.json",
+      "output_schema": "analysis_result",
+      "model_tier": "reasoning",
+      "raw_access_allowed": false,
+      "hubspot_api_allowed": false
+    },
+    {
+      "role": "object_relationship_agent",
+      "instruction": "skills/hubspot-lifecycle-integrity-audit/subagents/object_relationship_agent.md",
+      "phase": "analysis",
+      "inputs": [
+        "manifest.json",
+        "processed/journey_evidence_store.json",
+        "crm_context.yaml",
+        "processed/association_summary.json",
+        "processed/object_counts.json",
+        "processed/journey_transition_candidates.json"
+      ],
+      "output": "agent_workspace/analysis/object_relationship_agent.json",
+      "output_schema": "analysis_result",
+      "model_tier": "standard",
+      "raw_access_allowed": false,
+      "hubspot_api_allowed": false
+    },
+    {
+      "role": "lifecycle_state_agent",
+      "instruction": "skills/hubspot-lifecycle-integrity-audit/subagents/lifecycle_state_agent.md",
+      "phase": "analysis",
+      "inputs": [
+        "manifest.json",
+        "processed/journey_evidence_store.json",
+        "crm_context.yaml",
+        "processed/lifecycle_distribution.json",
+        "processed/property_usage_summary.json",
+        "processed/stage_transition_summary.json"
+      ],
+      "output": "agent_workspace/analysis/lifecycle_state_agent.json",
+      "output_schema": "analysis_result",
+      "model_tier": "standard",
+      "raw_access_allowed": false,
+      "hubspot_api_allowed": false
+    },
+    {
+      "role": "pipeline_structure_agent",
+      "instruction": "skills/hubspot-lifecycle-integrity-audit/subagents/pipeline_structure_agent.md",
+      "phase": "analysis",
+      "inputs": [
+        "manifest.json",
+        "processed/journey_evidence_store.json",
+        "crm_context.yaml",
+        "processed/pipeline_summary.json",
+        "processed/deal_stage_distribution.json"
+      ],
+      "output": "agent_workspace/analysis/pipeline_structure_agent.json",
+      "output_schema": "analysis_result",
+      "model_tier": "light",
+      "raw_access_allowed": false,
+      "hubspot_api_allowed": false
+    },
+    {
+      "role": "source_attribution_agent",
+      "instruction": "skills/hubspot-lifecycle-integrity-audit/subagents/source_attribution_agent.md",
+      "phase": "analysis",
+      "inputs": [
+        "manifest.json",
+        "processed/journey_evidence_store.json",
+        "crm_context.yaml",
+        "processed/source_field_candidates.json",
+        "processed/property_usage_summary.json"
+      ],
+      "output": "agent_workspace/analysis/source_attribution_agent.json",
+      "output_schema": "analysis_result",
+      "model_tier": "standard",
+      "raw_access_allowed": false,
+      "hubspot_api_allowed": false
+    },
+    {
+      "role": "activity_handoff_agent",
+      "instruction": "skills/hubspot-lifecycle-integrity-audit/subagents/activity_handoff_agent.md",
+      "phase": "analysis",
+      "inputs": [
+        "manifest.json",
+        "processed/journey_evidence_store.json",
+        "crm_context.yaml",
+        "processed/activity_summary.json",
+        "processed/data_age_summary.json",
+        "processed/high_intent_cohort_summary.json",
+        "processed/owner_distribution.json"
+      ],
+      "output": "agent_workspace/analysis/activity_handoff_agent.json",
+      "output_schema": "analysis_result",
+      "model_tier": "light",
+      "raw_access_allowed": false,
+      "hubspot_api_allowed": false
+    },
+    {
+      "role": "automation_scoring_analysis_agent",
+      "instruction": "skills/hubspot-lifecycle-integrity-audit/subagents/automation_scoring_analysis_agent.md",
+      "phase": "analysis",
+      "inputs": [
+        "manifest.json",
+        "processed/journey_evidence_store.json",
+        "crm_context.yaml",
+        "processed/automation_coverage.json",
+        "processed/workflow_inventory.json",
+        "processed/workflow_dependency_graph.json",
+        "processed/workflow_performance_summary.json",
+        "processed/scoring_activation_summary.json",
+        "processed/automation_scoring_measurements.json",
+        "automation_evidence.csv"
+      ],
+      "output": "agent_workspace/analysis/automation_scoring_analysis_agent.json",
+      "output_schema": "automation_analysis_result",
+      "model_tier": "standard",
+      "raw_access_allowed": false,
+      "hubspot_api_allowed": false
+    },
+    {
+      "role": "inbound_journey_hypothesis_agent",
+      "instruction": "skills/hubspot-lifecycle-integrity-audit/subagents/inbound_journey_hypothesis_agent.md",
+      "phase": "hypothesis",
+      "inputs": [
+        "manifest.json",
+        "processed/journey_evidence_store.json",
+        "crm_context.yaml",
+        "journey_pattern_registry.json",
+        "agent_workspace/analysis"
+      ],
+      "output": "agent_workspace/hypotheses/inbound_journey_hypothesis_agent.json",
+      "output_schema": "journey_hypothesis",
+      "model_tier": "reasoning",
+      "raw_access_allowed": false,
+      "hubspot_api_allowed": false
+    },
+    {
+      "role": "outbound_journey_hypothesis_agent",
+      "instruction": "skills/hubspot-lifecycle-integrity-audit/subagents/outbound_journey_hypothesis_agent.md",
+      "phase": "hypothesis",
+      "inputs": [
+        "manifest.json",
+        "processed/journey_evidence_store.json",
+        "crm_context.yaml",
+        "journey_pattern_registry.json",
+        "agent_workspace/analysis"
+      ],
+      "output": "agent_workspace/hypotheses/outbound_journey_hypothesis_agent.json",
+      "output_schema": "journey_hypothesis",
+      "model_tier": "reasoning",
+      "raw_access_allowed": false,
+      "hubspot_api_allowed": false
+    },
+    {
+      "role": "abm_journey_hypothesis_agent",
+      "instruction": "skills/hubspot-lifecycle-integrity-audit/subagents/abm_journey_hypothesis_agent.md",
+      "phase": "hypothesis",
+      "inputs": [
+        "manifest.json",
+        "processed/journey_evidence_store.json",
+        "crm_context.yaml",
+        "journey_pattern_registry.json",
+        "agent_workspace/analysis"
+      ],
+      "output": "agent_workspace/hypotheses/abm_journey_hypothesis_agent.json",
+      "output_schema": "journey_hypothesis",
+      "model_tier": "reasoning",
+      "raw_access_allowed": false,
+      "hubspot_api_allowed": false
+    },
+    {
+      "role": "partner_journey_hypothesis_agent",
+      "instruction": "skills/hubspot-lifecycle-integrity-audit/subagents/partner_journey_hypothesis_agent.md",
+      "phase": "hypothesis",
+      "inputs": [
+        "manifest.json",
+        "processed/journey_evidence_store.json",
+        "crm_context.yaml",
+        "journey_pattern_registry.json",
+        "agent_workspace/analysis"
+      ],
+      "output": "agent_workspace/hypotheses/partner_journey_hypothesis_agent.json",
+      "output_schema": "journey_hypothesis",
+      "model_tier": "reasoning",
+      "raw_access_allowed": false,
+      "hubspot_api_allowed": false
+    },
+    {
+      "role": "expansion_journey_hypothesis_agent",
+      "instruction": "skills/hubspot-lifecycle-integrity-audit/subagents/expansion_journey_hypothesis_agent.md",
+      "phase": "hypothesis",
+      "inputs": [
+        "manifest.json",
+        "processed/journey_evidence_store.json",
+        "crm_context.yaml",
+        "journey_pattern_registry.json",
+        "agent_workspace/analysis"
+      ],
+      "output": "agent_workspace/hypotheses/expansion_journey_hypothesis_agent.json",
+      "output_schema": "journey_hypothesis",
+      "model_tier": "reasoning",
+      "raw_access_allowed": false,
+      "hubspot_api_allowed": false
+    },
+    {
+      "role": "mixed_motion_journey_agent",
+      "instruction": "skills/hubspot-lifecycle-integrity-audit/subagents/mixed_motion_journey_agent.md",
+      "phase": "hypothesis",
+      "inputs": [
+        "manifest.json",
+        "processed/journey_evidence_store.json",
+        "crm_context.yaml",
+        "journey_pattern_registry.json",
+        "agent_workspace/analysis",
+        "agent_workspace/hypotheses"
+      ],
+      "output": "agent_workspace/hypotheses/mixed_motion_journey_agent.json",
+      "output_schema": "mixed_motion_assessment",
+      "model_tier": "reasoning",
+      "raw_access_allowed": false,
+      "hubspot_api_allowed": false
+    },
+    {
+      "role": "lifecycle_integrity_audit_agent",
+      "instruction": "skills/hubspot-lifecycle-integrity-audit/subagents/lifecycle_integrity_audit_agent.md",
+      "phase": "audit",
+      "inputs": [
+        "manifest.json",
+        "processed/journey_evidence_store.json",
+        "crm_context.yaml",
+        "journey_pattern_registry.json",
+        "processed/lifecycle_integrity_measurements.json",
+        "processed/high_intent_cohort_summary.json",
+        "evidence.csv",
+        "outlier_registry.csv",
+        "agent_workspace/hypotheses"
+      ],
+      "output": "agent_workspace/candidates/lifecycle_integrity_audit_agent.json",
+      "output_schema": "candidate_findings",
+      "model_tier": "standard",
+      "raw_access_allowed": false,
+      "hubspot_api_allowed": false
+    },
+    {
+      "role": "handoff_integrity_audit_agent",
+      "instruction": "skills/hubspot-lifecycle-integrity-audit/subagents/handoff_integrity_audit_agent.md",
+      "phase": "audit",
+      "inputs": [
+        "manifest.json",
+        "processed/journey_evidence_store.json",
+        "crm_context.yaml",
+        "journey_pattern_registry.json",
+        "processed/lifecycle_integrity_measurements.json",
+        "processed/high_intent_cohort_summary.json",
+        "evidence.csv",
+        "outlier_registry.csv",
+        "agent_workspace/hypotheses"
+      ],
+      "output": "agent_workspace/candidates/handoff_integrity_audit_agent.json",
+      "output_schema": "candidate_findings",
+      "model_tier": "standard",
+      "raw_access_allowed": false,
+      "hubspot_api_allowed": false
+    },
+    {
+      "role": "association_integrity_audit_agent",
+      "instruction": "skills/hubspot-lifecycle-integrity-audit/subagents/association_integrity_audit_agent.md",
+      "phase": "audit",
+      "inputs": [
+        "manifest.json",
+        "processed/journey_evidence_store.json",
+        "crm_context.yaml",
+        "journey_pattern_registry.json",
+        "processed/lifecycle_integrity_measurements.json",
+        "processed/high_intent_cohort_summary.json",
+        "evidence.csv",
+        "outlier_registry.csv",
+        "agent_workspace/hypotheses"
+      ],
+      "output": "agent_workspace/candidates/association_integrity_audit_agent.json",
+      "output_schema": "candidate_findings",
+      "model_tier": "standard",
+      "raw_access_allowed": false,
+      "hubspot_api_allowed": false
+    },
+    {
+      "role": "attribution_continuity_audit_agent",
+      "instruction": "skills/hubspot-lifecycle-integrity-audit/subagents/attribution_continuity_audit_agent.md",
+      "phase": "audit",
+      "inputs": [
+        "manifest.json",
+        "processed/journey_evidence_store.json",
+        "crm_context.yaml",
+        "journey_pattern_registry.json",
+        "processed/lifecycle_integrity_measurements.json",
+        "processed/high_intent_cohort_summary.json",
+        "evidence.csv",
+        "outlier_registry.csv",
+        "agent_workspace/hypotheses"
+      ],
+      "output": "agent_workspace/candidates/attribution_continuity_audit_agent.json",
+      "output_schema": "candidate_findings",
+      "model_tier": "standard",
+      "raw_access_allowed": false,
+      "hubspot_api_allowed": false
+    },
+    {
+      "role": "state_coherence_audit_agent",
+      "instruction": "skills/hubspot-lifecycle-integrity-audit/subagents/state_coherence_audit_agent.md",
+      "phase": "audit",
+      "inputs": [
+        "manifest.json",
+        "processed/journey_evidence_store.json",
+        "crm_context.yaml",
+        "journey_pattern_registry.json",
+        "processed/lifecycle_integrity_measurements.json",
+        "processed/high_intent_cohort_summary.json",
+        "evidence.csv",
+        "outlier_registry.csv",
+        "agent_workspace/hypotheses"
+      ],
+      "output": "agent_workspace/candidates/state_coherence_audit_agent.json",
+      "output_schema": "candidate_findings",
+      "model_tier": "standard",
+      "raw_access_allowed": false,
+      "hubspot_api_allowed": false
+    },
+    {
+      "role": "outlier_detection_agent",
+      "instruction": "skills/hubspot-lifecycle-integrity-audit/subagents/outlier_detection_agent.md",
+      "phase": "audit",
+      "inputs": [
+        "manifest.json",
+        "processed/journey_evidence_store.json",
+        "crm_context.yaml",
+        "journey_pattern_registry.json",
+        "processed/lifecycle_integrity_measurements.json",
+        "processed/high_intent_cohort_summary.json",
+        "evidence.csv",
+        "outlier_registry.csv",
+        "agent_workspace/hypotheses"
+      ],
+      "output": "agent_workspace/candidates/outlier_detection_agent.json",
+      "output_schema": "candidate_findings",
+      "model_tier": "standard",
+      "raw_access_allowed": false,
+      "hubspot_api_allowed": false
+    },
+    {
+      "role": "automation_root_cause_agent",
+      "instruction": "skills/hubspot-lifecycle-integrity-audit/subagents/automation_root_cause_agent.md",
+      "phase": "root_cause",
+      "inputs": [
+        "manifest.json",
+        "processed/journey_evidence_store.json",
+        "crm_context.yaml",
+        "journey_pattern_registry.json",
+        "processed/lifecycle_integrity_measurements.json",
+        "processed/high_intent_cohort_summary.json",
+        "evidence.csv",
+        "outlier_registry.csv",
+        "processed/automation_coverage.json",
+        "processed/workflow_inventory.json",
+        "processed/workflow_dependency_graph.json",
+        "processed/workflow_performance_summary.json",
+        "processed/scoring_activation_summary.json",
+        "processed/automation_scoring_measurements.json",
+        "automation_evidence.csv",
+        "findings.json",
+        "agent_workspace/analysis/automation_scoring_analysis_agent.json"
+      ],
+      "output": "agent_workspace/root_cause/automation_root_cause_agent.json",
+      "output_schema": "root_cause_assessments",
+      "model_tier": "reasoning",
+      "raw_access_allowed": false,
+      "hubspot_api_allowed": false
+    },
+    {
+      "role": "data_fidelity_reviewer",
+      "instruction": "skills/hubspot-lifecycle-integrity-audit/subagents/data_fidelity_reviewer.md",
+      "phase": "review",
+      "inputs": [
+        "manifest.json",
+        "processed/journey_evidence_store.json",
+        "crm_context.yaml",
+        "journey_pattern_registry.json",
+        "processed/lifecycle_integrity_measurements.json",
+        "processed/high_intent_cohort_summary.json",
+        "evidence.csv",
+        "outlier_registry.csv",
+        "findings.json",
+        "agent_workspace/candidates",
+        "agent_workspace/root_cause/automation_root_cause_agent.json"
+      ],
+      "output": "agent_workspace/reviews/data_fidelity_reviewer.json",
+      "output_schema": "review_decisions",
+      "model_tier": "light",
+      "raw_access_allowed": false,
+      "hubspot_api_allowed": false
+    },
+    {
+      "role": "journey_mapping_skeptic",
+      "instruction": "skills/hubspot-lifecycle-integrity-audit/subagents/journey_mapping_skeptic.md",
+      "phase": "review",
+      "inputs": [
+        "manifest.json",
+        "processed/journey_evidence_store.json",
+        "crm_context.yaml",
+        "journey_pattern_registry.json",
+        "processed/lifecycle_integrity_measurements.json",
+        "processed/high_intent_cohort_summary.json",
+        "evidence.csv",
+        "outlier_registry.csv",
+        "findings.json",
+        "agent_workspace/candidates",
+        "agent_workspace/root_cause/automation_root_cause_agent.json"
+      ],
+      "output": "agent_workspace/reviews/journey_mapping_skeptic.json",
+      "output_schema": "review_decisions",
+      "model_tier": "reasoning",
+      "raw_access_allowed": false,
+      "hubspot_api_allowed": false
+    },
+    {
+      "role": "logic_reviewer",
+      "instruction": "skills/hubspot-lifecycle-integrity-audit/subagents/logic_reviewer.md",
+      "phase": "review",
+      "inputs": [
+        "manifest.json",
+        "processed/journey_evidence_store.json",
+        "crm_context.yaml",
+        "journey_pattern_registry.json",
+        "processed/lifecycle_integrity_measurements.json",
+        "processed/high_intent_cohort_summary.json",
+        "evidence.csv",
+        "outlier_registry.csv",
+        "findings.json",
+        "agent_workspace/candidates",
+        "agent_workspace/root_cause/automation_root_cause_agent.json"
+      ],
+      "output": "agent_workspace/reviews/logic_reviewer.json",
+      "output_schema": "review_decisions",
+      "model_tier": "reasoning",
+      "raw_access_allowed": false,
+      "hubspot_api_allowed": false
+    },
+    {
+      "role": "false_positive_reviewer",
+      "instruction": "skills/hubspot-lifecycle-integrity-audit/subagents/false_positive_reviewer.md",
+      "phase": "review",
+      "inputs": [
+        "manifest.json",
+        "processed/journey_evidence_store.json",
+        "crm_context.yaml",
+        "journey_pattern_registry.json",
+        "processed/lifecycle_integrity_measurements.json",
+        "processed/high_intent_cohort_summary.json",
+        "evidence.csv",
+        "outlier_registry.csv",
+        "findings.json",
+        "agent_workspace/candidates",
+        "agent_workspace/root_cause/automation_root_cause_agent.json"
+      ],
+      "output": "agent_workspace/reviews/false_positive_reviewer.json",
+      "output_schema": "review_decisions",
+      "model_tier": "reasoning",
+      "raw_access_allowed": false,
+      "hubspot_api_allowed": false
+    },
+    {
+      "role": "privacy_safety_reviewer",
+      "instruction": "skills/hubspot-lifecycle-integrity-audit/subagents/privacy_safety_reviewer.md",
+      "phase": "review",
+      "inputs": [
+        "manifest.json",
+        "processed/journey_evidence_store.json",
+        "crm_context.yaml",
+        "journey_pattern_registry.json",
+        "processed/lifecycle_integrity_measurements.json",
+        "processed/high_intent_cohort_summary.json",
+        "evidence.csv",
+        "outlier_registry.csv",
+        "findings.json",
+        "agent_workspace/candidates",
+        "agent_workspace/root_cause/automation_root_cause_agent.json"
+      ],
+      "output": "agent_workspace/reviews/privacy_safety_reviewer.json",
+      "output_schema": "review_decisions",
+      "model_tier": "reasoning",
+      "raw_access_allowed": false,
+      "hubspot_api_allowed": false
+    },
+    {
+      "role": "recommendation_agent",
+      "instruction": "skills/hubspot-lifecycle-integrity-audit/subagents/recommendation_agent.md",
+      "phase": "recommendation",
+      "inputs": [
+        "manifest.json",
+        "processed/journey_evidence_store.json",
+        "crm_context.yaml",
+        "journey_pattern_registry.json",
+        "findings.json",
+        "review_trace.json",
+        "processed/automation_coverage.json",
+        "processed/workflow_inventory.json",
+        "processed/workflow_dependency_graph.json",
+        "processed/workflow_performance_summary.json",
+        "processed/scoring_activation_summary.json",
+        "processed/automation_scoring_measurements.json",
+        "automation_evidence.csv",
+        "agent_workspace/root_cause/automation_root_cause_agent.json"
+      ],
+      "output": "agent_workspace/recommendation_plan.json",
+      "output_schema": "recommendation_lanes",
+      "model_tier": "standard",
+      "raw_access_allowed": false,
+      "hubspot_api_allowed": false
+    },
+    {
+      "role": "final_report_agent",
+      "instruction": "skills/hubspot-lifecycle-integrity-audit/subagents/final_report_agent.md",
+      "phase": "report",
+      "inputs": [
+        "manifest.json",
+        "processed/journey_evidence_store.json",
+        "crm_context.yaml",
+        "journey_pattern_registry.json",
+        "processed/lifecycle_integrity_measurements.json",
+        "processed/high_intent_cohort_summary.json",
+        "processed/automation_scoring_measurements.json",
+        "processed/scoring_activation_summary.json",
+        "agent_workspace/hypotheses",
+        "agent_workspace/root_cause/automation_root_cause_agent.json",
+        "findings.json",
+        "review_trace.json",
+        "agent_workspace/recommendation_plan.json"
+      ],
+      "output": "final_gate_report.json",
+      "output_schema": "deterministic_report_and_gate",
+      "model_tier": "standard",
+      "raw_access_allowed": false,
+      "hubspot_api_allowed": false
+    }
+  ]
+}

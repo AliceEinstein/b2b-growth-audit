@@ -1,0 +1,25 @@
+[
+  {
+    "module": "association_architecture",
+    "id": "contacts_without_company",
+    "expect": {
+      "denominator": 10,
+      "affected_records": 8,
+      "affected_percentage": 80.0
+    }
+  },
+  {
+    "module": "association_architecture",
+    "id": "deals_without_company",
+    "expect": {
+      "affected_records": 3
+    }
+  },
+  {
+    "module": "association_architecture",
+    "id": "deals_without_contact",
+    "expect": {
+      "affected_records": 3
+    }
+  }
+]

@@ -1,0 +1,4 @@
+{"id": "co1", "properties": {"createdate": "2026-01-15T00:00:00Z", "domain": "inbound-1.test", "name": "Inbound Account 1", "lifecyclestage": ""}}
+{"id": "co2", "properties": {"createdate": "2026-02-15T00:00:00Z", "domain": "inbound-2.test", "name": "Inbound Account 2", "lifecyclestage": ""}}
+{"id": "co3", "properties": {"createdate": "2026-03-15T00:00:00Z", "domain": "inbound-3.test", "name": "Inbound Account 3", "lifecyclestage": ""}}
+{"id": "co4", "properties": {"createdate": "2026-04-15T00:00:00Z", "domain": "inbound-4.test", "name": "Inbound Account 4", "lifecyclestage": "customer"}}

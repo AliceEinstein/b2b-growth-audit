@@ -1,0 +1,127 @@
+[
+  {
+    "name": "createdate",
+    "label": "Create Date",
+    "hubspotDefined": true
+  },
+  {
+    "name": "lastmodifieddate",
+    "label": "Last Modified Date",
+    "hubspotDefined": true
+  },
+  {
+    "name": "email",
+    "label": "Email",
+    "hubspotDefined": true
+  },
+  {
+    "name": "firstname",
+    "label": "First Name",
+    "hubspotDefined": true
+  },
+  {
+    "name": "lastname",
+    "label": "Last Name",
+    "hubspotDefined": true
+  },
+  {
+    "name": "phone",
+    "label": "Phone",
+    "hubspotDefined": true
+  },
+  {
+    "name": "lifecyclestage",
+    "label": "Lifecycle Stage",
+    "hubspotDefined": true
+  },
+  {
+    "name": "hs_analytics_source",
+    "label": "Original Source",
+    "hubspotDefined": true
+  },
+  {
+    "name": "hubspot_owner_id",
+    "label": "Contact owner",
+    "hubspotDefined": true
+  },
+  {
+    "name": "hs_object_source",
+    "label": "Record source",
+    "hubspotDefined": true
+  },
+  {
+    "name": "email",
+    "label": "Email",
+    "hubspotDefined": true
+  },
+  {
+    "name": "hs_latest_source",
+    "label": "Latest Source",
+    "hubspotDefined": true
+  },
+  {
+    "name": "hs_analytics_source_data_1",
+    "label": "Original Source Drill Down 1",
+    "hubspotDefined": true
+  },
+  {
+    "name": "hs_analytics_source_data_2",
+    "label": "Original Source Drill Down 2",
+    "hubspotDefined": true
+  },
+  {
+    "name": "hs_latest_source_data_1",
+    "label": "Latest Source Drill Down 1",
+    "hubspotDefined": true
+  },
+  {
+    "name": "hs_latest_source_data_2",
+    "label": "Latest Source Drill Down 2",
+    "hubspotDefined": true
+  },
+  {
+    "name": "old_lead_source_2021",
+    "label": "Old Lead Source 2021",
+    "hubspotDefined": false
+  },
+  {
+    "name": "campaign_source",
+    "label": "Campaign Source",
+    "hubspotDefined": false
+  },
+  {
+    "name": "source_campaign",
+    "label": "Source Campaign",
+    "hubspotDefined": false
+  },
+  {
+    "name": "lead_source",
+    "label": "Lead Source",
+    "hubspotDefined": false
+  },
+  {
+    "name": "source_lead",
+    "label": "Source Lead",
+    "hubspotDefined": false
+  },
+  {
+    "name": "utm_source",
+    "label": "UTM Source",
+    "hubspotDefined": false
+  },
+  {
+    "name": "source_utm",
+    "label": "Source UTM",
+    "hubspotDefined": false
+  },
+  {
+    "name": "lead_referrer_name",
+    "label": "Lead Referrer Name",
+    "hubspotDefined": false
+  },
+  {
+    "name": "utm_notes",
+    "label": "UTM Notes",
+    "hubspotDefined": false
+  }
+]

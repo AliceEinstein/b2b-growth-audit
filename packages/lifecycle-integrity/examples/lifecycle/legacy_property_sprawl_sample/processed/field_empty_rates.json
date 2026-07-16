@@ -1,0 +1,34 @@
+{
+  "contacts": {
+    "createdate": {
+      "empty_rate": 0.0,
+      "total": 8
+    },
+    "lifecyclestage": {
+      "empty_rate": 0.0,
+      "total": 8
+    },
+    "hs_analytics_source": {
+      "empty_rate": 0.0,
+      "total": 8
+    },
+    "hubspot_owner_id": {
+      "empty_rate": 0.0,
+      "total": 8
+    },
+    "old_lifecycle_2021": {
+      "empty_rate": 50.0,
+      "total": 8
+    },
+    "lead_source_backup": {
+      "empty_rate": 50.0,
+      "total": 8
+    },
+    "utm_campaign_legacy": {
+      "empty_rate": 62.5,
+      "total": 8
+    }
+  },
+  "companies": {},
+  "deals": {}
+}

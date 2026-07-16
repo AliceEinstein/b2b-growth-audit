@@ -1,0 +1,91 @@
+{
+  "reference_time": null,
+  "reference_time_source": "latest_observed_modified_timestamp",
+  "definition": "Operational recency proxy based on last-modified timestamps; this is not proof of human, marketing, or sales activity.",
+  "objects": {
+    "contacts": {
+      "activity_field": "lastmodifieddate",
+      "available": false,
+      "total": 1,
+      "with_valid_timestamp": 0,
+      "missing_or_invalid": 1,
+      "future_dated": 0,
+      "recency_buckets": {
+        "within_30_days": 0,
+        "31_to_90_days": 0,
+        "91_to_180_days": 0,
+        "over_180_days": 0
+      },
+      "last_modified_range": {
+        "available": false,
+        "oldest": null,
+        "newest": null,
+        "records_with_valid_timestamp": 0,
+        "records_missing_or_invalid": 1
+      },
+      "created_range": {
+        "available": true,
+        "oldest": "2026-01-15T00:00:00Z",
+        "newest": "2026-01-15T00:00:00Z",
+        "records_with_valid_timestamp": 1,
+        "records_missing_or_invalid": 0
+      }
+    },
+    "companies": {
+      "activity_field": "hs_lastmodifieddate",
+      "available": false,
+      "total": 1,
+      "with_valid_timestamp": 0,
+      "missing_or_invalid": 1,
+      "future_dated": 0,
+      "recency_buckets": {
+        "within_30_days": 0,
+        "31_to_90_days": 0,
+        "91_to_180_days": 0,
+        "over_180_days": 0
+      },
+      "last_modified_range": {
+        "available": false,
+        "oldest": null,
+        "newest": null,
+        "records_with_valid_timestamp": 0,
+        "records_missing_or_invalid": 1
+      },
+      "created_range": {
+        "available": true,
+        "oldest": "2026-01-15T00:00:00Z",
+        "newest": "2026-01-15T00:00:00Z",
+        "records_with_valid_timestamp": 1,
+        "records_missing_or_invalid": 0
+      }
+    },
+    "deals": {
+      "activity_field": "hs_lastmodifieddate",
+      "available": false,
+      "total": 3,
+      "with_valid_timestamp": 0,
+      "missing_or_invalid": 3,
+      "future_dated": 0,
+      "recency_buckets": {
+        "within_30_days": 0,
+        "31_to_90_days": 0,
+        "91_to_180_days": 0,
+        "over_180_days": 0
+      },
+      "last_modified_range": {
+        "available": false,
+        "oldest": null,
+        "newest": null,
+        "records_with_valid_timestamp": 0,
+        "records_missing_or_invalid": 3
+      },
+      "created_range": {
+        "available": true,
+        "oldest": "2026-02-15T00:00:00Z",
+        "newest": "2026-08-15T00:00:00Z",
+        "records_with_valid_timestamp": 3,
+        "records_missing_or_invalid": 0
+      }
+    }
+  }
+}

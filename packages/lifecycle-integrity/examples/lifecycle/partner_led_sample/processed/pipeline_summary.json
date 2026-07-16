@@ -1,0 +1,18 @@
+{
+  "pipelines": [
+    {
+      "pipeline_id": "partner",
+      "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Partner Referral",
+      "stage_count": 1,
+      "deal_count": 3,
+      "stages": [
+        {
+          "stage_id": "open",
+          "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Partner Qualified",
+          "deal_count": 3
+        }
+      ]
+    }
+  ],
+  "deals_in_unknown_pipeline": 0
+}

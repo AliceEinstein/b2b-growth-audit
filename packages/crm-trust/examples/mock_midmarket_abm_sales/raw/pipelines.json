@@ -1,0 +1,94 @@
+[
+  {
+    "id": "new_business",
+    "label": "New Business",
+    "stages": [
+      {
+        "id": "qualification",
+        "label": "Qualification",
+        "metadata": {
+          "isClosed": "false",
+          "probability": "0.2"
+        }
+      },
+      {
+        "id": "discovery",
+        "label": "Discovery",
+        "metadata": {
+          "isClosed": "false",
+          "probability": "0.35"
+        }
+      },
+      {
+        "id": "proposal",
+        "label": "Proposal",
+        "metadata": {
+          "isClosed": "false",
+          "probability": "0.6"
+        }
+      },
+      {
+        "id": "negotiation",
+        "label": "Negotiation",
+        "metadata": {
+          "isClosed": "false",
+          "probability": "0.8"
+        }
+      },
+      {
+        "id": "closedwon",
+        "label": "Closed Won",
+        "metadata": {
+          "isClosed": "true",
+          "probability": "1.0"
+        }
+      },
+      {
+        "id": "closedlost",
+        "label": "Closed Lost",
+        "metadata": {
+          "isClosed": "true",
+          "probability": "0.0"
+        }
+      }
+    ]
+  },
+  {
+    "id": "expansion",
+    "label": "Expansion",
+    "stages": [
+      {
+        "id": "account_review",
+        "label": "Account Review",
+        "metadata": {
+          "isClosed": "false",
+          "probability": "0.35"
+        }
+      },
+      {
+        "id": "solution_design",
+        "label": "Solution Design",
+        "metadata": {
+          "isClosed": "false",
+          "probability": "0.6"
+        }
+      },
+      {
+        "id": "closedwon",
+        "label": "Closed Won",
+        "metadata": {
+          "isClosed": "true",
+          "probability": "1.0"
+        }
+      },
+      {
+        "id": "closedlost",
+        "label": "Closed Lost",
+        "metadata": {
+          "isClosed": "true",
+          "probability": "0.0"
+        }
+      }
+    ]
+  }
+]

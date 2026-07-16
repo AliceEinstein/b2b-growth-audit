@@ -1,0 +1,39 @@
+{
+  "module": "property_governance",
+  "findings": [
+    {
+      "id": "decayed_source_field_candidates",
+      "module": "property_governance",
+      "severity": "medium",
+      "confidence": "medium",
+      "object_type": "properties",
+      "measurement_id": "decayed_source_fields",
+      "field_name": null,
+      "denominator": 17,
+      "affected_records": 3,
+      "affected_percentage": 17.6,
+      "evidence_file": "evidence/property_governance.csv",
+      "business_impact": "Three source-like properties are populated historically but not in the recent half, which creates a legacy-field risk and can fragment attribution logic over time.",
+      "recommendation_type": "needs_business_rule_confirmation",
+      "auto_fix_allowed": false,
+      "review_status": "approved"
+    },
+    {
+      "id": "similar_source_field_name_candidates",
+      "module": "property_governance",
+      "severity": "medium",
+      "confidence": "medium",
+      "object_type": "properties",
+      "measurement_id": "similar_name_field_groups",
+      "field_name": null,
+      "denominator": 17,
+      "affected_records": 11,
+      "affected_percentage": 64.7,
+      "evidence_file": "evidence/property_governance.csv",
+      "business_impact": "Eleven source-like property name groups are collision candidates; without a confirmed canonical mapping, workflows and reports may read different fields for the same business concept.",
+      "recommendation_type": "needs_business_rule_confirmation",
+      "auto_fix_allowed": false,
+      "review_status": "approved"
+    }
+  ]
+}

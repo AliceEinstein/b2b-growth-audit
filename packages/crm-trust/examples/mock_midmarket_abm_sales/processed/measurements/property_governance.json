@@ -1,0 +1,39 @@
+{
+  "module": "property_governance",
+  "evidence_file": "evidence/property_governance.csv",
+  "evidence_rows": 8,
+  "snapshot_coverage": {
+    "days": null,
+    "full_history": true,
+    "truncated": {
+      "contacts": false,
+      "companies": false,
+      "deals": false
+    },
+    "relationship_measurements_complete": true
+  },
+  "measurements": [
+    {
+      "id": "decayed_source_fields",
+      "object_type": "properties",
+      "field_name": null,
+      "denominator": 17,
+      "affected_records": 3,
+      "affected_percentage": 17.6,
+      "available": true,
+      "note": null,
+      "description": "source-like fields filled in the older half of records but never in the recent half"
+    },
+    {
+      "id": "similar_name_field_groups",
+      "object_type": "properties",
+      "field_name": null,
+      "denominator": 17,
+      "affected_records": 11,
+      "affected_percentage": 64.7,
+      "available": true,
+      "note": null,
+      "description": "source-like fields whose normalized names collide (duplicate candidates)"
+    }
+  ]
+}

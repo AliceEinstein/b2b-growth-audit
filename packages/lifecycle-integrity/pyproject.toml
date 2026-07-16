@@ -1,0 +1,28 @@
+[project]
+name = "hubspot-lifecycle-integrity-audit"
+version = "0.2.0"
+description = "Local-first, read-only HubSpot Lifecycle Integrity Audit"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "Alice Ren", email = "contact@smartifymarketing.com" }]
+requires-python = ">=3.9"
+dependencies = [
+    "httpx>=0.27,<1",
+    "pydantic>=2.7,<3",
+    "python-dotenv>=1.0,<2",
+    "PyYAML>=6.0,<7",
+    "rich>=13.7,<15",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0,<10"]
+
+[build-system]
+requires = ["setuptools>=77", "wheel>=0.43"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["connectors", "connectors.hubspot", "core", "scripts"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]

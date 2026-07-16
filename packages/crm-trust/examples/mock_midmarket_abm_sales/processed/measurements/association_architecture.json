@@ -1,0 +1,72 @@
+{
+  "module": "association_architecture",
+  "evidence_file": "evidence/association_architecture.csv",
+  "evidence_rows": 73,
+  "snapshot_coverage": {
+    "days": null,
+    "full_history": true,
+    "truncated": {
+      "contacts": false,
+      "companies": false,
+      "deals": false
+    },
+    "relationship_measurements_complete": true
+  },
+  "measurements": [
+    {
+      "id": "contacts_without_company",
+      "object_type": "contacts",
+      "field_name": null,
+      "denominator": 360,
+      "affected_records": 80,
+      "affected_percentage": 22.2,
+      "available": true,
+      "note": null,
+      "description": "contacts with no associated company"
+    },
+    {
+      "id": "deals_without_company",
+      "object_type": "deals",
+      "field_name": null,
+      "denominator": 36,
+      "affected_records": 4,
+      "affected_percentage": 11.1,
+      "available": true,
+      "note": null,
+      "description": "deals with no associated company"
+    },
+    {
+      "id": "deals_without_contact",
+      "object_type": "deals",
+      "field_name": null,
+      "denominator": 36,
+      "affected_records": 6,
+      "affected_percentage": 16.7,
+      "available": true,
+      "note": null,
+      "description": "deals with no associated contact"
+    },
+    {
+      "id": "duplicate_company_domain_candidates",
+      "object_type": "companies",
+      "field_name": "domain",
+      "denominator": 55,
+      "affected_records": 8,
+      "affected_percentage": 14.5,
+      "available": true,
+      "note": null,
+      "description": "companies sharing a domain with at least one other company"
+    },
+    {
+      "id": "companies_without_domain",
+      "object_type": "companies",
+      "field_name": "domain",
+      "denominator": 60,
+      "affected_records": 5,
+      "affected_percentage": 8.3,
+      "available": true,
+      "note": null,
+      "description": "companies with empty domain"
+    }
+  ]
+}

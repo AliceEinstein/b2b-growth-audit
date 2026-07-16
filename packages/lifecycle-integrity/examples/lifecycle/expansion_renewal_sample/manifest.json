@@ -1,0 +1,19 @@
+{
+  "run_id": "expansion_renewal_sample",
+  "created_at": "2026-07-12T00:00:00+00:00",
+  "status": "completed",
+  "days": null,
+  "full_history": true,
+  "counts": {
+    "contacts": 1,
+    "companies": 1,
+    "deals": 3
+  },
+  "truncated": {
+    "contacts": false,
+    "companies": false,
+    "deals": false
+  },
+  "source_candidates": {},
+  "warnings": []
+}

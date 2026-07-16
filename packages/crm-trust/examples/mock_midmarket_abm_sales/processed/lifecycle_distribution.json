@@ -1,0 +1,14 @@
+{
+  "contacts": {
+    "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] lead": 180,
+    "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead": 80,
+    "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] salesqualifiedlead": 50,
+    "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] opportunity": 30,
+    "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] customer": 15,
+    "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] closedlost": 5
+  },
+  "companies": {
+    "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] lead": 48,
+    "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] customer": 12
+  }
+}

@@ -1,0 +1,28 @@
+{
+  "pipelines": [
+    {
+      "pipeline_id": "default",
+      "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Sales Pipeline",
+      "stage_count": 3,
+      "deal_count": 3,
+      "stages": [
+        {
+          "stage_id": "appointmentscheduled",
+          "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Appointment",
+          "deal_count": 3
+        },
+        {
+          "stage_id": "closedwon",
+          "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Closed Won",
+          "deal_count": 0
+        },
+        {
+          "stage_id": "closedlost",
+          "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Closed Lost",
+          "deal_count": 0
+        }
+      ]
+    }
+  ],
+  "deals_in_unknown_pipeline": 0
+}

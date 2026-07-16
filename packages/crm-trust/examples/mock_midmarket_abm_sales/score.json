@@ -1,0 +1,97 @@
+{
+  "total": 48,
+  "max_total": 100,
+  "categories": {
+    "attribution_trust": {
+      "max_points": 25,
+      "deducted": 6,
+      "score": 19,
+      "counted_findings": [
+        {
+          "id": "recent_original_source_capture_gap",
+          "severity": "high"
+        }
+      ]
+    },
+    "lifecycle_funnel": {
+      "max_points": 20,
+      "deducted": 12,
+      "score": 8,
+      "counted_findings": [
+        {
+          "id": "customers_without_closedwon_deal_trace",
+          "severity": "high"
+        },
+        {
+          "id": "mql_plus_contacts_without_deal_trace",
+          "severity": "high"
+        }
+      ]
+    },
+    "association_architecture": {
+      "max_points": 20,
+      "deducted": 16,
+      "score": 4,
+      "counted_findings": [
+        {
+          "id": "contacts_without_company_association",
+          "severity": "high"
+        },
+        {
+          "id": "deals_without_company_association",
+          "severity": "medium"
+        },
+        {
+          "id": "deals_without_contact_association",
+          "severity": "medium"
+        },
+        {
+          "id": "duplicate_company_domain_candidates",
+          "severity": "medium"
+        },
+        {
+          "id": "companies_without_domain",
+          "severity": "low"
+        }
+      ]
+    },
+    "pipeline_hygiene": {
+      "max_points": 20,
+      "deducted": 12,
+      "score": 8,
+      "counted_findings": [
+        {
+          "id": "open_deals_past_close_date",
+          "severity": "medium"
+        },
+        {
+          "id": "deals_without_amount",
+          "severity": "medium"
+        },
+        {
+          "id": "deals_without_owner",
+          "severity": "medium"
+        },
+        {
+          "id": "deals_in_unknown_pipeline",
+          "severity": "medium"
+        }
+      ]
+    },
+    "property_governance": {
+      "max_points": 15,
+      "deducted": 6,
+      "score": 9,
+      "counted_findings": [
+        {
+          "id": "decayed_source_field_candidates",
+          "severity": "medium"
+        },
+        {
+          "id": "similar_source_field_name_candidates",
+          "severity": "medium"
+        }
+      ]
+    }
+  }
+}

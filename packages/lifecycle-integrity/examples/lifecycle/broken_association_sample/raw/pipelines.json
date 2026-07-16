@@ -1,0 +1,20 @@
+[
+  {
+    "id": "default",
+    "label": "Sales Pipeline",
+    "stages": [
+      {
+        "id": "appointmentscheduled",
+        "label": "Appointment"
+      },
+      {
+        "id": "closedwon",
+        "label": "Closed Won"
+      },
+      {
+        "id": "closedlost",
+        "label": "Closed Lost"
+      }
+    ]
+  }
+]

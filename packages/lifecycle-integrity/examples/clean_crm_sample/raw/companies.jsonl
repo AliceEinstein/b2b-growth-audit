@@ -1,0 +1,3 @@
+{"id": "co1", "properties": {"createdate": "2026-01-15T00:00:00Z", "domain": "alpha.com", "name": "Alpha", "lifecyclestage": ""}}
+{"id": "co2", "properties": {"createdate": "2026-02-15T00:00:00Z", "domain": "beta.io", "name": "Beta", "lifecyclestage": ""}}
+{"id": "co3", "properties": {"createdate": "2026-03-15T00:00:00Z", "domain": "gamma.dev", "name": "Gamma", "lifecyclestage": ""}}

@@ -1,0 +1,223 @@
+{
+  "coverage": {
+    "status": "unavailable"
+  },
+  "checks": [],
+  "root_cause_links": [
+    {
+      "measurement_id": "contacts_missing_lifecycle",
+      "workflow_aliases": [],
+      "score_fields": [],
+      "issue_types": [],
+      "configuration_status": "unknown",
+      "causal_status": "unverified",
+      "confidence": 0,
+      "limitations": [
+        "Automation coverage was unavailable; workflow root cause was not inspected."
+      ],
+      "evidence_refs": []
+    },
+    {
+      "measurement_id": "customers_without_stage_history",
+      "workflow_aliases": [],
+      "score_fields": [],
+      "issue_types": [],
+      "configuration_status": "unknown",
+      "causal_status": "unverified",
+      "confidence": 0,
+      "limitations": [
+        "Automation coverage was unavailable; workflow root cause was not inspected."
+      ],
+      "evidence_refs": []
+    },
+    {
+      "measurement_id": "contacts_stage_regression",
+      "workflow_aliases": [],
+      "score_fields": [],
+      "issue_types": [],
+      "configuration_status": "unknown",
+      "causal_status": "unverified",
+      "confidence": 0,
+      "limitations": [
+        "Automation coverage was unavailable; workflow root cause was not inspected."
+      ],
+      "evidence_refs": []
+    },
+    {
+      "measurement_id": "deals_without_company",
+      "workflow_aliases": [],
+      "score_fields": [],
+      "issue_types": [],
+      "configuration_status": "unknown",
+      "causal_status": "unverified",
+      "confidence": 0,
+      "limitations": [
+        "Automation coverage was unavailable; workflow root cause was not inspected."
+      ],
+      "evidence_refs": []
+    },
+    {
+      "measurement_id": "deals_without_contact",
+      "workflow_aliases": [],
+      "score_fields": [],
+      "issue_types": [],
+      "configuration_status": "unknown",
+      "causal_status": "unverified",
+      "confidence": 0,
+      "limitations": [
+        "Automation coverage was unavailable; workflow root cause was not inspected."
+      ],
+      "evidence_refs": []
+    },
+    {
+      "measurement_id": "closed_won_company_not_customer",
+      "workflow_aliases": [],
+      "score_fields": [],
+      "issue_types": [],
+      "configuration_status": "unknown",
+      "causal_status": "unverified",
+      "confidence": 0,
+      "limitations": [
+        "Automation coverage was unavailable; workflow root cause was not inspected."
+      ],
+      "evidence_refs": []
+    },
+    {
+      "measurement_id": "expansion_renewal_deals_without_owner",
+      "workflow_aliases": [],
+      "score_fields": [],
+      "issue_types": [],
+      "configuration_status": "unknown",
+      "causal_status": "unverified",
+      "confidence": 0,
+      "limitations": [
+        "Automation coverage was unavailable; workflow root cause was not inspected."
+      ],
+      "evidence_refs": []
+    },
+    {
+      "measurement_id": "expansion_renewal_deals_without_company",
+      "workflow_aliases": [],
+      "score_fields": [],
+      "issue_types": [],
+      "configuration_status": "unknown",
+      "causal_status": "unverified",
+      "confidence": 0,
+      "limitations": [
+        "Automation coverage was unavailable; workflow root cause was not inspected."
+      ],
+      "evidence_refs": []
+    },
+    {
+      "measurement_id": "inbound_new_business_deals_without_owner",
+      "workflow_aliases": [],
+      "score_fields": [],
+      "issue_types": [],
+      "configuration_status": "unknown",
+      "causal_status": "unverified",
+      "confidence": 0,
+      "limitations": [
+        "Automation coverage was unavailable; workflow root cause was not inspected."
+      ],
+      "evidence_refs": []
+    },
+    {
+      "measurement_id": "inbound_new_business_deals_without_company",
+      "workflow_aliases": [],
+      "score_fields": [],
+      "issue_types": [],
+      "configuration_status": "unknown",
+      "causal_status": "unverified",
+      "confidence": 0,
+      "limitations": [
+        "Automation coverage was unavailable; workflow root cause was not inspected."
+      ],
+      "evidence_refs": []
+    },
+    {
+      "measurement_id": "outbound_sales_led_deals_without_owner",
+      "workflow_aliases": [],
+      "score_fields": [],
+      "issue_types": [],
+      "configuration_status": "unknown",
+      "causal_status": "unverified",
+      "confidence": 0,
+      "limitations": [
+        "Automation coverage was unavailable; workflow root cause was not inspected."
+      ],
+      "evidence_refs": []
+    },
+    {
+      "measurement_id": "outbound_sales_led_deals_without_company",
+      "workflow_aliases": [],
+      "score_fields": [],
+      "issue_types": [],
+      "configuration_status": "unknown",
+      "causal_status": "unverified",
+      "confidence": 0,
+      "limitations": [
+        "Automation coverage was unavailable; workflow root cause was not inspected."
+      ],
+      "evidence_refs": []
+    },
+    {
+      "measurement_id": "inbound_deals_without_source_trace",
+      "workflow_aliases": [],
+      "score_fields": [],
+      "issue_types": [],
+      "configuration_status": "unknown",
+      "causal_status": "unverified",
+      "confidence": 0,
+      "limitations": [
+        "Automation coverage was unavailable; workflow root cause was not inspected."
+      ],
+      "evidence_refs": []
+    },
+    {
+      "measurement_id": "expansion_deals_without_customer_company",
+      "workflow_aliases": [],
+      "score_fields": [],
+      "issue_types": [],
+      "configuration_status": "unknown",
+      "causal_status": "unverified",
+      "confidence": 0,
+      "limitations": [
+        "Automation coverage was unavailable; workflow root cause was not inspected."
+      ],
+      "evidence_refs": []
+    },
+    {
+      "measurement_id": "lifecycle_field_fragmentation",
+      "workflow_aliases": [],
+      "score_fields": [],
+      "issue_types": [],
+      "configuration_status": "unknown",
+      "causal_status": "unverified",
+      "confidence": 0,
+      "limitations": [
+        "Automation coverage was unavailable; workflow root cause was not inspected."
+      ],
+      "evidence_refs": []
+    },
+    {
+      "measurement_id": "activity_handoff_evidence_available",
+      "workflow_aliases": [],
+      "score_fields": [],
+      "issue_types": [],
+      "configuration_status": "unknown",
+      "causal_status": "unverified",
+      "confidence": 0,
+      "limitations": [
+        "Automation coverage was unavailable; workflow root cause was not inspected."
+      ],
+      "evidence_refs": []
+    }
+  ],
+  "workflow_count": 0,
+  "relevant_workflow_count": 0,
+  "score_candidate_count": 0,
+  "limitations": [
+    "Workflow configuration does not prove per-record execution.",
+    "Missing workflow controls are not defects by default; manual controls may exist."
+  ]
+}

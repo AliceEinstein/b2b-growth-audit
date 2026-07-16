@@ -1,0 +1,66 @@
+{
+  "contacts": [
+    {
+      "field": "hs_analytics_source",
+      "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Original Source",
+      "hubspot_defined": true,
+      "stats": {
+        "total": 8,
+        "non_empty": 8,
+        "fill_rate": 100.0,
+        "empty_rate": 0.0,
+        "fill_rate_older_half": 100.0,
+        "fill_rate_recent_half": 100.0,
+        "distinct_count": 1,
+        "top_values": [
+          {
+            "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ORGANIC_SEARCH",
+            "count": 8
+          }
+        ]
+      }
+    },
+    {
+      "field": "lead_source_backup",
+      "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Lead Source Backup",
+      "hubspot_defined": false,
+      "stats": {
+        "total": 8,
+        "non_empty": 4,
+        "fill_rate": 50.0,
+        "empty_rate": 50.0,
+        "fill_rate_older_half": 100.0,
+        "fill_rate_recent_half": 0.0,
+        "distinct_count": 1,
+        "top_values": [
+          {
+            "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] google",
+            "count": 4
+          }
+        ]
+      }
+    },
+    {
+      "field": "utm_campaign_legacy",
+      "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] UTM Campaign Legacy",
+      "hubspot_defined": false,
+      "stats": {
+        "total": 8,
+        "non_empty": 3,
+        "fill_rate": 37.5,
+        "empty_rate": 62.5,
+        "fill_rate_older_half": 75.0,
+        "fill_rate_recent_half": 0.0,
+        "distinct_count": 1,
+        "top_values": [
+          {
+            "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] old",
+            "count": 3
+          }
+        ]
+      }
+    }
+  ],
+  "companies": [],
+  "deals": []
+}

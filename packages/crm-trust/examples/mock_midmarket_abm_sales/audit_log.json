@@ -1,0 +1,29 @@
+{
+  "run_type": "synthetic_fixture_downstream_audit_test",
+  "fixture": "mock_midmarket_abm_sales",
+  "snapshot_status": "completed",
+  "full_history": true,
+  "truncated": {
+    "contacts": false,
+    "companies": false,
+    "deals": false
+  },
+  "phases_completed": [
+    "schema_discovery",
+    "business_context",
+    "audit_profile_selection",
+    "deterministic_measurements",
+    "audit_findings",
+    "four_review_gates",
+    "score_consolidation",
+    "recommendations",
+    "final_report"
+  ],
+  "read_only": true,
+  "raw_pii_retained_locally_only": true,
+  "notes": [
+    "All CRM values in this fixture are synthetic.",
+    "Downstream agents were instructed to read processed artifacts and evidence only, never raw records.",
+    "No CRM write operation is part of this test."
+  ]
+}

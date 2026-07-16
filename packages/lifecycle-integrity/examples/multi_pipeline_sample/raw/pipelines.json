@@ -1,0 +1,54 @@
+[
+  {
+    "id": "sales",
+    "label": "Sales",
+    "stages": [
+      {
+        "id": "s_new",
+        "label": "New",
+        "metadata": {
+          "isClosed": "false",
+          "probability": "0.2"
+        }
+      },
+      {
+        "id": "s_won",
+        "label": "Won",
+        "metadata": {
+          "isClosed": "true",
+          "probability": "1.0"
+        }
+      },
+      {
+        "id": "s_lost",
+        "label": "Lost",
+        "metadata": {
+          "isClosed": "true",
+          "probability": "0.0"
+        }
+      }
+    ]
+  },
+  {
+    "id": "onboarding",
+    "label": "Onboarding",
+    "stages": [
+      {
+        "id": "ob_open",
+        "label": "In Progress",
+        "metadata": {
+          "isClosed": "false",
+          "probability": "0.5"
+        }
+      },
+      {
+        "id": "ob_done",
+        "label": "Done",
+        "metadata": {
+          "isClosed": "true",
+          "probability": "1.0"
+        }
+      }
+    ]
+  }
+]

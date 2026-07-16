@@ -1,0 +1,11 @@
+{
+  "contacts": {
+    "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead": 3,
+    "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] lead": 3,
+    "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] salesqualifiedlead": 1
+  },
+  "companies": {
+    "(empty)": 2,
+    "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] customer": 1
+  }
+}

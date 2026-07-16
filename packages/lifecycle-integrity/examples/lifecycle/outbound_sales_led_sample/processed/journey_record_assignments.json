@@ -1,0 +1,38 @@
+[
+  {
+    "record_id_hash": "e6a86a01e0e243e48c2cbfa059ef9e32b33e31a9422d773d1537eea4c8ebff16",
+    "object_type": "deals",
+    "assigned_journey": "outbound_sales_led",
+    "assignment_confidence": 85,
+    "evidence": [
+      "matched journey terms: outbound, sdr, import"
+    ]
+  },
+  {
+    "record_id_hash": "b106c4745bf2a83b63391e25c83a57d41f605591eeff7ed06ee6a382e33a2da1",
+    "object_type": "deals",
+    "assigned_journey": "outbound_sales_led",
+    "assignment_confidence": 85,
+    "evidence": [
+      "matched journey terms: outbound, sdr, import"
+    ]
+  },
+  {
+    "record_id_hash": "1c871e29aa9150afb9f7d21ac79b38533d344b9e05e3c7b32167399005c18c32",
+    "object_type": "deals",
+    "assigned_journey": "outbound_sales_led",
+    "assignment_confidence": 85,
+    "evidence": [
+      "matched journey terms: outbound, sdr, import"
+    ]
+  },
+  {
+    "record_id_hash": "3fd906e79ef49462bbaa570b3a2335572aa434c7ef62eaf02cc9094f4e319eeb",
+    "object_type": "deals",
+    "assigned_journey": "outbound_sales_led",
+    "assignment_confidence": 85,
+    "evidence": [
+      "matched journey terms: outbound, sdr, import"
+    ]
+  }
+]

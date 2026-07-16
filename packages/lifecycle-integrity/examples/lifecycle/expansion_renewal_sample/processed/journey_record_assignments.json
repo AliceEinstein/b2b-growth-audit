@@ -1,0 +1,29 @@
+[
+  {
+    "record_id_hash": "b20b3a08bc68def709061898f6a3cc4a4f364f106bff47a9809bd1d991dff826",
+    "object_type": "deals",
+    "assigned_journey": "expansion_renewal",
+    "assignment_confidence": 85,
+    "evidence": [
+      "matched journey terms: expansion, renewal, renew"
+    ]
+  },
+  {
+    "record_id_hash": "24d6a30bb507d1faf5c03ddf40293b63b0f35199b2dc7830c330d1226ddb0ec4",
+    "object_type": "deals",
+    "assigned_journey": "expansion_renewal",
+    "assignment_confidence": 85,
+    "evidence": [
+      "matched journey terms: expansion, renewal, renew"
+    ]
+  },
+  {
+    "record_id_hash": "bfe5f3f638bd605e4a52e09ba7c24b852f1f56369ce46c2ff70bb86a231058b5",
+    "object_type": "deals",
+    "assigned_journey": "expansion_renewal",
+    "assignment_confidence": 85,
+    "evidence": [
+      "matched journey terms: expansion, renewal, renew"
+    ]
+  }
+]

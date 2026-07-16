@@ -1,0 +1,11 @@
+{
+  "crm_complexity_tier": "midmarket_abm",
+  "likely_motion": "b2b_sales_led_abm",
+  "pipeline_complexity": "multi_pipeline",
+  "attribution_maturity": "partial",
+  "confidence": "high",
+  "evidence": [
+    "synthetic mid-market ABM + sales-led portal",
+    "two pipelines, eight owners, 60 companies, and 36 deals"
+  ]
+}

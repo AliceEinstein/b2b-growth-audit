@@ -1,0 +1,38 @@
+[
+  {
+    "record_id_hash": "6dc4576e8e60928aad5b9733e3a70ebfe1e5d7b142a64613775408f388fa6d0e",
+    "object_type": "deals",
+    "assigned_journey": "inbound_new_business",
+    "assignment_confidence": 65,
+    "evidence": [
+      "matched journey terms: organic"
+    ]
+  },
+  {
+    "record_id_hash": "5cc0e006b389dbf3d26778eac47e8bb02c9ec4f177840d8b22e0d03703fcd4e8",
+    "object_type": "deals",
+    "assigned_journey": "outbound_sales_led",
+    "assignment_confidence": 75,
+    "evidence": [
+      "matched journey terms: outbound, sdr"
+    ]
+  },
+  {
+    "record_id_hash": "d0f063ceabbf79b12cd924c4c4ba4174330c23db2fd3a5367cb4bbd3ba8d0186",
+    "object_type": "deals",
+    "assigned_journey": "expansion_renewal",
+    "assignment_confidence": 85,
+    "evidence": [
+      "matched journey terms: expansion, renewal, renew"
+    ]
+  },
+  {
+    "record_id_hash": "f7cad14d71ed535430452097811ab6de50507bdb31cc82914d2d2fee505d83c5",
+    "object_type": "deals",
+    "assigned_journey": "expansion_renewal",
+    "assignment_confidence": 85,
+    "evidence": [
+      "matched journey terms: expansion, renewal, renew"
+    ]
+  }
+]

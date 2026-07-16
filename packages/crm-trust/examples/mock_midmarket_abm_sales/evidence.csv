@@ -1,0 +1,242 @@
+finding_id,object_type,record_id_hash,field_name,issue_type,current_value_redacted,confidence,recommended_review
+contacts_missing_original_source,contacts,d996bcdcd98f852a,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these contacts
+contacts_missing_original_source,contacts,7fd3677bb32ff425,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these contacts
+contacts_missing_original_source,contacts,33f970956b45269a,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these contacts
+contacts_missing_original_source,contacts,347883c8db3dda97,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these contacts
+contacts_missing_original_source,contacts,245bdfc1fc70b888,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these contacts
+contacts_missing_original_source,contacts,e461117d06681105,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these contacts
+contacts_missing_original_source,contacts,96f9ce14efca3f5d,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these contacts
+contacts_missing_original_source,contacts,3b9c8573aca33119,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these contacts
+contacts_missing_original_source,contacts,6c8bea12f5ce48ca,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these contacts
+contacts_missing_original_source,contacts,5e3c10b6b9aeb77a,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these contacts
+contacts_missing_original_source,contacts,51c45f029ffec432,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these contacts
+contacts_missing_original_source,contacts,0c4827775ef41ddc,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these contacts
+contacts_missing_original_source,contacts,94ae76643c2898f6,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these contacts
+contacts_missing_original_source,contacts,6365f1504a794ed4,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these contacts
+contacts_missing_original_source,contacts,f0f09464fdf494e6,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these contacts
+contacts_missing_original_source,contacts,95709b11fa0624ca,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these contacts
+contacts_missing_original_source,contacts,ea45d3469fa7a905,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these contacts
+contacts_missing_original_source,contacts,d068ec853f473b2e,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these contacts
+contacts_missing_original_source,contacts,aee3c1039bc185be,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these contacts
+contacts_missing_original_source,contacts,3440587d80d3f622,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these contacts
+contacts_missing_original_source,contacts,40180d61ec922ad4,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these contacts
+contacts_missing_original_source,contacts,5f5d6a0de0390b97,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these contacts
+contacts_missing_original_source,contacts,0a8ba67477854825,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these contacts
+contacts_missing_original_source,contacts,286f9903722b8504,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these contacts
+contacts_missing_original_source,contacts,445af03d19b7c38b,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these contacts
+contacts_missing_original_source,contacts,f13c6a2df602dc3e,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these contacts
+contacts_missing_original_source,contacts,b47fb71d2c9acf0a,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these contacts
+contacts_missing_original_source,contacts,73fb2e737e3f4fe8,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these contacts
+contacts_missing_original_source,contacts,212de1a50836b51a,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these contacts
+contacts_missing_original_source,contacts,e34e0f4ff8785453,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these contacts
+contacts_missing_original_source,contacts,9a5a502f07d3b3a1,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these contacts
+contacts_missing_original_source,contacts,b6b3482818cc6518,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these contacts
+contacts_missing_original_source,contacts,1fcf9fdb5d135858,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these contacts
+contacts_missing_original_source,contacts,ac77088021bc2dfa,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these contacts
+contacts_missing_original_source,contacts,2c5ae86cb272eb33,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these contacts
+contacts_missing_original_source,contacts,488927eef3c1347d,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these contacts
+contacts_missing_original_source,contacts,8b729119acc7c671,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these contacts
+contacts_missing_original_source,contacts,b00f722ea0f7bb94,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these contacts
+contacts_missing_original_source,contacts,4e45a21cf9d28073,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these contacts
+contacts_missing_original_source,contacts,8fd3e4ad2c121416,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these contacts
+recent_half_contacts_missing_original_source,contacts,d996bcdcd98f852a,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these recent contacts
+recent_half_contacts_missing_original_source,contacts,7fd3677bb32ff425,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these recent contacts
+recent_half_contacts_missing_original_source,contacts,33f970956b45269a,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these recent contacts
+recent_half_contacts_missing_original_source,contacts,347883c8db3dda97,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these recent contacts
+recent_half_contacts_missing_original_source,contacts,245bdfc1fc70b888,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these recent contacts
+recent_half_contacts_missing_original_source,contacts,e461117d06681105,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these recent contacts
+recent_half_contacts_missing_original_source,contacts,96f9ce14efca3f5d,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these recent contacts
+recent_half_contacts_missing_original_source,contacts,3b9c8573aca33119,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these recent contacts
+recent_half_contacts_missing_original_source,contacts,6c8bea12f5ce48ca,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these recent contacts
+recent_half_contacts_missing_original_source,contacts,5e3c10b6b9aeb77a,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these recent contacts
+recent_half_contacts_missing_original_source,contacts,51c45f029ffec432,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these recent contacts
+recent_half_contacts_missing_original_source,contacts,0c4827775ef41ddc,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these recent contacts
+recent_half_contacts_missing_original_source,contacts,94ae76643c2898f6,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these recent contacts
+recent_half_contacts_missing_original_source,contacts,6365f1504a794ed4,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these recent contacts
+recent_half_contacts_missing_original_source,contacts,f0f09464fdf494e6,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these recent contacts
+recent_half_contacts_missing_original_source,contacts,95709b11fa0624ca,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these recent contacts
+recent_half_contacts_missing_original_source,contacts,ea45d3469fa7a905,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these recent contacts
+recent_half_contacts_missing_original_source,contacts,d068ec853f473b2e,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these recent contacts
+recent_half_contacts_missing_original_source,contacts,aee3c1039bc185be,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these recent contacts
+recent_half_contacts_missing_original_source,contacts,3440587d80d3f622,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these recent contacts
+recent_half_contacts_missing_original_source,contacts,40180d61ec922ad4,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these recent contacts
+recent_half_contacts_missing_original_source,contacts,5f5d6a0de0390b97,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these recent contacts
+recent_half_contacts_missing_original_source,contacts,0a8ba67477854825,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these recent contacts
+recent_half_contacts_missing_original_source,contacts,286f9903722b8504,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these recent contacts
+recent_half_contacts_missing_original_source,contacts,445af03d19b7c38b,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these recent contacts
+recent_half_contacts_missing_original_source,contacts,f13c6a2df602dc3e,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these recent contacts
+recent_half_contacts_missing_original_source,contacts,b47fb71d2c9acf0a,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these recent contacts
+recent_half_contacts_missing_original_source,contacts,73fb2e737e3f4fe8,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these recent contacts
+recent_half_contacts_missing_original_source,contacts,212de1a50836b51a,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these recent contacts
+recent_half_contacts_missing_original_source,contacts,e34e0f4ff8785453,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these recent contacts
+recent_half_contacts_missing_original_source,contacts,9a5a502f07d3b3a1,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these recent contacts
+recent_half_contacts_missing_original_source,contacts,b6b3482818cc6518,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these recent contacts
+recent_half_contacts_missing_original_source,contacts,1fcf9fdb5d135858,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these recent contacts
+recent_half_contacts_missing_original_source,contacts,ac77088021bc2dfa,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these recent contacts
+recent_half_contacts_missing_original_source,contacts,2c5ae86cb272eb33,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these recent contacts
+recent_half_contacts_missing_original_source,contacts,488927eef3c1347d,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these recent contacts
+recent_half_contacts_missing_original_source,contacts,8b729119acc7c671,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these recent contacts
+recent_half_contacts_missing_original_source,contacts,b00f722ea0f7bb94,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these recent contacts
+recent_half_contacts_missing_original_source,contacts,4e45a21cf9d28073,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these recent contacts
+recent_half_contacts_missing_original_source,contacts,8fd3e4ad2c121416,hs_analytics_source,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm how source should be captured for these recent contacts
+customers_without_closedwon_deal,contacts,40180d61ec922ad4,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] customer,high,confirm whether this customer should have a won deal on record
+customers_without_closedwon_deal,contacts,5f5d6a0de0390b97,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] customer,high,confirm whether this customer should have a won deal on record
+customers_without_closedwon_deal,contacts,0a8ba67477854825,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] customer,high,confirm whether this customer should have a won deal on record
+customers_without_closedwon_deal,contacts,286f9903722b8504,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] customer,high,confirm whether this customer should have a won deal on record
+customers_without_closedwon_deal,contacts,445af03d19b7c38b,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] customer,high,confirm whether this customer should have a won deal on record
+customers_without_closedwon_deal,contacts,f13c6a2df602dc3e,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] customer,high,confirm whether this customer should have a won deal on record
+customers_without_closedwon_deal,contacts,b47fb71d2c9acf0a,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] customer,high,confirm whether this customer should have a won deal on record
+customers_without_closedwon_deal,contacts,73fb2e737e3f4fe8,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] customer,high,confirm whether this customer should have a won deal on record
+customers_without_closedwon_deal,contacts,212de1a50836b51a,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] customer,high,confirm whether this customer should have a won deal on record
+customers_without_closedwon_deal,contacts,e34e0f4ff8785453,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] customer,high,confirm whether this customer should have a won deal on record
+customers_without_closedwon_deal,contacts,9a5a502f07d3b3a1,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] customer,high,confirm whether this customer should have a won deal on record
+customers_without_closedwon_deal,contacts,b6b3482818cc6518,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] customer,high,confirm whether this customer should have a won deal on record
+customers_without_closedwon_deal,contacts,1fcf9fdb5d135858,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] customer,high,confirm whether this customer should have a won deal on record
+customers_without_closedwon_deal,contacts,ac77088021bc2dfa,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] customer,high,confirm whether this customer should have a won deal on record
+customers_without_closedwon_deal,contacts,2c5ae86cb272eb33,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] customer,high,confirm whether this customer should have a won deal on record
+mql_plus_contacts_without_deal,contacts,0516cfa83b22495e,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,22527f2312878fc0,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,15a811070515a00b,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,6d07ff3a8fa93f31,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,fd0fdcf2bb388e3b,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,ecbc35338093aa2b,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,b25e4ab1e66dcaad,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,51901f26a1a668f2,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,bd3439503460257b,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,53cb6e2dc97c991d,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,ec088cc4f23a311e,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,9bc5dbf13c5731a2,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,28c88c7747bce763,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,ec37f2de1666ef0e,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,ebae256e816ffd04,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,084607be9cf7f2cd,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,c7b8f9a76d3ffc1c,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,a8d8b50c1197ca17,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,78ee1dc3945f7791,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,ce5242a14ea4f1e9,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,26297db2a03dcdef,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,e09ece09a3f1f271,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,c8878d8df058b3c3,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,b05888eb45b4d730,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,74a6e4d4cbd2c69b,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,eb905eb00a803d0d,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,c080cfd77a4d503f,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,989a7660521238f6,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,368f1199588e21b7,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,a4a5207c32c3fe95,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,e0188c8d5ca9301e,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,b36d7778b34d6613,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,45a5d6ac33f54fa3,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,52c5465c93f98a22,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,8d27dfa2a9628c3f,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,3c3afa4e558794c5,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,32b11481afc65f93,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,521b74630fdf8a0e,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,a5557bf06a10f66e,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,c734cc7311007782,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,040838cc371b0294,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,37afa9123456e734,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,2ab374896e9b3be0,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,b46130fed3ec8466,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,45bca69eef6d5578,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,a54f14bcf01ed379,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,fffdddb8e503c9ae,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,4a4213808f401d30,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,aded90ddd2919e33,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+mql_plus_contacts_without_deal,contacts,082d7e6344e86a4e,lifecyclestage,funnel_inconsistency,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead,high,confirm whether these contacts should have an associated deal
+contacts_without_company,contacts,a135d772ff1acb07,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,6769e16ed08d9656,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,68c29b9d380d208c,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,9ed7cf8171c342dc,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,bb3ed378012b7dd9,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,02091805f773d4a0,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,0d6b0ad4a9d8e73d,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,32e10b5bb796ec25,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,a0d366d4cb9b9138,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,662ae06b87bb012a,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,3d8d8aa356ea54cb,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,b4b8656a46ea2ce5,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,550bc38ea2ccebaf,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,861df49a88fef886,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,27a46010b4daae20,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,998f66afbdaf8fbe,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,6a2c23ab9ac080d7,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,339f702a60ddc99a,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,894218dbdc59bac5,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,f0a255c898424a60,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,56f8341d2d6e0d71,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,0765fbcd4606ba7f,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,1296032a6d43bf9a,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,ee99f62af1bef528,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,cdf945408959aed9,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,087566889f7673fb,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,49fa1aa9e74e785d,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,444ef1617610811f,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,399be9fd49db5ee6,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,911a8bc9e64caf4e,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,3459133a1263dbc8,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,48683a321e61ba35,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,01a07306e52c5790,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,6ad560cd418cba93,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,d8cde86e50b0d3f9,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,2ac634948c446357,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,8ca715d5fb5fdaf1,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,e62a76ccf1a0b89c,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,6ef200d0601bca6a,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,83f80ba65c0d5aab,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,d996bcdcd98f852a,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,7fd3677bb32ff425,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,33f970956b45269a,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,347883c8db3dda97,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,245bdfc1fc70b888,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,e461117d06681105,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,96f9ce14efca3f5d,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,3b9c8573aca33119,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,6c8bea12f5ce48ca,,missing_association,,high,review whether this record should be linked
+contacts_without_company,contacts,5e3c10b6b9aeb77a,,missing_association,,high,review whether this record should be linked
+deals_without_company,deals,8ddae5101f61c00b,,missing_association,,high,review whether this record should be linked
+deals_without_company,deals,f31f57ba4a0b4220,,missing_association,,high,review whether this record should be linked
+deals_without_company,deals,06a1faee778195e0,,missing_association,,high,review whether this record should be linked
+deals_without_company,deals,e8cb01971b6478af,,missing_association,,high,review whether this record should be linked
+deals_without_contact,deals,1363a8020fee41bb,,missing_association,,high,review whether this record should be linked
+deals_without_contact,deals,39db7cb29a8290ad,,missing_association,,high,review whether this record should be linked
+deals_without_contact,deals,8ddae5101f61c00b,,missing_association,,high,review whether this record should be linked
+deals_without_contact,deals,f31f57ba4a0b4220,,missing_association,,high,review whether this record should be linked
+deals_without_contact,deals,06a1faee778195e0,,missing_association,,high,review whether this record should be linked
+deals_without_contact,deals,e8cb01971b6478af,,missing_association,,high,review whether this record should be linked
+duplicate_company_domain_candidates,companies,fbbe9fe39de101fa,domain,duplicate_domain_candidate,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] shared-account.example.test,high,human review — never merge automatically
+duplicate_company_domain_candidates,companies,9c5ff8eb2d2db2a0,domain,duplicate_domain_candidate,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] shared-account.example.test,high,human review — never merge automatically
+duplicate_company_domain_candidates,companies,82cde9682a44c5c4,domain,duplicate_domain_candidate,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] shared-account.example.test,high,human review — never merge automatically
+duplicate_company_domain_candidates,companies,13df8e6835b0bbd5,domain,duplicate_domain_candidate,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] shared-account.example.test,high,human review — never merge automatically
+duplicate_company_domain_candidates,companies,375e52c21e20955b,domain,duplicate_domain_candidate,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] regional-account.example.test,high,human review — never merge automatically
+duplicate_company_domain_candidates,companies,f83b435dbbc52c7b,domain,duplicate_domain_candidate,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] regional-account.example.test,high,human review — never merge automatically
+duplicate_company_domain_candidates,companies,12e9c7b08262cf7a,domain,duplicate_domain_candidate,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] regional-account.example.test,high,human review — never merge automatically
+duplicate_company_domain_candidates,companies,b72f8765da6d6e5a,domain,duplicate_domain_candidate,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] regional-account.example.test,high,human review — never merge automatically
+companies_without_domain,companies,fc74354c04a43eb5,domain,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,review whether this company should have a domain
+companies_without_domain,companies,16d3575242f31865,domain,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,review whether this company should have a domain
+companies_without_domain,companies,21b36186b8761ae4,domain,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,review whether this company should have a domain
+companies_without_domain,companies,a36d4f8958ec579f,domain,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,review whether this company should have a domain
+companies_without_domain,companies,1cefbe7ab8f988f2,domain,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,review whether this company should have a domain
+open_deals_past_close_date,deals,6fb10248acd39242,closedate,past_due_close_date,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-02-15T00:00:00Z,high,review close date or stage with the deal owner
+open_deals_past_close_date,deals,1ea000648b4cbd2f,closedate,past_due_close_date,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-02-15T00:00:00Z,high,review close date or stage with the deal owner
+open_deals_past_close_date,deals,220ff1595e0530b0,closedate,past_due_close_date,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-02-15T00:00:00Z,high,review close date or stage with the deal owner
+deals_without_owner,deals,8a0aa97cdcc7491d,hubspot_owner_id,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm with the deal owner
+deals_without_owner,deals,f63f1695110847e7,hubspot_owner_id,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm with the deal owner
+deals_without_owner,deals,c4111bccaa6b1277,hubspot_owner_id,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm with the deal owner
+deals_without_owner,deals,f31f57ba4a0b4220,hubspot_owner_id,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm with the deal owner
+deals_without_amount,deals,8e47a57d3a37f661,amount,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm with the deal owner
+deals_without_amount,deals,9920e13a790230d9,amount,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm with the deal owner
+deals_without_amount,deals,fec458d703118800,amount,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm with the deal owner
+deals_without_amount,deals,413c3cd70cedb8b3,amount,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm with the deal owner
+deals_without_amount,deals,8ddae5101f61c00b,amount,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm with the deal owner
+deals_without_amount,deals,e8cb01971b6478af,amount,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm with the deal owner
+deals_in_unknown_pipeline,deals,06a1faee778195e0,pipeline,unknown_reference,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] legacy_pipeline,high,confirm the pipeline definition and deal assignment
+deals_in_unknown_pipeline,deals,e8cb01971b6478af,pipeline,unknown_reference,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] legacy_pipeline,high,confirm the pipeline definition and deal assignment
+decayed_source_fields,contacts,-,old_lead_source_2021,usage_decay,older_half 100.0% recent_half 0.0%,high,confirm whether this field is legacy before any governance action
+decayed_source_fields,contacts,-,lead_source,usage_decay,older_half 100.0% recent_half 0.0%,high,confirm whether this field is legacy before any governance action
+decayed_source_fields,contacts,-,source_lead,usage_decay,older_half 33.3% recent_half 0.0%,high,confirm whether this field is legacy before any governance action
+similar_name_field_groups,contacts,-,"hs_analytics_source_data_1, hs_analytics_source_data_2",name_collision,,high,human review — potential duplicate properties
+similar_name_field_groups,contacts,-,"hs_latest_source_data_1, hs_latest_source_data_2",name_collision,,high,human review — potential duplicate properties
+similar_name_field_groups,contacts,-,"lead_source, old_lead_source_2021, source_lead",name_collision,,high,human review — potential duplicate properties
+similar_name_field_groups,contacts,-,"campaign_source, source_campaign",name_collision,,high,human review — potential duplicate properties
+similar_name_field_groups,contacts,-,"source_utm, utm_source",name_collision,,high,human review — potential duplicate properties

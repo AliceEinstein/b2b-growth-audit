@@ -1,0 +1,246 @@
+{
+  "safe_operational_actions": [
+    {
+      "finding_id": "contacts_without_company_association",
+      "action": "Create a non-writing review list from evidence/association_architecture.csv for the 80 contacts without a company association.",
+      "classification_reason": "The action only exports hashed evidence for human review; it does not select or create any CRM association.",
+      "evidence_file": "evidence/association_architecture.csv",
+      "basis": "contacts_without_company: 80 of 360 contacts (22.2%).",
+      "expected_outcome": "A review queue that lets the CRM owner decide which contacts belong to accounts.",
+      "decision_owner": "CRM owner",
+      "target": "Review scope in evidence/association_architecture.csv",
+      "current_state": "contacts_without_company: 80 of 360 contacts (22.2%).",
+      "desired_state": "A review queue that lets the CRM owner decide which contacts belong to accounts.",
+      "implementation_steps": [
+        "Create a non-writing review list from evidence/association_architecture.csv for the 80 contacts without a company association."
+      ],
+      "success_measure": "A review queue that lets the CRM owner decide which contacts belong to accounts.",
+      "approval_required": "CRM owner"
+    },
+    {
+      "finding_id": "deals_without_company_association",
+      "action": "Create a human review list for the 4 deals without a company association and document the evidence rows.",
+      "classification_reason": "Preparing a review queue is reversible and does not alter deal or company truth.",
+      "evidence_file": "evidence/association_architecture.csv",
+      "basis": "deals_without_company: 4 of 36 deals (11.1%).",
+      "expected_outcome": "A decision-ready queue for restoring account-level pipeline coverage.",
+      "decision_owner": "Revenue operations owner",
+      "target": "Review scope in evidence/association_architecture.csv",
+      "current_state": "deals_without_company: 4 of 36 deals (11.1%).",
+      "desired_state": "A decision-ready queue for restoring account-level pipeline coverage.",
+      "implementation_steps": [
+        "Create a human review list for the 4 deals without a company association and document the evidence rows."
+      ],
+      "success_measure": "A decision-ready queue for restoring account-level pipeline coverage.",
+      "approval_required": "Revenue operations owner"
+    },
+    {
+      "finding_id": "deals_without_contact_association",
+      "action": "Create a human review list for the 6 deals without a contact association.",
+      "classification_reason": "The action is an evidence export only; deciding which contact belongs to a deal remains a human task.",
+      "evidence_file": "evidence/association_architecture.csv",
+      "basis": "deals_without_contact: 6 of 36 deals (16.7%).",
+      "expected_outcome": "A review queue for restoring contact-to-revenue traceability.",
+      "decision_owner": "Revenue operations owner",
+      "target": "Review scope in evidence/association_architecture.csv",
+      "current_state": "deals_without_contact: 6 of 36 deals (16.7%).",
+      "desired_state": "A review queue for restoring contact-to-revenue traceability.",
+      "implementation_steps": [
+        "Create a human review list for the 6 deals without a contact association."
+      ],
+      "success_measure": "A review queue for restoring contact-to-revenue traceability.",
+      "approval_required": "Revenue operations owner"
+    },
+    {
+      "finding_id": "companies_without_domain",
+      "action": "Create a missing-domain review list for the 5 affected companies and route it to the CRM owner.",
+      "classification_reason": "The list is a non-destructive operational artifact and does not infer or write a domain.",
+      "evidence_file": "evidence/association_architecture.csv",
+      "basis": "companies_without_domain: 5 of 60 companies (8.3%).",
+      "expected_outcome": "A review queue for improving account matching and deduplication inputs.",
+      "decision_owner": "CRM owner",
+      "target": "Review scope in evidence/association_architecture.csv",
+      "current_state": "companies_without_domain: 5 of 60 companies (8.3%).",
+      "desired_state": "A review queue for improving account matching and deduplication inputs.",
+      "implementation_steps": [
+        "Create a missing-domain review list for the 5 affected companies and route it to the CRM owner."
+      ],
+      "success_measure": "A review queue for improving account matching and deduplication inputs.",
+      "approval_required": "CRM owner"
+    },
+    {
+      "finding_id": "deals_without_owner",
+      "action": "Create an owner-gap review list for the 4 affected deals without assigning an owner.",
+      "classification_reason": "The action surfaces work for an administrator while preserving the rule that owner assignment changes CRM truth.",
+      "evidence_file": "evidence/pipeline_hygiene.csv",
+      "basis": "deals_without_owner: 4 of 36 deals (11.1%).",
+      "expected_outcome": "A review queue for resolving ownership gaps without guessing an assignee.",
+      "decision_owner": "Sales operations owner",
+      "target": "Review scope in evidence/pipeline_hygiene.csv",
+      "current_state": "deals_without_owner: 4 of 36 deals (11.1%).",
+      "desired_state": "A review queue for resolving ownership gaps without guessing an assignee.",
+      "implementation_steps": [
+        "Create an owner-gap review list for the 4 affected deals without assigning an owner."
+      ],
+      "success_measure": "A review queue for resolving ownership gaps without guessing an assignee.",
+      "approval_required": "Sales operations owner"
+    }
+  ],
+  "needs_business_rule_confirmation": [
+    {
+      "finding_id": "recent_original_source_capture_gap",
+      "action": "Confirm the canonical original-source capture rule and draft list criteria for the 40 recent contacts missing that field.",
+      "classification_reason": "The correct source-of-truth and any remediation depend on the business attribution policy; the audit must not backfill historical source values automatically.",
+      "evidence_file": "evidence/attribution_trust.csv",
+      "basis": "recent_half_contacts_missing_original_source: 40 of 180 recent contacts (22.2%).",
+      "expected_outcome": "A confirmed source-capture rule and a concrete review-list specification for the affected cohort.",
+      "decision_owner": "Marketing operations owner",
+      "target": "Review scope in evidence/attribution_trust.csv",
+      "current_state": "recent_half_contacts_missing_original_source: 40 of 180 recent contacts (22.2%).",
+      "desired_state": "A confirmed source-capture rule and a concrete review-list specification for the affected cohort.",
+      "implementation_steps": [
+        "Confirm the canonical original-source capture rule and draft list criteria for the 40 recent contacts missing that field."
+      ],
+      "success_measure": "A confirmed source-capture rule and a concrete review-list specification for the affected cohort.",
+      "approval_required": "Marketing operations owner"
+    },
+    {
+      "finding_id": "customers_without_closedwon_deal_trace",
+      "action": "Confirm whether customer lifecycle stage requires a closed-won deal relationship, then prepare a human review queue for the 15 exceptions.",
+      "classification_reason": "The relationship between lifecycle stage and revenue is a business rule, not a universal HubSpot invariant.",
+      "evidence_file": "evidence/lifecycle_funnel.csv",
+      "basis": "customers_without_closedwon_deal: 15 of 15 customer-stage contacts (100.0%).",
+      "expected_outcome": "A documented lifecycle-to-revenue rule and a human-reviewed exception queue.",
+      "decision_owner": "Marketing and revenue operations owner",
+      "target": "Review scope in evidence/lifecycle_funnel.csv",
+      "current_state": "customers_without_closedwon_deal: 15 of 15 customer-stage contacts (100.0%).",
+      "desired_state": "A documented lifecycle-to-revenue rule and a human-reviewed exception queue.",
+      "implementation_steps": [
+        "Confirm whether customer lifecycle stage requires a closed-won deal relationship, then prepare a human review queue for the 15 exceptions."
+      ],
+      "success_measure": "A documented lifecycle-to-revenue rule and a human-reviewed exception queue.",
+      "approval_required": "Marketing and revenue operations owner"
+    },
+    {
+      "finding_id": "mql_plus_contacts_without_deal_trace",
+      "action": "Confirm the sales handoff rule for MQL, SQL, and opportunity contacts, then review the 155 contacts without an associated deal.",
+      "classification_reason": "Some businesses allow pre-deal stages to remain contact-led; the correct action depends on the portal's operating model.",
+      "evidence_file": "evidence/lifecycle_funnel.csv",
+      "basis": "mql_plus_contacts_without_deal: 155 of 160 MQL+ contacts (96.9%).",
+      "expected_outcome": "A confirmed handoff rule and an exception queue that distinguishes intentional pre-deal stages from broken traceability.",
+      "decision_owner": "Marketing and sales operations owner",
+      "target": "Review scope in evidence/lifecycle_funnel.csv",
+      "current_state": "mql_plus_contacts_without_deal: 155 of 160 MQL+ contacts (96.9%).",
+      "desired_state": "A confirmed handoff rule and an exception queue that distinguishes intentional pre-deal stages from broken traceability.",
+      "implementation_steps": [
+        "Confirm the sales handoff rule for MQL, SQL, and opportunity contacts, then review the 155 contacts without an associated deal."
+      ],
+      "success_measure": "A confirmed handoff rule and an exception queue that distinguishes intentional pre-deal stages from broken traceability.",
+      "approval_required": "Marketing and sales operations owner"
+    },
+    {
+      "finding_id": "duplicate_company_domain_candidates",
+      "action": "Have the account owner review the 8 shared-domain company candidates and record whether each is intentional or duplicate-like.",
+      "classification_reason": "Shared domains can represent legitimate subsidiaries or regions, so business confirmation is required before any consolidation decision.",
+      "evidence_file": "evidence/association_architecture.csv",
+      "basis": "duplicate_company_domain_candidates: 8 of 55 domain-populated companies (14.5%).",
+      "expected_outcome": "A documented decision for each shared-domain candidate and a reliable account-rollup rule.",
+      "decision_owner": "Account operations owner",
+      "target": "Review scope in evidence/association_architecture.csv",
+      "current_state": "duplicate_company_domain_candidates: 8 of 55 domain-populated companies (14.5%).",
+      "desired_state": "A documented decision for each shared-domain candidate and a reliable account-rollup rule.",
+      "implementation_steps": [
+        "Have the account owner review the 8 shared-domain company candidates and record whether each is intentional or duplicate-like."
+      ],
+      "success_measure": "A documented decision for each shared-domain candidate and a reliable account-rollup rule.",
+      "approval_required": "Account operations owner"
+    },
+    {
+      "finding_id": "deals_without_amount",
+      "action": "Confirm which deal stages require an amount and review the 6 missing-amount deals against that policy.",
+      "classification_reason": "Amount may be optional in early stages; a mandatory-field rule must come from the business.",
+      "evidence_file": "evidence/pipeline_hygiene.csv",
+      "basis": "deals_without_amount: 6 of 36 deals (16.7%).",
+      "expected_outcome": "A stage-aware amount requirement and a reviewed exception list.",
+      "decision_owner": "Sales operations owner",
+      "target": "Review scope in evidence/pipeline_hygiene.csv",
+      "current_state": "deals_without_amount: 6 of 36 deals (16.7%).",
+      "desired_state": "A stage-aware amount requirement and a reviewed exception list.",
+      "implementation_steps": [
+        "Confirm which deal stages require an amount and review the 6 missing-amount deals against that policy."
+      ],
+      "success_measure": "A stage-aware amount requirement and a reviewed exception list.",
+      "approval_required": "Sales operations owner"
+    },
+    {
+      "finding_id": "decayed_source_field_candidates",
+      "action": "Confirm a canonical-versus-legacy source field map for the 3 decayed source-like property candidates.",
+      "classification_reason": "A field that is historically populated may still carry business meaning; archival or migration requires an owner decision.",
+      "evidence_file": "evidence/property_governance.csv",
+      "basis": "decayed_source_fields: 3 of 17 source-like fields (17.6%) show older-half usage with no recent-half usage.",
+      "expected_outcome": "A business-approved canonical/legacy map that can guide future workflow governance.",
+      "decision_owner": "Marketing operations owner",
+      "target": "Review scope in evidence/property_governance.csv",
+      "current_state": "decayed_source_fields: 3 of 17 source-like fields (17.6%) show older-half usage with no recent-half usage.",
+      "desired_state": "A business-approved canonical/legacy map that can guide future workflow governance.",
+      "implementation_steps": [
+        "Confirm a canonical-versus-legacy source field map for the 3 decayed source-like property candidates."
+      ],
+      "success_measure": "A business-approved canonical/legacy map that can guide future workflow governance.",
+      "approval_required": "Marketing operations owner"
+    },
+    {
+      "finding_id": "similar_source_field_name_candidates",
+      "action": "Review the 11 source-like property name collision candidates and approve a canonical field map before changing workflows.",
+      "classification_reason": "Similar names alone do not establish that properties are duplicates or interchangeable.",
+      "evidence_file": "evidence/property_governance.csv",
+      "basis": "similar_name_field_groups: 11 of 17 source-like fields (64.7%) are name-collision candidates.",
+      "expected_outcome": "A canonical property map and an explicit confirmation list for workflow/report owners.",
+      "decision_owner": "CRM governance owner",
+      "target": "Review scope in evidence/property_governance.csv",
+      "current_state": "similar_name_field_groups: 11 of 17 source-like fields (64.7%) are name-collision candidates.",
+      "desired_state": "A canonical property map and an explicit confirmation list for workflow/report owners.",
+      "implementation_steps": [
+        "Review the 11 source-like property name collision candidates and approve a canonical field map before changing workflows."
+      ],
+      "success_measure": "A canonical property map and an explicit confirmation list for workflow/report owners.",
+      "approval_required": "CRM governance owner"
+    }
+  ],
+  "do_not_auto_fix": [
+    {
+      "finding_id": "open_deals_past_close_date",
+      "action": "Route the 3 open deals with past close dates to a human pipeline review; do not change their dates or stages automatically.",
+      "classification_reason": "Changing a close date or deal stage changes CRM truth and may encode a sales decision that the audit cannot infer.",
+      "evidence_file": "evidence/pipeline_hygiene.csv",
+      "basis": "open_deals_past_close_date: 3 of 20 open deals (15.0%).",
+      "expected_outcome": "A human disposition for each past-date deal and a clearer pipeline reporting baseline.",
+      "decision_owner": "Sales operations owner",
+      "target": "Review scope in evidence/pipeline_hygiene.csv",
+      "current_state": "open_deals_past_close_date: 3 of 20 open deals (15.0%).",
+      "desired_state": "A human disposition for each past-date deal and a clearer pipeline reporting baseline.",
+      "implementation_steps": [
+        "Route the 3 open deals with past close dates to a human pipeline review; do not change their dates or stages automatically."
+      ],
+      "success_measure": "A human disposition for each past-date deal and a clearer pipeline reporting baseline.",
+      "approval_required": "Sales operations owner"
+    },
+    {
+      "finding_id": "deals_in_unknown_pipeline",
+      "action": "Ask a CRM administrator to determine the intended pipeline for the 2 affected deals before any manual correction.",
+      "classification_reason": "Moving a deal between pipelines changes reporting semantics and requires an explicit owner decision.",
+      "evidence_file": "evidence/pipeline_hygiene.csv",
+      "basis": "deals_in_unknown_pipeline: 2 of 36 deals (5.6%) reference an undefined pipeline.",
+      "expected_outcome": "A documented pipeline decision for the affected deals and a consistent pipeline rollup.",
+      "decision_owner": "CRM administrator",
+      "target": "Review scope in evidence/pipeline_hygiene.csv",
+      "current_state": "deals_in_unknown_pipeline: 2 of 36 deals (5.6%) reference an undefined pipeline.",
+      "desired_state": "A documented pipeline decision for the affected deals and a consistent pipeline rollup.",
+      "implementation_steps": [
+        "Ask a CRM administrator to determine the intended pipeline for the 2 affected deals before any manual correction."
+      ],
+      "success_measure": "A documented pipeline decision for the affected deals and a consistent pipeline rollup.",
+      "approval_required": "CRM administrator"
+    }
+  ]
+}

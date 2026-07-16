@@ -1,0 +1,31 @@
+{
+  "expected_patterns_min_confidence": {
+    "inbound_new_business": 45,
+    "outbound_sales_led": 45,
+    "expansion_renewal": 50
+  },
+  "expected_confidence_ranges": {
+    "inbound_new_business": [
+      45,
+      100
+    ],
+    "outbound_sales_led": [
+      45,
+      100
+    ],
+    "expansion_renewal": [
+      50,
+      100
+    ]
+  },
+  "expected_findings": [],
+  "expected_observations": [],
+  "blocked_recommendations": [
+    "automatic CRM writes",
+    "automatic lifecycle-stage resets",
+    "automatic record merges or deletions"
+  ],
+  "unsafe_recommendations_allowed": false,
+  "all_scored_findings_require_evidence": true,
+  "expected_primary_model": "multi_motion"
+}

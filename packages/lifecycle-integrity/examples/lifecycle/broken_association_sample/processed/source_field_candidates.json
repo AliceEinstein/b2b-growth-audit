@@ -1,0 +1,26 @@
+{
+  "contacts": [
+    {
+      "field": "hs_analytics_source",
+      "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Original Source",
+      "hubspot_defined": true,
+      "stats": {
+        "total": 6,
+        "non_empty": 6,
+        "fill_rate": 100.0,
+        "empty_rate": 0.0,
+        "fill_rate_older_half": 100.0,
+        "fill_rate_recent_half": 100.0,
+        "distinct_count": 1,
+        "top_values": [
+          {
+            "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ORGANIC_SEARCH",
+            "count": 6
+          }
+        ]
+      }
+    }
+  ],
+  "companies": [],
+  "deals": []
+}

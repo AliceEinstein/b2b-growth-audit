@@ -1,0 +1,72 @@
+{
+  "module": "pipeline_hygiene",
+  "evidence_file": "evidence/pipeline_hygiene.csv",
+  "evidence_rows": 15,
+  "snapshot_coverage": {
+    "days": null,
+    "full_history": true,
+    "truncated": {
+      "contacts": false,
+      "companies": false,
+      "deals": false
+    },
+    "relationship_measurements_complete": true
+  },
+  "measurements": [
+    {
+      "id": "open_deals_past_close_date",
+      "object_type": "deals",
+      "field_name": "closedate",
+      "denominator": 20,
+      "affected_records": 3,
+      "affected_percentage": 15.0,
+      "available": true,
+      "note": null,
+      "description": "open deals whose close date is in the past"
+    },
+    {
+      "id": "deals_without_owner",
+      "object_type": "deals",
+      "field_name": "hubspot_owner_id",
+      "denominator": 36,
+      "affected_records": 4,
+      "affected_percentage": 11.1,
+      "available": true,
+      "note": null,
+      "description": "deals with empty hubspot_owner_id"
+    },
+    {
+      "id": "deals_without_amount",
+      "object_type": "deals",
+      "field_name": "amount",
+      "denominator": 36,
+      "affected_records": 6,
+      "affected_percentage": 16.7,
+      "available": true,
+      "note": null,
+      "description": "deals with empty amount"
+    },
+    {
+      "id": "deals_in_unknown_pipeline",
+      "object_type": "deals",
+      "field_name": "pipeline",
+      "denominator": 36,
+      "affected_records": 2,
+      "affected_percentage": 5.6,
+      "available": true,
+      "note": null,
+      "description": "deals referencing a pipeline not present in pipeline definitions"
+    },
+    {
+      "id": "deals_stuck_in_stage",
+      "object_type": "deals",
+      "field_name": null,
+      "denominator": null,
+      "affected_records": null,
+      "affected_percentage": null,
+      "available": false,
+      "note": "stage-entry timestamps are not fetched in v1; do not infer this",
+      "description": "deals stuck in a stage beyond a normal cycle"
+    }
+  ]
+}

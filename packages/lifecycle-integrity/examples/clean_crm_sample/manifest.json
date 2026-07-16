@@ -1,0 +1,19 @@
+{
+  "run_id": "clean_crm_sample",
+  "created_at": "2026-07-12T00:00:00+00:00",
+  "status": "completed",
+  "days": 365,
+  "full_history": false,
+  "counts": {
+    "contacts": 8,
+    "companies": 3,
+    "deals": 4
+  },
+  "truncated": {
+    "contacts": false,
+    "companies": false,
+    "deals": false
+  },
+  "source_candidates": {},
+  "warnings": []
+}

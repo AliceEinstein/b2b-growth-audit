@@ -1,0 +1,68 @@
+[
+  {
+    "module": "attribution_trust",
+    "id": "contacts_missing_original_source",
+    "expect": {
+      "denominator": 8,
+      "affected_records": 0
+    }
+  },
+  {
+    "module": "attribution_trust",
+    "id": "closedwon_deals_without_source_trace",
+    "expect": {
+      "denominator": 1,
+      "affected_records": 0
+    }
+  },
+  {
+    "module": "lifecycle_funnel",
+    "id": "contacts_missing_lifecycle",
+    "expect": {
+      "affected_records": 0
+    }
+  },
+  {
+    "module": "lifecycle_funnel",
+    "id": "customers_without_closedwon_deal",
+    "expect": {
+      "denominator": 1,
+      "affected_records": 0
+    }
+  },
+  {
+    "module": "association_architecture",
+    "id": "contacts_without_company",
+    "expect": {
+      "affected_records": 0
+    }
+  },
+  {
+    "module": "association_architecture",
+    "id": "duplicate_company_domain_candidates",
+    "expect": {
+      "affected_records": 0
+    }
+  },
+  {
+    "module": "pipeline_hygiene",
+    "id": "open_deals_past_close_date",
+    "expect": {
+      "affected_records": 0
+    }
+  },
+  {
+    "module": "pipeline_hygiene",
+    "id": "deals_in_unknown_pipeline",
+    "expect": {
+      "affected_records": 0
+    }
+  },
+  {
+    "module": "property_governance",
+    "id": "decayed_source_fields",
+    "expect": {
+      "affected_records": 0
+    }
+  }
+]

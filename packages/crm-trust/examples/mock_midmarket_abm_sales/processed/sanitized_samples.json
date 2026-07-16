@@ -1,0 +1,278 @@
+{
+  "contacts": [
+    {
+      "record_id_hash": "cf10cb6bb7858200",
+      "properties": {
+        "createdate": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2024-01-01T00:00:00Z",
+        "lastmodifieddate": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-03-15T00:00:00Z",
+        "email": "[PRESENT]",
+        "firstname": "[PRESENT]",
+        "lastname": "[PRESENT]",
+        "phone": "[PRESENT]",
+        "lifecyclestage": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] lead",
+        "hs_analytics_source": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] PAID_SEARCH",
+        "hs_analytics_source_data_1": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] DEMAND_GEN",
+        "hs_analytics_source_data_2": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] synthetic-campaign",
+        "hs_latest_source": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] OFFLINE",
+        "hs_latest_source_data_1": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ",
+        "hs_latest_source_data_2": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] synthetic-touch",
+        "hubspot_owner_id": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 1002",
+        "hs_object_source": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] API",
+        "old_lead_source_2021": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] legacy-import",
+        "campaign_source": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] abm-event",
+        "source_campaign": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ",
+        "lead_source": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] sales-development",
+        "source_lead": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ",
+        "utm_source": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] linkedin",
+        "source_utm": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ",
+        "lead_referrer_name": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ",
+        "utm_notes": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] "
+      }
+    },
+    {
+      "record_id_hash": "605e7aacad4e4d54",
+      "properties": {
+        "createdate": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2024-01-02T00:00:00Z",
+        "lastmodifieddate": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-05-30T00:00:00Z",
+        "email": "[PRESENT]",
+        "firstname": "[PRESENT]",
+        "lastname": "[PRESENT]",
+        "phone": "[PRESENT]",
+        "lifecyclestage": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] lead",
+        "hs_analytics_source": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] PAID_SEARCH",
+        "hs_analytics_source_data_1": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] DEMAND_GEN",
+        "hs_analytics_source_data_2": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] synthetic-campaign",
+        "hs_latest_source": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] OFFLINE",
+        "hs_latest_source_data_1": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ",
+        "hs_latest_source_data_2": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] synthetic-touch",
+        "hubspot_owner_id": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 1003",
+        "hs_object_source": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] API",
+        "old_lead_source_2021": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] legacy-import",
+        "campaign_source": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] abm-event",
+        "source_campaign": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] abm-event",
+        "lead_source": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] sales-development",
+        "source_lead": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ",
+        "utm_source": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] linkedin",
+        "source_utm": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] linkedin",
+        "lead_referrer_name": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ",
+        "utm_notes": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] "
+      }
+    },
+    {
+      "record_id_hash": "2ca8aa1fdc1b51ec",
+      "properties": {
+        "createdate": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2024-01-03T00:00:00Z",
+        "lastmodifieddate": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-07-01T00:00:00Z",
+        "email": "[PRESENT]",
+        "firstname": "[PRESENT]",
+        "lastname": "[PRESENT]",
+        "phone": "[PRESENT]",
+        "lifecyclestage": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] lead",
+        "hs_analytics_source": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ORGANIC_SEARCH",
+        "hs_analytics_source_data_1": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] DEMAND_GEN",
+        "hs_analytics_source_data_2": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] synthetic-campaign",
+        "hs_latest_source": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] OFFLINE",
+        "hs_latest_source_data_1": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ",
+        "hs_latest_source_data_2": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] synthetic-touch",
+        "hubspot_owner_id": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 1004",
+        "hs_object_source": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] API",
+        "old_lead_source_2021": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] legacy-import",
+        "campaign_source": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] abm-event",
+        "source_campaign": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ",
+        "lead_source": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] sales-development",
+        "source_lead": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] sales-development",
+        "utm_source": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] linkedin",
+        "source_utm": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ",
+        "lead_referrer_name": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ",
+        "utm_notes": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] "
+      }
+    },
+    {
+      "record_id_hash": "46a428444bd91a54",
+      "properties": {
+        "createdate": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2024-01-04T00:00:00Z",
+        "lastmodifieddate": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2025-11-15T00:00:00Z",
+        "email": "[PRESENT]",
+        "firstname": "[PRESENT]",
+        "lastname": "[PRESENT]",
+        "phone": "[MISSING]",
+        "lifecyclestage": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] lead",
+        "hs_analytics_source": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] PAID_SEARCH",
+        "hs_analytics_source_data_1": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] DEMAND_GEN",
+        "hs_analytics_source_data_2": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] synthetic-campaign",
+        "hs_latest_source": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] DIRECT_TRAFFIC",
+        "hs_latest_source_data_1": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ",
+        "hs_latest_source_data_2": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] synthetic-touch",
+        "hubspot_owner_id": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 1005",
+        "hs_object_source": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] FORM",
+        "old_lead_source_2021": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] legacy-import",
+        "campaign_source": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] abm-event",
+        "source_campaign": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] abm-event",
+        "lead_source": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] sales-development",
+        "source_lead": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ",
+        "utm_source": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] linkedin",
+        "source_utm": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] linkedin",
+        "lead_referrer_name": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ",
+        "utm_notes": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] "
+      }
+    },
+    {
+      "record_id_hash": "6d62d5c74e1ba3b5",
+      "properties": {
+        "createdate": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2024-01-05T00:00:00Z",
+        "lastmodifieddate": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-03-15T00:00:00Z",
+        "email": "[PRESENT]",
+        "firstname": "[PRESENT]",
+        "lastname": "[PRESENT]",
+        "phone": "[PRESENT]",
+        "lifecyclestage": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] lead",
+        "hs_analytics_source": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] PAID_SEARCH",
+        "hs_analytics_source_data_1": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ABM_WEBINAR",
+        "hs_analytics_source_data_2": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] synthetic-campaign",
+        "hs_latest_source": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] OFFLINE",
+        "hs_latest_source_data_1": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ",
+        "hs_latest_source_data_2": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] synthetic-touch",
+        "hubspot_owner_id": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 1006",
+        "hs_object_source": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] API",
+        "old_lead_source_2021": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] legacy-import",
+        "campaign_source": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] abm-event",
+        "source_campaign": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ",
+        "lead_source": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] sales-development",
+        "source_lead": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ",
+        "utm_source": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] linkedin",
+        "source_utm": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ",
+        "lead_referrer_name": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ",
+        "utm_notes": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] "
+      }
+    }
+  ],
+  "companies": [
+    {
+      "record_id_hash": "fbbe9fe39de101fa",
+      "properties": {
+        "createdate": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2024-01-01T00:00:00Z",
+        "hs_lastmodifieddate": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-04-15T00:00:00Z",
+        "domain": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] shared-account.example.test",
+        "name": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Synthetic Account 001",
+        "lifecyclestage": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] customer",
+        "hubspot_owner_id": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 1002",
+        "hs_object_source": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] CRM_UI"
+      }
+    },
+    {
+      "record_id_hash": "9c5ff8eb2d2db2a0",
+      "properties": {
+        "createdate": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2024-01-02T00:00:00Z",
+        "hs_lastmodifieddate": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-06-01T00:00:00Z",
+        "domain": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] shared-account.example.test",
+        "name": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Synthetic Account 002",
+        "lifecyclestage": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] customer",
+        "hubspot_owner_id": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 1003",
+        "hs_object_source": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] IMPORT"
+      }
+    },
+    {
+      "record_id_hash": "82cde9682a44c5c4",
+      "properties": {
+        "createdate": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2024-01-03T00:00:00Z",
+        "hs_lastmodifieddate": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-07-05T00:00:00Z",
+        "domain": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] shared-account.example.test",
+        "name": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Synthetic Account 003",
+        "lifecyclestage": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] customer",
+        "hubspot_owner_id": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 1004",
+        "hs_object_source": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] CRM_UI"
+      }
+    },
+    {
+      "record_id_hash": "13df8e6835b0bbd5",
+      "properties": {
+        "createdate": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2024-01-04T00:00:00Z",
+        "hs_lastmodifieddate": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2025-12-15T00:00:00Z",
+        "domain": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] shared-account.example.test",
+        "name": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Synthetic Account 004",
+        "lifecyclestage": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] customer",
+        "hubspot_owner_id": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 1005",
+        "hs_object_source": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] IMPORT"
+      }
+    },
+    {
+      "record_id_hash": "375e52c21e20955b",
+      "properties": {
+        "createdate": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2024-01-05T00:00:00Z",
+        "hs_lastmodifieddate": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-04-15T00:00:00Z",
+        "domain": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] regional-account.example.test",
+        "name": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Synthetic Account 005",
+        "lifecyclestage": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] customer",
+        "hubspot_owner_id": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 1006",
+        "hs_object_source": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] CRM_UI"
+      }
+    }
+  ],
+  "deals": [
+    {
+      "record_id_hash": "33350c592519b48e",
+      "properties": {
+        "createdate": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2024-01-08T00:00:00Z",
+        "hs_lastmodifieddate": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-03-20T00:00:00Z",
+        "dealname": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Synthetic Opportunity 001",
+        "pipeline": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] new_business",
+        "dealstage": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] discovery",
+        "amount": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 16250",
+        "hubspot_owner_id": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 1002",
+        "closedate": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-12-15T00:00:00Z"
+      }
+    },
+    {
+      "record_id_hash": "47a68a2b5c0f11c8",
+      "properties": {
+        "createdate": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2024-01-09T00:00:00Z",
+        "hs_lastmodifieddate": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-05-20T00:00:00Z",
+        "dealname": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Synthetic Opportunity 002",
+        "pipeline": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] new_business",
+        "dealstage": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] proposal",
+        "amount": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 17500",
+        "hubspot_owner_id": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 1003",
+        "closedate": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-12-15T00:00:00Z"
+      }
+    },
+    {
+      "record_id_hash": "6fb10248acd39242",
+      "properties": {
+        "createdate": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2024-02-08T00:00:00Z",
+        "hs_lastmodifieddate": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-07-03T00:00:00Z",
+        "dealname": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Synthetic Opportunity 003",
+        "pipeline": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] new_business",
+        "dealstage": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] negotiation",
+        "amount": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 18750",
+        "hubspot_owner_id": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 1004",
+        "closedate": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-02-15T00:00:00Z"
+      }
+    },
+    {
+      "record_id_hash": "0d3f02fb3566335d",
+      "properties": {
+        "createdate": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2024-02-09T00:00:00Z",
+        "hs_lastmodifieddate": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2025-10-15T00:00:00Z",
+        "dealname": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Synthetic Opportunity 004",
+        "pipeline": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] new_business",
+        "dealstage": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] qualification",
+        "amount": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 20000",
+        "hubspot_owner_id": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 1005",
+        "closedate": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-12-15T00:00:00Z"
+      }
+    },
+    {
+      "record_id_hash": "3f68d7cd58cc195e",
+      "properties": {
+        "createdate": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2024-03-08T00:00:00Z",
+        "hs_lastmodifieddate": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-03-20T00:00:00Z",
+        "dealname": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Synthetic Opportunity 005",
+        "pipeline": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] new_business",
+        "dealstage": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] discovery",
+        "amount": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 21250",
+        "hubspot_owner_id": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 1006",
+        "closedate": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-12-15T00:00:00Z"
+      }
+    }
+  ]
+}

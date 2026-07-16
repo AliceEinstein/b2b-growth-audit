@@ -1,0 +1,17 @@
+{
+  "contacts": {
+    "total": 7,
+    "with_owner": 5,
+    "coverage_pct": 71.4
+  },
+  "companies": {
+    "total": 3,
+    "with_owner": 0,
+    "coverage_pct": 0.0
+  },
+  "deals": {
+    "total": 3,
+    "with_owner": 2,
+    "coverage_pct": 66.7
+  }
+}

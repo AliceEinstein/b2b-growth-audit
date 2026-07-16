@@ -1,0 +1,16 @@
+[
+  {
+    "id": "abm",
+    "label": "ABM Named Accounts",
+    "stages": [
+      {
+        "id": "open",
+        "label": "Engaged Account",
+        "metadata": {
+          "isClosed": "false",
+          "probability": "0.3"
+        }
+      }
+    ]
+  }
+]

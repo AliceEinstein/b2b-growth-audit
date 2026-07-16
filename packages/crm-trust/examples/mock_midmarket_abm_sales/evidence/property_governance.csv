@@ -1,0 +1,9 @@
+finding_id,object_type,record_id_hash,field_name,issue_type,current_value_redacted,confidence,recommended_review
+decayed_source_fields,contacts,-,old_lead_source_2021,usage_decay,older_half 100.0% recent_half 0.0%,high,confirm whether this field is legacy before any governance action
+decayed_source_fields,contacts,-,lead_source,usage_decay,older_half 100.0% recent_half 0.0%,high,confirm whether this field is legacy before any governance action
+decayed_source_fields,contacts,-,source_lead,usage_decay,older_half 33.3% recent_half 0.0%,high,confirm whether this field is legacy before any governance action
+similar_name_field_groups,contacts,-,"hs_analytics_source_data_1, hs_analytics_source_data_2",name_collision,,high,human review — potential duplicate properties
+similar_name_field_groups,contacts,-,"hs_latest_source_data_1, hs_latest_source_data_2",name_collision,,high,human review — potential duplicate properties
+similar_name_field_groups,contacts,-,"lead_source, old_lead_source_2021, source_lead",name_collision,,high,human review — potential duplicate properties
+similar_name_field_groups,contacts,-,"campaign_source, source_campaign",name_collision,,high,human review — potential duplicate properties
+similar_name_field_groups,contacts,-,"source_utm, utm_source",name_collision,,high,human review — potential duplicate properties

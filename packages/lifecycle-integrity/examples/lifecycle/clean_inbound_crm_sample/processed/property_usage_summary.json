@@ -1,0 +1,343 @@
+{
+  "contacts": {
+    "createdate": {
+      "total": 10,
+      "non_empty": 10,
+      "fill_rate": 100.0,
+      "empty_rate": 0.0,
+      "fill_rate_older_half": 100.0,
+      "fill_rate_recent_half": 100.0,
+      "distinct_count": 8,
+      "top_values": [
+        {
+          "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-02-15T00:00:00Z",
+          "count": 2
+        },
+        {
+          "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-03-15T00:00:00Z",
+          "count": 2
+        },
+        {
+          "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-01-15T00:00:00Z",
+          "count": 1
+        },
+        {
+          "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-04-15T00:00:00Z",
+          "count": 1
+        },
+        {
+          "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-05-15T00:00:00Z",
+          "count": 1
+        },
+        {
+          "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-06-15T00:00:00Z",
+          "count": 1
+        },
+        {
+          "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-07-15T00:00:00Z",
+          "count": 1
+        },
+        {
+          "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-08-15T00:00:00Z",
+          "count": 1
+        }
+      ]
+    },
+    "lifecyclestage": {
+      "total": 10,
+      "non_empty": 10,
+      "fill_rate": 100.0,
+      "empty_rate": 0.0,
+      "fill_rate_older_half": 100.0,
+      "fill_rate_recent_half": 100.0,
+      "distinct_count": 2,
+      "top_values": [
+        {
+          "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] lead",
+          "count": 8
+        },
+        {
+          "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] customer",
+          "count": 2
+        }
+      ]
+    },
+    "hs_analytics_source": {
+      "total": 10,
+      "non_empty": 10,
+      "fill_rate": 100.0,
+      "empty_rate": 0.0,
+      "fill_rate_older_half": 100.0,
+      "fill_rate_recent_half": 100.0,
+      "distinct_count": 2,
+      "top_values": [
+        {
+          "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ORGANIC_SEARCH",
+          "count": 6
+        },
+        {
+          "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] PAID_SEARCH",
+          "count": 4
+        }
+      ]
+    },
+    "hubspot_owner_id": {
+      "total": 10,
+      "non_empty": 10,
+      "fill_rate": 100.0,
+      "empty_rate": 0.0,
+      "fill_rate_older_half": 100.0,
+      "fill_rate_recent_half": 100.0,
+      "distinct_count": 1,
+      "top_values": [
+        {
+          "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 901",
+          "count": 10
+        }
+      ]
+    },
+    "hs_v2_date_entered_lead": {
+      "total": 10,
+      "non_empty": 2,
+      "fill_rate": 20.0,
+      "empty_rate": 80.0,
+      "fill_rate_older_half": 40.0,
+      "fill_rate_recent_half": 0.0,
+      "distinct_count": 2,
+      "top_values": [
+        {
+          "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-02-15T00:00:00Z",
+          "count": 1
+        },
+        {
+          "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-03-15T00:00:00Z",
+          "count": 1
+        }
+      ]
+    },
+    "hs_v2_date_entered_marketingqualifiedlead": {
+      "total": 10,
+      "non_empty": 2,
+      "fill_rate": 20.0,
+      "empty_rate": 80.0,
+      "fill_rate_older_half": 40.0,
+      "fill_rate_recent_half": 0.0,
+      "distinct_count": 2,
+      "top_values": [
+        {
+          "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-03-15T00:00:00Z",
+          "count": 1
+        },
+        {
+          "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-04-15T00:00:00Z",
+          "count": 1
+        }
+      ]
+    },
+    "hs_v2_date_entered_salesqualifiedlead": {
+      "total": 10,
+      "non_empty": 2,
+      "fill_rate": 20.0,
+      "empty_rate": 80.0,
+      "fill_rate_older_half": 40.0,
+      "fill_rate_recent_half": 0.0,
+      "distinct_count": 2,
+      "top_values": [
+        {
+          "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-04-15T00:00:00Z",
+          "count": 1
+        },
+        {
+          "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-05-15T00:00:00Z",
+          "count": 1
+        }
+      ]
+    },
+    "hs_v2_date_entered_customer": {
+      "total": 10,
+      "non_empty": 2,
+      "fill_rate": 20.0,
+      "empty_rate": 80.0,
+      "fill_rate_older_half": 40.0,
+      "fill_rate_recent_half": 0.0,
+      "distinct_count": 2,
+      "top_values": [
+        {
+          "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-05-15T00:00:00Z",
+          "count": 1
+        },
+        {
+          "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-06-15T00:00:00Z",
+          "count": 1
+        }
+      ]
+    }
+  },
+  "companies": {
+    "createdate": {
+      "total": 4,
+      "non_empty": 4,
+      "fill_rate": 100.0,
+      "empty_rate": 0.0,
+      "fill_rate_older_half": 100.0,
+      "fill_rate_recent_half": 100.0,
+      "distinct_count": 4,
+      "top_values": [
+        {
+          "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-01-15T00:00:00Z",
+          "count": 1
+        },
+        {
+          "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-02-15T00:00:00Z",
+          "count": 1
+        },
+        {
+          "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-03-15T00:00:00Z",
+          "count": 1
+        },
+        {
+          "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-04-15T00:00:00Z",
+          "count": 1
+        }
+      ]
+    },
+    "domain": {
+      "total": 4,
+      "non_empty": 4,
+      "fill_rate": 100.0,
+      "empty_rate": 0.0,
+      "fill_rate_older_half": 100.0,
+      "fill_rate_recent_half": 100.0,
+      "distinct_count": 4,
+      "top_values": null
+    },
+    "name": {
+      "total": 4,
+      "non_empty": 4,
+      "fill_rate": 100.0,
+      "empty_rate": 0.0,
+      "fill_rate_older_half": 100.0,
+      "fill_rate_recent_half": 100.0,
+      "distinct_count": 4,
+      "top_values": null
+    },
+    "lifecyclestage": {
+      "total": 4,
+      "non_empty": 1,
+      "fill_rate": 25.0,
+      "empty_rate": 75.0,
+      "fill_rate_older_half": 0.0,
+      "fill_rate_recent_half": 50.0,
+      "distinct_count": 1,
+      "top_values": [
+        {
+          "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] customer",
+          "count": 1
+        }
+      ]
+    }
+  },
+  "deals": {
+    "createdate": {
+      "total": 4,
+      "non_empty": 4,
+      "fill_rate": 100.0,
+      "empty_rate": 0.0,
+      "fill_rate_older_half": 100.0,
+      "fill_rate_recent_half": 100.0,
+      "distinct_count": 4,
+      "top_values": [
+        {
+          "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-04-15T00:00:00Z",
+          "count": 1
+        },
+        {
+          "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-05-15T00:00:00Z",
+          "count": 1
+        },
+        {
+          "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-06-15T00:00:00Z",
+          "count": 1
+        },
+        {
+          "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-07-15T00:00:00Z",
+          "count": 1
+        }
+      ]
+    },
+    "pipeline": {
+      "total": 4,
+      "non_empty": 4,
+      "fill_rate": 100.0,
+      "empty_rate": 0.0,
+      "fill_rate_older_half": 100.0,
+      "fill_rate_recent_half": 100.0,
+      "distinct_count": 1,
+      "top_values": [
+        {
+          "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] default",
+          "count": 4
+        }
+      ]
+    },
+    "dealstage": {
+      "total": 4,
+      "non_empty": 4,
+      "fill_rate": 100.0,
+      "empty_rate": 0.0,
+      "fill_rate_older_half": 100.0,
+      "fill_rate_recent_half": 100.0,
+      "distinct_count": 2,
+      "top_values": [
+        {
+          "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] appointmentscheduled",
+          "count": 3
+        },
+        {
+          "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] closedwon",
+          "count": 1
+        }
+      ]
+    },
+    "amount": {
+      "total": 4,
+      "non_empty": 4,
+      "fill_rate": 100.0,
+      "empty_rate": 0.0,
+      "fill_rate_older_half": 100.0,
+      "fill_rate_recent_half": 100.0,
+      "distinct_count": 1,
+      "top_values": [
+        {
+          "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 1000",
+          "count": 4
+        }
+      ]
+    },
+    "hubspot_owner_id": {
+      "total": 4,
+      "non_empty": 4,
+      "fill_rate": 100.0,
+      "empty_rate": 0.0,
+      "fill_rate_older_half": 100.0,
+      "fill_rate_recent_half": 100.0,
+      "distinct_count": 1,
+      "top_values": [
+        {
+          "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 901",
+          "count": 4
+        }
+      ]
+    },
+    "closedate": {
+      "total": 4,
+      "non_empty": 0,
+      "fill_rate": 0.0,
+      "empty_rate": 100.0,
+      "fill_rate_older_half": 0.0,
+      "fill_rate_recent_half": 0.0,
+      "distinct_count": 0,
+      "top_values": null
+    }
+  }
+}

@@ -1,0 +1,20 @@
+[
+  {
+    "record_id_hash": "f9a86a784b3455e61b21f883abadc90a9cf02594b1020cdb139871fb27efa191",
+    "object_type": "deals",
+    "assigned_journey": "abm_account_based",
+    "assignment_confidence": 95,
+    "evidence": [
+      "matched journey terms: abm, target account, account tier"
+    ]
+  },
+  {
+    "record_id_hash": "069abde387dcf2e329fef43c83d70757d298edc2486813e90e6954c632bbb915",
+    "object_type": "deals",
+    "assigned_journey": "abm_account_based",
+    "assignment_confidence": 95,
+    "evidence": [
+      "matched journey terms: abm, target account, account tier"
+    ]
+  }
+]

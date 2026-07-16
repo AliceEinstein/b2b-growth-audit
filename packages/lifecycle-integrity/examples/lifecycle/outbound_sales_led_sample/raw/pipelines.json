@@ -1,0 +1,24 @@
+[
+  {
+    "id": "outbound",
+    "label": "Outbound New Business",
+    "stages": [
+      {
+        "id": "open",
+        "label": "Prospecting",
+        "metadata": {
+          "isClosed": "false",
+          "probability": "0.2"
+        }
+      },
+      {
+        "id": "won",
+        "label": "Won",
+        "metadata": {
+          "isClosed": "true",
+          "probability": "1.0"
+        }
+      }
+    ]
+  }
+]

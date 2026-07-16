@@ -1,0 +1,23 @@
+{
+  "pipelines": [
+    {
+      "pipeline_id": "outbound",
+      "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Outbound New Business",
+      "stage_count": 2,
+      "deal_count": 4,
+      "stages": [
+        {
+          "stage_id": "open",
+          "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Prospecting",
+          "deal_count": 4
+        },
+        {
+          "stage_id": "won",
+          "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Won",
+          "deal_count": 0
+        }
+      ]
+    }
+  ],
+  "deals_in_unknown_pipeline": 0
+}

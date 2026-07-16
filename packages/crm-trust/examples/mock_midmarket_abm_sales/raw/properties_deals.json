@@ -1,0 +1,42 @@
+[
+  {
+    "name": "createdate",
+    "label": "Create Date",
+    "hubspotDefined": true
+  },
+  {
+    "name": "hs_lastmodifieddate",
+    "label": "Last Modified Date",
+    "hubspotDefined": true
+  },
+  {
+    "name": "dealstage",
+    "label": "Deal Stage",
+    "hubspotDefined": true
+  },
+  {
+    "name": "pipeline",
+    "label": "Pipeline",
+    "hubspotDefined": true
+  },
+  {
+    "name": "amount",
+    "label": "Amount",
+    "hubspotDefined": true
+  },
+  {
+    "name": "closedate",
+    "label": "Close Date",
+    "hubspotDefined": true
+  },
+  {
+    "name": "hubspot_owner_id",
+    "label": "Deal owner",
+    "hubspotDefined": true
+  },
+  {
+    "name": "dealname",
+    "label": "Deal name",
+    "hubspotDefined": true
+  }
+]

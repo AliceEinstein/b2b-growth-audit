@@ -1,0 +1,8 @@
+{
+  "contacts": {
+    "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] lead": 5
+  },
+  "companies": {
+    "(empty)": 1
+  }
+}

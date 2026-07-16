@@ -1,0 +1,22 @@
+{
+  "module": "attribution_trust",
+  "findings": [
+    {
+      "id": "recent_original_source_capture_gap",
+      "module": "attribution_trust",
+      "severity": "high",
+      "confidence": "high",
+      "object_type": "contacts",
+      "measurement_id": "recent_half_contacts_missing_original_source",
+      "field_name": "hs_analytics_source",
+      "denominator": 180,
+      "affected_records": 40,
+      "affected_percentage": 22.2,
+      "evidence_file": "evidence/attribution_trust.csv",
+      "business_impact": "Recent contact cohorts have materially weaker original-source coverage, so marketing cannot reliably compare newer acquisition cohorts or explain source mix into pipeline.",
+      "recommendation_type": "needs_business_rule_confirmation",
+      "auto_fix_allowed": false,
+      "review_status": "approved"
+    }
+  ]
+}

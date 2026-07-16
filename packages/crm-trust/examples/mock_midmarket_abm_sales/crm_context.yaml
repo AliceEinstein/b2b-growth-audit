@@ -1,0 +1,59 @@
+audit_focus: marketing_to_pipeline_trust
+crm_complexity:
+  tier: midmarket_abm
+  confidence: high
+canonical_fields:
+  lifecycle_stage:
+    object: contact
+    field: lifecyclestage
+    confidence: high
+    requires_confirmation: false
+    evidence: standard HubSpot lifecycle field
+  original_source:
+    object: contact
+    field: hs_analytics_source
+    confidence: high
+    requires_confirmation: false
+    evidence: standard HubSpot original source field
+  latest_source:
+    object: contact
+    field: hs_latest_source
+    confidence: high
+    requires_confirmation: false
+    evidence: standard HubSpot latest source field
+  campaign_source:
+    object: contact
+    field: campaign_source
+    confidence: medium
+    requires_confirmation: true
+    evidence: synthetic overlapping source candidate
+  account_ownership:
+    object: company
+    field: hubspot_owner_id
+    confidence: medium
+    requires_confirmation: true
+    evidence: synthetic account ownership field
+  deal_ownership:
+    object: deal
+    field: hubspot_owner_id
+    confidence: high
+    requires_confirmation: false
+    evidence: standard HubSpot deal owner field
+  deal_pipeline:
+    object: deal
+    field: pipeline
+    confidence: high
+    requires_confirmation: false
+    evidence: two synthetic pipeline definitions
+suspected_legacy_fields:
+- old_lead_source_2021
+suspected_duplicate_groups:
+- - campaign_source
+  - source_campaign
+- - lead_source
+  - source_lead
+- - utm_source
+  - source_utm
+manual_confirmation_needed:
+- Confirm the canonical campaign/source field before changing workflows.
+- Confirm which contacts and deals require a company association.

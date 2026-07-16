@@ -1,0 +1,4 @@
+{"id": "co1", "properties": {"createdate": "2026-01-15T00:00:00Z", "domain": "acme.com", "name": "Acme", "lifecyclestage": ""}}
+{"id": "co2", "properties": {"createdate": "2026-02-15T00:00:00Z", "domain": "acme.com", "name": "Acme Inc", "lifecyclestage": ""}}
+{"id": "co3", "properties": {"createdate": "2026-03-15T00:00:00Z", "domain": "beta.io", "name": "Beta", "lifecyclestage": ""}}
+{"id": "co4", "properties": {"createdate": "2026-04-15T00:00:00Z", "domain": "", "name": "Ghost LLC", "lifecyclestage": ""}}

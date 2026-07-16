@@ -1,0 +1,71 @@
+{
+  "pipelines": [
+    {
+      "pipeline_id": "new_business",
+      "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] New Business",
+      "stage_count": 6,
+      "deal_count": 26,
+      "stages": [
+        {
+          "stage_id": "qualification",
+          "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Qualification",
+          "deal_count": 4
+        },
+        {
+          "stage_id": "discovery",
+          "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Discovery",
+          "deal_count": 5
+        },
+        {
+          "stage_id": "proposal",
+          "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Proposal",
+          "deal_count": 5
+        },
+        {
+          "stage_id": "negotiation",
+          "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Negotiation",
+          "deal_count": 4
+        },
+        {
+          "stage_id": "closedwon",
+          "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Closed Won",
+          "deal_count": 8
+        },
+        {
+          "stage_id": "closedlost",
+          "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Closed Lost",
+          "deal_count": 0
+        }
+      ]
+    },
+    {
+      "pipeline_id": "expansion",
+      "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Expansion",
+      "stage_count": 4,
+      "deal_count": 8,
+      "stages": [
+        {
+          "stage_id": "account_review",
+          "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Account Review",
+          "deal_count": 0
+        },
+        {
+          "stage_id": "solution_design",
+          "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Solution Design",
+          "deal_count": 0
+        },
+        {
+          "stage_id": "closedwon",
+          "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Closed Won",
+          "deal_count": 4
+        },
+        {
+          "stage_id": "closedlost",
+          "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Closed Lost",
+          "deal_count": 4
+        }
+      ]
+    }
+  ],
+  "deals_in_unknown_pipeline": 2
+}

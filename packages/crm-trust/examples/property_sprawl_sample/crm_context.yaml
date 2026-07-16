@@ -1,0 +1,17 @@
+audit_focus: marketing_to_pipeline_trust
+canonical_fields:
+  lifecycle_stage:
+    confidence: high
+    evidence: standard HubSpot field
+    field: lifecyclestage
+    object: contact
+    requires_confirmation: false
+  original_source:
+    confidence: high
+    evidence: standard HubSpot field
+    field: hs_analytics_source
+    object: contact
+    requires_confirmation: false
+crm_complexity:
+  confidence: medium
+  tier: lean_smb

@@ -1,0 +1,16 @@
+finding_id,object_type,record_id_hash,field_name,issue_type,current_value_redacted,confidence,recommended_review
+open_deals_past_close_date,deals,6fb10248acd39242,closedate,past_due_close_date,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-02-15T00:00:00Z,high,review close date or stage with the deal owner
+open_deals_past_close_date,deals,1ea000648b4cbd2f,closedate,past_due_close_date,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-02-15T00:00:00Z,high,review close date or stage with the deal owner
+open_deals_past_close_date,deals,220ff1595e0530b0,closedate,past_due_close_date,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 2026-02-15T00:00:00Z,high,review close date or stage with the deal owner
+deals_without_owner,deals,8a0aa97cdcc7491d,hubspot_owner_id,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm with the deal owner
+deals_without_owner,deals,f63f1695110847e7,hubspot_owner_id,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm with the deal owner
+deals_without_owner,deals,c4111bccaa6b1277,hubspot_owner_id,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm with the deal owner
+deals_without_owner,deals,f31f57ba4a0b4220,hubspot_owner_id,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm with the deal owner
+deals_without_amount,deals,8e47a57d3a37f661,amount,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm with the deal owner
+deals_without_amount,deals,9920e13a790230d9,amount,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm with the deal owner
+deals_without_amount,deals,fec458d703118800,amount,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm with the deal owner
+deals_without_amount,deals,413c3cd70cedb8b3,amount,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm with the deal owner
+deals_without_amount,deals,8ddae5101f61c00b,amount,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm with the deal owner
+deals_without_amount,deals,e8cb01971b6478af,amount,missing_value,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ,high,confirm with the deal owner
+deals_in_unknown_pipeline,deals,06a1faee778195e0,pipeline,unknown_reference,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] legacy_pipeline,high,confirm the pipeline definition and deal assignment
+deals_in_unknown_pipeline,deals,e8cb01971b6478af,pipeline,unknown_reference,[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] legacy_pipeline,high,confirm the pipeline definition and deal assignment

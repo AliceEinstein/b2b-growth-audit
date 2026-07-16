@@ -1,0 +1,335 @@
+{
+  "snapshot": {
+    "run_id": "mock_midmarket_abm_sales",
+    "status": "completed",
+    "created_at": "2026-07-12T00:00:00+00:00",
+    "snapshot_started_at": "2026-07-13T23:00:00+00:00",
+    "snapshot_completed_at": "2026-07-14T00:00:00+00:00",
+    "full_history": true,
+    "days": null,
+    "truncated": {
+      "contacts": false,
+      "companies": false,
+      "deals": false
+    }
+  },
+  "record_counts": {
+    "contacts": 360,
+    "companies": 60,
+    "deals": 36,
+    "owners": 8,
+    "deal_pipelines": 2,
+    "truncated": {
+      "contacts": false,
+      "companies": false,
+      "deals": false
+    }
+  },
+  "field_completeness": {
+    "contacts": {
+      "email": {
+        "total": 360,
+        "non_empty": 360,
+        "fill_rate": 100.0,
+        "empty_rate": 0.0
+      },
+      "firstname": {
+        "total": 360,
+        "non_empty": 360,
+        "fill_rate": 100.0,
+        "empty_rate": 0.0
+      },
+      "lastname": {
+        "total": 360,
+        "non_empty": 339,
+        "fill_rate": 94.2,
+        "empty_rate": 5.8
+      },
+      "phone": {
+        "total": 360,
+        "non_empty": 270,
+        "fill_rate": 75.0,
+        "empty_rate": 25.0
+      },
+      "lifecyclestage": {
+        "total": 360,
+        "non_empty": 360,
+        "fill_rate": 100.0,
+        "empty_rate": 0.0
+      },
+      "hs_analytics_source": {
+        "total": 360,
+        "non_empty": 320,
+        "fill_rate": 88.9,
+        "empty_rate": 11.1
+      },
+      "hs_latest_source": {
+        "total": 360,
+        "non_empty": 330,
+        "fill_rate": 91.7,
+        "empty_rate": 8.3
+      },
+      "hubspot_owner_id": {
+        "total": 360,
+        "non_empty": 324,
+        "fill_rate": 90.0,
+        "empty_rate": 10.0
+      }
+    },
+    "companies": {
+      "name": {
+        "total": 60,
+        "non_empty": 59,
+        "fill_rate": 98.3,
+        "empty_rate": 1.7
+      },
+      "domain": {
+        "total": 60,
+        "non_empty": 55,
+        "fill_rate": 91.7,
+        "empty_rate": 8.3
+      },
+      "lifecyclestage": {
+        "total": 60,
+        "non_empty": 60,
+        "fill_rate": 100.0,
+        "empty_rate": 0.0
+      },
+      "hubspot_owner_id": {
+        "total": 60,
+        "non_empty": 55,
+        "fill_rate": 91.7,
+        "empty_rate": 8.3
+      }
+    },
+    "deals": {
+      "dealname": {
+        "total": 36,
+        "non_empty": 36,
+        "fill_rate": 100.0,
+        "empty_rate": 0.0
+      },
+      "pipeline": {
+        "total": 36,
+        "non_empty": 36,
+        "fill_rate": 100.0,
+        "empty_rate": 0.0
+      },
+      "dealstage": {
+        "total": 36,
+        "non_empty": 36,
+        "fill_rate": 100.0,
+        "empty_rate": 0.0
+      },
+      "amount": {
+        "total": 36,
+        "non_empty": 30,
+        "fill_rate": 83.3,
+        "empty_rate": 16.7
+      },
+      "closedate": {
+        "total": 36,
+        "non_empty": 36,
+        "fill_rate": 100.0,
+        "empty_rate": 0.0
+      },
+      "hubspot_owner_id": {
+        "total": 36,
+        "non_empty": 32,
+        "fill_rate": 88.9,
+        "empty_rate": 11.1
+      }
+    }
+  },
+  "identity_completeness": {
+    "email": {
+      "fill_rate": 100.0,
+      "valid_format_rate_among_present": 100.0
+    },
+    "firstname": {
+      "fill_rate": 100.0,
+      "valid_format_rate_among_present": 100.0
+    },
+    "lastname": {
+      "fill_rate": 94.2,
+      "valid_format_rate_among_present": 100.0
+    },
+    "phone": {
+      "fill_rate": 75.0,
+      "valid_format_rate_among_present": 100.0
+    }
+  },
+  "association_coverage": {
+    "contacts_to_companies": {
+      "available": true,
+      "total": 360,
+      "with_association": 280,
+      "coverage_pct": 77.8,
+      "distribution": {
+        "0": 80,
+        "1": 270,
+        "2+": 10
+      }
+    },
+    "deals_to_companies": {
+      "available": true,
+      "total": 36,
+      "with_association": 32,
+      "coverage_pct": 88.9,
+      "distribution": {
+        "0": 4,
+        "1": 32,
+        "2+": 0
+      }
+    },
+    "deals_to_contacts": {
+      "available": true,
+      "total": 36,
+      "with_association": 30,
+      "coverage_pct": 83.3,
+      "distribution": {
+        "0": 6,
+        "1": 30,
+        "2+": 0
+      }
+    }
+  },
+  "lifecycle_distribution": {
+    "contacts": {
+      "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] lead": 180,
+      "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead": 80,
+      "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] salesqualifiedlead": 50,
+      "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] opportunity": 30,
+      "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] customer": 15,
+      "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] closedlost": 5
+    },
+    "companies": {
+      "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] lead": 48,
+      "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] customer": 12
+    }
+  },
+  "pipeline": {
+    "defined_pipeline_count": 2,
+    "deals_in_unknown_pipeline": 2,
+    "defined_pipelines": [
+      {
+        "pipeline_id": "new_business",
+        "stage_count": 6,
+        "deal_count": 26
+      },
+      {
+        "pipeline_id": "expansion",
+        "stage_count": 4,
+        "deal_count": 8
+      }
+    ]
+  },
+  "source_field_summary": {
+    "hs_analytics_source": {
+      "fill_rate": 88.9,
+      "empty_rate": 11.1,
+      "fill_rate_older_half": 100.0,
+      "fill_rate_recent_half": 77.8
+    },
+    "hs_analytics_source_data_1": {
+      "fill_rate": 91.7,
+      "empty_rate": 8.3,
+      "fill_rate_older_half": 100.0,
+      "fill_rate_recent_half": 83.3
+    },
+    "hs_analytics_source_data_2": {
+      "fill_rate": 83.3,
+      "empty_rate": 16.7,
+      "fill_rate_older_half": 100.0,
+      "fill_rate_recent_half": 66.7
+    },
+    "hs_latest_source": {
+      "fill_rate": 91.7,
+      "empty_rate": 8.3,
+      "fill_rate_older_half": 100.0,
+      "fill_rate_recent_half": 83.3
+    },
+    "hs_latest_source_data_1": {
+      "fill_rate": 16.7,
+      "empty_rate": 83.3,
+      "fill_rate_older_half": 16.7,
+      "fill_rate_recent_half": 16.7
+    },
+    "hs_latest_source_data_2": {
+      "fill_rate": 83.3,
+      "empty_rate": 16.7,
+      "fill_rate_older_half": 100.0,
+      "fill_rate_recent_half": 66.7
+    },
+    "hs_object_source": {
+      "fill_rate": 100.0,
+      "empty_rate": 0.0,
+      "fill_rate_older_half": 100.0,
+      "fill_rate_recent_half": 100.0
+    },
+    "old_lead_source_2021": {
+      "fill_rate": 50.0,
+      "empty_rate": 50.0,
+      "fill_rate_older_half": 100.0,
+      "fill_rate_recent_half": 0.0
+    },
+    "campaign_source": {
+      "fill_rate": 66.7,
+      "empty_rate": 33.3,
+      "fill_rate_older_half": 100.0,
+      "fill_rate_recent_half": 33.3
+    },
+    "source_campaign": {
+      "fill_rate": 33.3,
+      "empty_rate": 66.7,
+      "fill_rate_older_half": 50.0,
+      "fill_rate_recent_half": 16.7
+    },
+    "lead_source": {
+      "fill_rate": 50.0,
+      "empty_rate": 50.0,
+      "fill_rate_older_half": 100.0,
+      "fill_rate_recent_half": 0.0
+    },
+    "source_lead": {
+      "fill_rate": 16.7,
+      "empty_rate": 83.3,
+      "fill_rate_older_half": 33.3,
+      "fill_rate_recent_half": 0.0
+    },
+    "utm_source": {
+      "fill_rate": 58.3,
+      "empty_rate": 41.7,
+      "fill_rate_older_half": 100.0,
+      "fill_rate_recent_half": 16.7
+    },
+    "source_utm": {
+      "fill_rate": 29.2,
+      "empty_rate": 70.8,
+      "fill_rate_older_half": 50.0,
+      "fill_rate_recent_half": 8.3
+    },
+    "lead_referrer_name": {
+      "fill_rate": 8.9,
+      "empty_rate": 91.1,
+      "fill_rate_older_half": 8.9,
+      "fill_rate_recent_half": 8.9
+    },
+    "utm_notes": {
+      "fill_rate": 0.6,
+      "empty_rate": 99.4,
+      "fill_rate_older_half": 0.6,
+      "fill_rate_recent_half": 0.6
+    }
+  },
+  "property_governance": {
+    "source_like_field_count": 17,
+    "source_like_fields_by_object": {
+      "contacts": 16,
+      "companies": 1,
+      "deals": 0
+    }
+  },
+  "activity_summary_file": "processed/activity_summary.json",
+  "interpretation_note": "Completeness is shown by field and object; no universal single completeness score is assigned because requiredness depends on the business process."
+}

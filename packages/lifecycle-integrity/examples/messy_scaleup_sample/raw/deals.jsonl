@@ -1,0 +1,5 @@
+{"id": "d1", "properties": {"createdate": "2026-03-15T00:00:00Z", "pipeline": "default", "dealstage": "appointmentscheduled", "amount": "1000", "hubspot_owner_id": "", "closedate": ""}}
+{"id": "d2", "properties": {"createdate": "2026-04-15T00:00:00Z", "pipeline": "default", "dealstage": "appointmentscheduled", "amount": "", "hubspot_owner_id": "901", "closedate": "2026-01-15T00:00:00Z"}}
+{"id": "d3", "properties": {"createdate": "2026-05-15T00:00:00Z", "pipeline": "default", "dealstage": "closedwon", "amount": "1000", "hubspot_owner_id": "901", "closedate": "2026-06-15T00:00:00Z"}}
+{"id": "d4", "properties": {"createdate": "2026-06-15T00:00:00Z", "pipeline": "legacy_pipe", "dealstage": "mystery_stage", "amount": "1000", "hubspot_owner_id": "901", "closedate": ""}}
+{"id": "d5", "properties": {"createdate": "2026-07-15T00:00:00Z", "pipeline": "default", "dealstage": "appointmentscheduled", "amount": "1000", "hubspot_owner_id": "", "closedate": ""}}

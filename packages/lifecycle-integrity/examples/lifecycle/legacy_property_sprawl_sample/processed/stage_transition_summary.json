@@ -1,0 +1,31 @@
+{
+  "available": false,
+  "contacts": {
+    "total": 8,
+    "with_stage_timestamps": 0,
+    "multi_stage_paths": 0,
+    "ranked_multi_stage_paths": 0,
+    "ordered_progressions": 0,
+    "mql_progressions": 0,
+    "stage_regressions": 0,
+    "customers_total": 0,
+    "customers_without_timestamped_path": 0
+  },
+  "companies": {
+    "total": 0,
+    "with_stage_timestamps": 0,
+    "multi_stage_paths": 0,
+    "ranked_multi_stage_paths": 0,
+    "ordered_progressions": 0,
+    "mql_progressions": 0,
+    "stage_regressions": 0,
+    "customers_total": 0,
+    "customers_without_timestamped_path": 0
+  },
+  "deals": {
+    "total": 0,
+    "with_stage_timestamps": 0,
+    "multi_stage_paths": 0
+  },
+  "limitation": "No stage-entry timestamps in this snapshot; journey paths are inferred from record creation order only. Re-run the acquisition pass with the current connector to capture hs_v2_date_entered_* properties."
+}

@@ -1,0 +1,30 @@
+{
+  "available": true,
+  "contacts": {
+    "total": 10,
+    "with_stage_timestamps": 2,
+    "multi_stage_paths": 2,
+    "ranked_multi_stage_paths": 2,
+    "ordered_progressions": 2,
+    "mql_progressions": 2,
+    "stage_regressions": 0,
+    "customers_total": 2,
+    "customers_without_timestamped_path": 0
+  },
+  "companies": {
+    "total": 4,
+    "with_stage_timestamps": 0,
+    "multi_stage_paths": 0,
+    "ranked_multi_stage_paths": 0,
+    "ordered_progressions": 0,
+    "mql_progressions": 0,
+    "stage_regressions": 0,
+    "customers_total": 1,
+    "customers_without_timestamped_path": 1
+  },
+  "deals": {
+    "total": 4,
+    "with_stage_timestamps": 0,
+    "multi_stage_paths": 0
+  }
+}

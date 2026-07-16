@@ -1,0 +1,76 @@
+audit_focus: lifecycle_integrity
+primary_journey_model: single_motion
+mapping_confidence: 47
+canonical_fields:
+  lifecycle_stage:
+    object: contact
+    field: lifecyclestage
+    confidence: high
+    requires_confirmation: false
+    evidence: HubSpot-defined lifecycle field present in the snapshot
+  original_source:
+    object: contact
+    field: hs_analytics_source
+    confidence: high
+    requires_confirmation: false
+    evidence: HubSpot-defined original source field present in the snapshot
+candidate_fields:
+  lifecycle:
+  - object_type: contacts
+    field: lifecyclestage
+    label: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Lifecycle Stage'
+    hubspot_defined: true
+    fill_rate: 100.0
+    fill_rate_recent_half: 100.0
+    distinct_count: 1
+    top_values:
+    - value: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] lead'
+      count: 6
+  - object_type: companies
+    field: lifecyclestage
+    label: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Lifecycle Stage'
+    hubspot_defined: true
+    fill_rate: 0.0
+    fill_rate_recent_half: null
+    distinct_count: 0
+    top_values: null
+  - object_type: deals
+    field: dealstage
+    label: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Deal Stage'
+    hubspot_defined: true
+    fill_rate: 100.0
+    fill_rate_recent_half: null
+    distinct_count: 1
+    top_values:
+    - value: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] appointmentscheduled'
+      count: 3
+  source:
+  - object_type: contacts
+    field: hs_analytics_source
+    label: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Original Source'
+    hubspot_defined: true
+    fill_rate: 100.0
+    fill_rate_recent_half: 100.0
+    distinct_count: 1
+    top_values:
+    - value: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ORGANIC_SEARCH'
+      count: 6
+  - object_type: contacts
+    field: hs_object_source
+    label: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Record source'
+    hubspot_defined: true
+    fill_rate: null
+    fill_rate_recent_half: null
+    distinct_count: null
+    top_values: null
+  deal_type: []
+  account_tier: []
+  partner: []
+  expansion: []
+  high_intent: []
+suspected_legacy_fields: []
+manual_confirmation_needed:
+- Confirm whether outbound_sales_led is represented by an unmapped custom field
+- Confirm whether abm_account_based is represented by an unmapped custom field
+- Confirm whether partner_led is represented by an unmapped custom field
+- Confirm whether expansion_renewal is represented by an unmapped custom field

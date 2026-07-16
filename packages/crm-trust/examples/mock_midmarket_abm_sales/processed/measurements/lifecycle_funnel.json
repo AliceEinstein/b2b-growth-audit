@@ -1,0 +1,50 @@
+{
+  "module": "lifecycle_funnel",
+  "evidence_file": "evidence/lifecycle_funnel.csv",
+  "evidence_rows": 65,
+  "snapshot_coverage": {
+    "days": null,
+    "full_history": true,
+    "truncated": {
+      "contacts": false,
+      "companies": false,
+      "deals": false
+    },
+    "relationship_measurements_complete": true
+  },
+  "measurements": [
+    {
+      "id": "contacts_missing_lifecycle",
+      "object_type": "contacts",
+      "field_name": "lifecyclestage",
+      "denominator": 360,
+      "affected_records": 0,
+      "affected_percentage": 0.0,
+      "available": true,
+      "note": null,
+      "description": "contacts with empty lifecyclestage"
+    },
+    {
+      "id": "customers_without_closedwon_deal",
+      "object_type": "contacts",
+      "field_name": "lifecyclestage",
+      "denominator": 15,
+      "affected_records": 15,
+      "affected_percentage": 100.0,
+      "available": true,
+      "note": null,
+      "description": "customer-stage contacts with no associated closed-won deal"
+    },
+    {
+      "id": "mql_plus_contacts_without_deal",
+      "object_type": "contacts",
+      "field_name": "lifecyclestage",
+      "denominator": 160,
+      "affected_records": 155,
+      "affected_percentage": 96.9,
+      "available": true,
+      "note": null,
+      "description": "contacts in ['marketingqualifiedlead', 'opportunity', 'salesqualifiedlead'] with no associated deal"
+    }
+  ]
+}

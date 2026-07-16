@@ -1,0 +1,99 @@
+{
+  "contacts": [
+    {
+      "record_id_hash": "160abc54b24f6509bc9f38601b50a9478d1f2634310b7cb1ecc4136208844bd8",
+      "properties": {
+        "createdate": "[PRESENT]",
+        "lifecyclestage": "[PRESENT]",
+        "hs_analytics_source": "[MISSING]",
+        "hubspot_owner_id": "[PRESENT]"
+      }
+    },
+    {
+      "record_id_hash": "afc675202a7853c2cc4eb2e787c4dc9a5a1cb593af7658be38b290ff3fb3a4a8",
+      "properties": {
+        "createdate": "[PRESENT]",
+        "lifecyclestage": "[PRESENT]",
+        "hs_analytics_source": "[MISSING]",
+        "hubspot_owner_id": "[PRESENT]"
+      }
+    },
+    {
+      "record_id_hash": "99e069f490b7f72189390c030b1e9ab0045a42ae3eb5d18183f8522bfe9340bb",
+      "properties": {
+        "createdate": "[PRESENT]",
+        "lifecyclestage": "[PRESENT]",
+        "hs_analytics_source": "[MISSING]",
+        "hubspot_owner_id": "[PRESENT]"
+      }
+    },
+    {
+      "record_id_hash": "287e79b9625cf35d05dd83600b9d4832d8c6610ad6c043ff5f11f2e22bd86995",
+      "properties": {
+        "createdate": "[PRESENT]",
+        "lifecyclestage": "[PRESENT]",
+        "hs_analytics_source": "[MISSING]",
+        "hubspot_owner_id": "[PRESENT]"
+      }
+    },
+    {
+      "record_id_hash": "d88324c7c45f1a4fa08716dc30f09e106a87c0bf9b4b8698e6f112fc9ad3f2f9",
+      "properties": {
+        "createdate": "[PRESENT]",
+        "lifecyclestage": "[PRESENT]",
+        "hs_analytics_source": "[MISSING]",
+        "hubspot_owner_id": "[PRESENT]"
+      }
+    }
+  ],
+  "companies": [
+    {
+      "record_id_hash": "7496481246f1b84f2532cbea927e0303119bbf9220c0b7a47ee91f802a8c6a5a",
+      "properties": {
+        "createdate": "[PRESENT]",
+        "domain": "[PRESENT]",
+        "name": "[PRESENT]",
+        "lifecyclestage": "[MISSING]",
+        "account_tier": "[PRESENT]",
+        "target_account": "[PRESENT]",
+        "hubspot_owner_id": "[PRESENT]"
+      }
+    },
+    {
+      "record_id_hash": "72e4a61353818931917a9e5006048f4883c3b9c669f95b71e631a5d7afd7067f",
+      "properties": {
+        "createdate": "[PRESENT]",
+        "domain": "[PRESENT]",
+        "name": "[PRESENT]",
+        "lifecyclestage": "[MISSING]",
+        "account_tier": "[PRESENT]",
+        "target_account": "[PRESENT]",
+        "hubspot_owner_id": "[PRESENT]"
+      }
+    }
+  ],
+  "deals": [
+    {
+      "record_id_hash": "f9a86a784b3455e61b21f883abadc90a9cf02594b1020cdb139871fb27efa191",
+      "properties": {
+        "createdate": "[PRESENT]",
+        "pipeline": "[PRESENT]",
+        "dealstage": "[PRESENT]",
+        "amount": "[PRESENT]",
+        "hubspot_owner_id": "[PRESENT]",
+        "closedate": "[MISSING]"
+      }
+    },
+    {
+      "record_id_hash": "069abde387dcf2e329fef43c83d70757d298edc2486813e90e6954c632bbb915",
+      "properties": {
+        "createdate": "[PRESENT]",
+        "pipeline": "[PRESENT]",
+        "dealstage": "[PRESENT]",
+        "amount": "[PRESENT]",
+        "hubspot_owner_id": "[PRESENT]",
+        "closedate": "[MISSING]"
+      }
+    }
+  ]
+}

@@ -1,0 +1,2 @@
+{"id": "co1", "properties": {"createdate": "2026-01-15T00:00:00Z", "domain": "named.test", "name": "Named Account", "lifecyclestage": "", "account_tier": "Tier 1", "target_account": "true", "hubspot_owner_id": "901"}}
+{"id": "co2", "properties": {"createdate": "2026-02-15T00:00:00Z", "domain": "tier.test", "name": "Tier Account", "lifecyclestage": "", "account_tier": "Tier 1", "target_account": "true", "hubspot_owner_id": "901"}}

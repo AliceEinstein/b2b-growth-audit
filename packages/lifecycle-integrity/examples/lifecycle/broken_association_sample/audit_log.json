@@ -1,0 +1,9 @@
+{
+  "started_at": "2026-07-15T17:10:02.402305+00:00",
+  "finished_at": "2026-07-15T17:10:02.402313+00:00",
+  "run_config": {
+    "synthetic_dataset": "broken_association_sample"
+  },
+  "events": [],
+  "warnings": []
+}

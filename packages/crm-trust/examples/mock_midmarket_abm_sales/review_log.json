@@ -1,0 +1,71 @@
+[
+  {"finding_id":"recent_original_source_capture_gap","reviewer":"data_fidelity_reviewer","verdict":"approve","reason":"The finding copies 180, 40, and 22.2 verbatim from recent_half_contacts_missing_original_source and correctly describes the recent half rather than all contacts."},
+  {"finding_id":"recent_original_source_capture_gap","reviewer":"logic_reviewer","verdict":"approve","reason":"The conclusion is limited to source coverage and reporting trust; it does not infer why capture is missing or claim that any channel performs poorly."},
+  {"finding_id":"recent_original_source_capture_gap","reviewer":"privacy_safety_reviewer","verdict":"approve","reason":"The finding contains no raw identity values, tokens, or CRM instruction text, and it does not propose a CRM write."},
+  {"finding_id":"recent_original_source_capture_gap","reviewer":"audit_scope_reviewer","verdict":"approve","reason":"Recent source capture directly affects marketing-to-pipeline attribution and remains inside the audit scope."},
+
+  {"finding_id":"customers_without_closedwon_deal_trace","reviewer":"data_fidelity_reviewer","verdict":"approve","reason":"The finding precisely states that 15 of 15 customer-stage contacts lack the measured closed-won deal relationship; it does not generalize beyond that denominator."},
+  {"finding_id":"customers_without_closedwon_deal_trace","reviewer":"logic_reviewer","verdict":"approve","reason":"For the selected sales-led ABM context, the reconciliation gap supports a high trust severity while the wording avoids claiming that the lifecycle values are factually wrong."},
+  {"finding_id":"customers_without_closedwon_deal_trace","reviewer":"privacy_safety_reviewer","verdict":"approve","reason":"Only aggregate counts and reporting implications are present; the recommendation requires business confirmation and cannot auto-edit lifecycle or deal data."},
+  {"finding_id":"customers_without_closedwon_deal_trace","reviewer":"audit_scope_reviewer","verdict":"approve","reason":"Reconciling lifecycle stages to closed-won pipeline is a direct marketing-to-pipeline trust question, not a forecast or sales-performance claim."},
+
+  {"finding_id":"mql_plus_contacts_without_deal_trace","reviewer":"data_fidelity_reviewer","verdict":"approve","reason":"The finding copies 160, 155, and 96.9 from mql_plus_contacts_without_deal and names the measured MQL, SQL, and opportunity population."},
+  {"finding_id":"mql_plus_contacts_without_deal_trace","reviewer":"logic_reviewer","verdict":"approve","reason":"The finding treats the absence as a funnel-traceability problem and explicitly preserves the need to confirm the intended handoff model; it does not assert causality."},
+  {"finding_id":"mql_plus_contacts_without_deal_trace","reviewer":"privacy_safety_reviewer","verdict":"approve","reason":"The finding is aggregate-only and proposes no automated stage, association, or record update."},
+  {"finding_id":"mql_plus_contacts_without_deal_trace","reviewer":"audit_scope_reviewer","verdict":"approve","reason":"Lifecycle-to-deal traceability is central to the selected audit and the finding does not drift into sales conversion or forecast analysis."},
+
+  {"finding_id":"contacts_without_company_association","reviewer":"data_fidelity_reviewer","verdict":"approve","reason":"The finding copies 360, 80, and 22.2 from contacts_without_company and correctly applies the ABM context only to the business impact."},
+  {"finding_id":"contacts_without_company_association","reviewer":"logic_reviewer","verdict":"approve","reason":"The high severity follows from the selected abm_heavy_crm profile and the finding distinguishes the reporting consequence from any presumed root cause."},
+  {"finding_id":"contacts_without_company_association","reviewer":"privacy_safety_reviewer","verdict":"approve","reason":"The finding contains no identity values and the safe action is limited to a reversible review list, not automatic association writes."},
+  {"finding_id":"contacts_without_company_association","reviewer":"audit_scope_reviewer","verdict":"approve","reason":"Company association integrity is required for account-level marketing-to-pipeline reporting in an ABM model."},
+
+  {"finding_id":"deals_without_company_association","reviewer":"data_fidelity_reviewer","verdict":"approve","reason":"The finding copies the 36-deal denominator, 4 affected deals, and 11.1 percentage from the cited measurement."},
+  {"finding_id":"deals_without_company_association","reviewer":"logic_reviewer","verdict":"approve","reason":"The medium severity is proportionate to the measured gap and the account-rollup conclusion follows from missing deal-to-company relationships."},
+  {"finding_id":"deals_without_company_association","reviewer":"privacy_safety_reviewer","verdict":"approve","reason":"The finding is aggregate-only and recommends only a non-destructive review list."},
+  {"finding_id":"deals_without_company_association","reviewer":"audit_scope_reviewer","verdict":"approve","reason":"Deal-to-company linkage affects account-level pipeline attribution and is within scope."},
+
+  {"finding_id":"deals_without_contact_association","reviewer":"data_fidelity_reviewer","verdict":"approve","reason":"The finding copies 36, 6, and 16.7 from deals_without_contact and keeps the claim limited to missing contact relationships."},
+  {"finding_id":"deals_without_contact_association","reviewer":"logic_reviewer","verdict":"approve","reason":"The contact-to-revenue traceability conclusion follows from the association measurement and does not claim that a particular contact should be linked."},
+  {"finding_id":"deals_without_contact_association","reviewer":"privacy_safety_reviewer","verdict":"approve","reason":"No raw contact values appear, and the proposed operational action is a human review list rather than an association write."},
+  {"finding_id":"deals_without_contact_association","reviewer":"audit_scope_reviewer","verdict":"approve","reason":"Contact-to-deal association is a direct part of marketing influence and revenue traceability."},
+
+  {"finding_id":"duplicate_company_domain_candidates","reviewer":"data_fidelity_reviewer","verdict":"approve","reason":"The finding copies 55, 8, and 14.5 from duplicate_company_domain_candidates and consistently calls them candidates rather than confirmed duplicates."},
+  {"finding_id":"duplicate_company_domain_candidates","reviewer":"logic_reviewer","verdict":"approve","reason":"The medium severity and conditional business impact respect the possibility of legitimate subsidiaries, franchises, or regional entities."},
+  {"finding_id":"duplicate_company_domain_candidates","reviewer":"privacy_safety_reviewer","verdict":"approve","reason":"The output exposes no domains or identity values and explicitly routes the decision to business confirmation rather than automatic merging."},
+  {"finding_id":"duplicate_company_domain_candidates","reviewer":"audit_scope_reviewer","verdict":"approve","reason":"Potential account duplication can split ABM rollups and attribution, so it is inside the selected scope."},
+
+  {"finding_id":"companies_without_domain","reviewer":"data_fidelity_reviewer","verdict":"approve","reason":"The finding copies 60, 5, and 8.3 from companies_without_domain and makes no stronger completeness claim."},
+  {"finding_id":"companies_without_domain","reviewer":"logic_reviewer","verdict":"approve","reason":"The low severity is consistent with a limited gap that degrades deduplication and enrichment rather than invalidating all reporting."},
+  {"finding_id":"companies_without_domain","reviewer":"privacy_safety_reviewer","verdict":"approve","reason":"The finding contains only aggregate data and the proposed review-list action cannot change CRM truth."},
+  {"finding_id":"companies_without_domain","reviewer":"audit_scope_reviewer","verdict":"approve","reason":"Domain completeness affects account reconciliation and is relevant to ABM reporting trust."},
+
+  {"finding_id":"open_deals_past_close_date","reviewer":"data_fidelity_reviewer","verdict":"approve","reason":"The finding copies 20, 3, and 15.0 from open_deals_past_close_date and limits the claim to open deals with past close dates."},
+  {"finding_id":"open_deals_past_close_date","reviewer":"logic_reviewer","verdict":"approve","reason":"The reporting-risk conclusion follows from the measurement without making a forecast, win-rate, or velocity claim."},
+  {"finding_id":"open_deals_past_close_date","reviewer":"privacy_safety_reviewer","verdict":"approve","reason":"The finding is aggregate-only and is correctly classified do_not_auto_fix because changing dates or stages would alter CRM truth."},
+  {"finding_id":"open_deals_past_close_date","reviewer":"audit_scope_reviewer","verdict":"approve","reason":"Open pipeline freshness affects the reliability of marketing-to-revenue reporting and remains within scope."},
+
+  {"finding_id":"deals_without_amount","reviewer":"data_fidelity_reviewer","verdict":"approve","reason":"The finding copies 36, 6, and 16.7 from deals_without_amount."},
+  {"finding_id":"deals_without_amount","reviewer":"logic_reviewer","verdict":"approve","reason":"The conclusion is limited to incomplete value-weighted pipeline reporting and does not assume that every deal must have an amount without business confirmation."},
+  {"finding_id":"deals_without_amount","reviewer":"privacy_safety_reviewer","verdict":"approve","reason":"No sensitive values are included and the classification requires confirmation before any CRM change."},
+  {"finding_id":"deals_without_amount","reviewer":"audit_scope_reviewer","verdict":"approve","reason":"Missing deal amount directly affects marketing-sourced pipeline value reporting."},
+
+  {"finding_id":"deals_without_owner","reviewer":"data_fidelity_reviewer","verdict":"approve","reason":"The finding copies 36, 4, and 11.1 from deals_without_owner."},
+  {"finding_id":"deals_without_owner","reviewer":"logic_reviewer","verdict":"approve","reason":"The accountability and segmentation conclusion follows from missing owner fields without inferring which owner should be assigned."},
+  {"finding_id":"deals_without_owner","reviewer":"privacy_safety_reviewer","verdict":"approve","reason":"The finding is aggregate-only and the safe action is limited to preparing a review list, not bulk owner assignment."},
+  {"finding_id":"deals_without_owner","reviewer":"audit_scope_reviewer","verdict":"approve","reason":"Owner completeness affects pipeline segmentation used in marketing-to-pipeline reporting."},
+
+  {"finding_id":"deals_in_unknown_pipeline","reviewer":"data_fidelity_reviewer","verdict":"approve","reason":"The finding copies 36, 2, and 5.6 from deals_in_unknown_pipeline and does not invent a target pipeline."},
+  {"finding_id":"deals_in_unknown_pipeline","reviewer":"logic_reviewer","verdict":"approve","reason":"The rollup-distortion conclusion follows from references to undefined pipeline definitions; the classification correctly avoids assuming a repair path."},
+  {"finding_id":"deals_in_unknown_pipeline","reviewer":"privacy_safety_reviewer","verdict":"approve","reason":"The finding contains no raw values and is correctly marked do_not_auto_fix because moving a deal between pipelines changes reporting truth."},
+  {"finding_id":"deals_in_unknown_pipeline","reviewer":"audit_scope_reviewer","verdict":"approve","reason":"Pipeline definition integrity is directly relevant to marketing-to-revenue rollups."},
+
+  {"finding_id":"decayed_source_field_candidates","reviewer":"data_fidelity_reviewer","verdict":"approve","reason":"The finding copies 17, 3, and 17.6 and preserves the measurement's candidate framing for decayed source-like properties."},
+  {"finding_id":"decayed_source_field_candidates","reviewer":"logic_reviewer","verdict":"approve","reason":"The finding treats decayed fields as a governance risk rather than claiming they are definitely obsolete or explaining why they decayed."},
+  {"finding_id":"decayed_source_field_candidates","reviewer":"privacy_safety_reviewer","verdict":"approve","reason":"No CRM field values or identities are exposed and the recommendation requires confirmation before any archival or deletion decision."},
+  {"finding_id":"decayed_source_field_candidates","reviewer":"audit_scope_reviewer","verdict":"approve","reason":"Source-field governance can change which properties marketing reporting trusts, so it belongs in scope."},
+
+  {"finding_id":"similar_source_field_name_candidates","reviewer":"data_fidelity_reviewer","verdict":"approve","reason":"The finding copies 17, 11, and 64.7 and calls the result collision candidates rather than confirmed duplicate properties."},
+  {"finding_id":"similar_source_field_name_candidates","reviewer":"logic_reviewer","verdict":"approve","reason":"The conclusion follows from name-collision candidates plus the confirmed need for canonical mapping; it does not infer that all eleven are redundant."},
+  {"finding_id":"similar_source_field_name_candidates","reviewer":"privacy_safety_reviewer","verdict":"approve","reason":"The finding contains no raw CRM values and does not recommend automatic property deletion or rewriting."},
+  {"finding_id":"similar_source_field_name_candidates","reviewer":"audit_scope_reviewer","verdict":"approve","reason":"Ambiguous source properties can make marketing-to-pipeline reports read inconsistent fields, which is within the audit's property-governance scope."}
+]

@@ -1,0 +1,39 @@
+{
+  "module": "lifecycle_funnel",
+  "findings": [
+    {
+      "id": "customers_without_closedwon_deal_trace",
+      "module": "lifecycle_funnel",
+      "severity": "high",
+      "confidence": "high",
+      "object_type": "contacts",
+      "measurement_id": "customers_without_closedwon_deal",
+      "field_name": "lifecyclestage",
+      "denominator": 15,
+      "affected_records": 15,
+      "affected_percentage": 100.0,
+      "evidence_file": "evidence/lifecycle_funnel.csv",
+      "business_impact": "The customer-stage population cannot be reconciled to closed-won revenue through the captured deal relationships, weakening lifecycle-to-pipeline reporting for a sales-led motion.",
+      "recommendation_type": "needs_business_rule_confirmation",
+      "auto_fix_allowed": false,
+      "review_status": "approved"
+    },
+    {
+      "id": "mql_plus_contacts_without_deal_trace",
+      "module": "lifecycle_funnel",
+      "severity": "high",
+      "confidence": "high",
+      "object_type": "contacts",
+      "measurement_id": "mql_plus_contacts_without_deal",
+      "field_name": "lifecyclestage",
+      "denominator": 160,
+      "affected_records": 155,
+      "affected_percentage": 96.9,
+      "evidence_file": "evidence/lifecycle_funnel.csv",
+      "business_impact": "Most contacts at MQL, SQL, or opportunity stages have no associated deal in this snapshot, so funnel conversion and marketing-sourced pipeline coverage cannot be read confidently without confirming the intended handoff model.",
+      "recommendation_type": "needs_business_rule_confirmation",
+      "auto_fix_allowed": false,
+      "review_status": "approved"
+    }
+  ]
+}

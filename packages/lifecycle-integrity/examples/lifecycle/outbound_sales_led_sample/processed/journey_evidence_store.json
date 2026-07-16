@@ -1,0 +1,322 @@
+{
+  "run_id": "outbound_sales_led_sample",
+  "date_window_days": null,
+  "full_history": true,
+  "object_counts": {
+    "contacts": 6,
+    "companies": 1,
+    "deals": 4
+  },
+  "candidate_fields": {
+    "lifecycle": [
+      {
+        "object_type": "contacts",
+        "field": "lifecyclestage",
+        "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Lifecycle Stage",
+        "hubspot_defined": true,
+        "fill_rate": 100.0,
+        "fill_rate_recent_half": 100.0,
+        "distinct_count": 1,
+        "top_values": [
+          {
+            "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] lead",
+            "count": 6
+          }
+        ]
+      },
+      {
+        "object_type": "companies",
+        "field": "lifecyclestage",
+        "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Lifecycle Stage",
+        "hubspot_defined": true,
+        "fill_rate": 0.0,
+        "fill_rate_recent_half": null,
+        "distinct_count": 0,
+        "top_values": null
+      },
+      {
+        "object_type": "deals",
+        "field": "dealstage",
+        "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Deal Stage",
+        "hubspot_defined": true,
+        "fill_rate": 100.0,
+        "fill_rate_recent_half": 100.0,
+        "distinct_count": 1,
+        "top_values": [
+          {
+            "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] open",
+            "count": 4
+          }
+        ]
+      }
+    ],
+    "source": [
+      {
+        "object_type": "contacts",
+        "field": "hs_analytics_source",
+        "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Original Source",
+        "hubspot_defined": true,
+        "fill_rate": 0.0,
+        "fill_rate_recent_half": 0.0,
+        "distinct_count": 0,
+        "top_values": null
+      },
+      {
+        "object_type": "contacts",
+        "field": "hs_object_source",
+        "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Record source",
+        "hubspot_defined": true,
+        "fill_rate": 100.0,
+        "fill_rate_recent_half": 100.0,
+        "distinct_count": 1,
+        "top_values": [
+          {
+            "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] IMPORT",
+            "count": 6
+          }
+        ]
+      }
+    ],
+    "deal_type": [
+      {
+        "object_type": "deals",
+        "field": "sales_motion",
+        "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Sales Motion",
+        "hubspot_defined": false,
+        "fill_rate": 100.0,
+        "fill_rate_recent_half": 100.0,
+        "distinct_count": 1,
+        "top_values": [
+          {
+            "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Outbound SDR",
+            "count": 4
+          }
+        ]
+      }
+    ],
+    "account_tier": [],
+    "partner": [],
+    "expansion": [],
+    "high_intent": []
+  },
+  "pipeline_structure": {
+    "pipelines": [
+      {
+        "pipeline_id": "outbound",
+        "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Outbound New Business",
+        "stage_count": 2,
+        "deal_count": 4,
+        "stages": [
+          {
+            "stage_id": "open",
+            "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Prospecting",
+            "deal_count": 4
+          },
+          {
+            "stage_id": "won",
+            "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Won",
+            "deal_count": 0
+          }
+        ]
+      }
+    ],
+    "deals_in_unknown_pipeline": 0
+  },
+  "association_summary": {
+    "contacts_to_companies": {
+      "available": true,
+      "total": 6,
+      "with_association": 6,
+      "coverage_pct": 100.0,
+      "distribution": {
+        "0": 0,
+        "1": 6,
+        "2+": 0
+      }
+    },
+    "deals_to_companies": {
+      "available": true,
+      "total": 4,
+      "with_association": 4,
+      "coverage_pct": 100.0,
+      "distribution": {
+        "0": 0,
+        "1": 4,
+        "2+": 0
+      }
+    },
+    "deals_to_contacts": {
+      "available": true,
+      "total": 4,
+      "with_association": 4,
+      "coverage_pct": 100.0,
+      "distribution": {
+        "0": 0,
+        "1": 4,
+        "2+": 0
+      }
+    }
+  },
+  "owner_coverage": {
+    "contacts": {
+      "total": 6,
+      "with_owner": 6,
+      "coverage_pct": 100.0
+    },
+    "companies": {
+      "total": 1,
+      "with_owner": 0,
+      "coverage_pct": 0.0
+    },
+    "deals": {
+      "total": 4,
+      "with_owner": 4,
+      "coverage_pct": 100.0
+    }
+  },
+  "activity_summary": {
+    "available": false,
+    "metadata_only": true,
+    "objects": {},
+    "limitation": "Activity metadata was not requested or unavailable."
+  },
+  "relationship_signals": {
+    "contact_before_deal": 4,
+    "contact_deal_pairs_with_dates": 4,
+    "deals_without_mql_plus_contact": 4,
+    "companies_with_multiple_contacts": 1,
+    "companies_with_prior_won_and_new_deal": 0
+  },
+  "stage_transition_summary": {
+    "available": false,
+    "contacts": {
+      "total": 6,
+      "with_stage_timestamps": 0,
+      "multi_stage_paths": 0,
+      "ranked_multi_stage_paths": 0,
+      "ordered_progressions": 0,
+      "mql_progressions": 0,
+      "stage_regressions": 0,
+      "customers_total": 0,
+      "customers_without_timestamped_path": 0
+    },
+    "companies": {
+      "total": 1,
+      "with_stage_timestamps": 0,
+      "multi_stage_paths": 0,
+      "ranked_multi_stage_paths": 0,
+      "ordered_progressions": 0,
+      "mql_progressions": 0,
+      "stage_regressions": 0,
+      "customers_total": 0,
+      "customers_without_timestamped_path": 0
+    },
+    "deals": {
+      "total": 4,
+      "with_stage_timestamps": 0,
+      "multi_stage_paths": 0
+    },
+    "limitation": "No stage-entry timestamps in this snapshot; journey paths are inferred from record creation order only. Re-run the acquisition pass with the current connector to capture hs_v2_date_entered_* properties."
+  },
+  "journey_signals": {
+    "inbound_new_business": {
+      "field_keyword_hits": 0,
+      "pipeline_keyword_hits": 0,
+      "path_strength_pct": 0,
+      "material_records": 0,
+      "temporal_coverage_pct": 0,
+      "association_coverage_pct": 0,
+      "contradiction_count": 0,
+      "supporting_evidence": [],
+      "contradicting_evidence": [],
+      "human_confirmation_needed": [
+        "Confirm whether inbound_new_business is represented by an unmapped custom field"
+      ]
+    },
+    "outbound_sales_led": {
+      "field_keyword_hits": 3,
+      "pipeline_keyword_hits": 2,
+      "path_strength_pct": 100.0,
+      "material_records": 4,
+      "temporal_coverage_pct": 100.0,
+      "association_coverage_pct": 100.0,
+      "contradiction_count": 0,
+      "supporting_evidence": [
+        "3 journey keyword signal(s) in active fields/values",
+        "2 journey keyword signal(s) in pipeline/stage labels",
+        "object-path strength 100.0%"
+      ],
+      "contradicting_evidence": [],
+      "human_confirmation_needed": []
+    },
+    "abm_account_based": {
+      "field_keyword_hits": 0,
+      "pipeline_keyword_hits": 0,
+      "path_strength_pct": 0,
+      "material_records": 0,
+      "temporal_coverage_pct": 0,
+      "association_coverage_pct": 0,
+      "contradiction_count": 0,
+      "supporting_evidence": [],
+      "contradicting_evidence": [],
+      "human_confirmation_needed": [
+        "Confirm whether abm_account_based is represented by an unmapped custom field"
+      ]
+    },
+    "partner_led": {
+      "field_keyword_hits": 0,
+      "pipeline_keyword_hits": 0,
+      "path_strength_pct": 0,
+      "material_records": 0,
+      "temporal_coverage_pct": 0,
+      "association_coverage_pct": 0,
+      "contradiction_count": 0,
+      "supporting_evidence": [],
+      "contradicting_evidence": [],
+      "human_confirmation_needed": [
+        "Confirm whether partner_led is represented by an unmapped custom field"
+      ]
+    },
+    "expansion_renewal": {
+      "field_keyword_hits": 0,
+      "pipeline_keyword_hits": 0,
+      "path_strength_pct": 0,
+      "material_records": 0,
+      "temporal_coverage_pct": 0,
+      "association_coverage_pct": 0,
+      "contradiction_count": 0,
+      "supporting_evidence": [],
+      "contradicting_evidence": [],
+      "human_confirmation_needed": [
+        "Confirm whether expansion_renewal is represented by an unmapped custom field"
+      ]
+    }
+  },
+  "assignment_counts": {
+    "outbound_sales_led": 4
+  },
+  "assignment_counts_by_object": {
+    "deals": {
+      "outbound_sales_led": 4
+    },
+    "high_intent_contacts": {}
+  },
+  "high_intent_summary": {
+    "definition": "Contacts with a qualified pre-deal lifecycle stage or a positive high-intent HubSpot property signal. This identifies a review population, not guaranteed pipeline.",
+    "total": 0,
+    "with_owner": 0,
+    "without_owner": 0,
+    "with_associated_deal": 0,
+    "without_associated_deal": 0,
+    "deal_association_available": true,
+    "by_journey": {},
+    "currency_amount_available": false,
+    "contains_raw_values": false
+  },
+  "ambiguous_areas": [
+    "Activity-level handoff evidence unavailable",
+    "Stage-entry timestamps unavailable; journey paths are inferred from record creation order only"
+  ],
+  "warnings": [],
+  "contains_raw_pii": false
+}

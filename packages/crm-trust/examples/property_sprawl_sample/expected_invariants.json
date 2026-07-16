@@ -1,0 +1,17 @@
+[
+  {
+    "module": "property_governance",
+    "id": "decayed_source_fields",
+    "expect": {
+      "denominator": 4,
+      "affected_records": 3
+    }
+  },
+  {
+    "module": "property_governance",
+    "id": "similar_name_field_groups",
+    "expect": {
+      "affected_records": 2
+    }
+  }
+]
