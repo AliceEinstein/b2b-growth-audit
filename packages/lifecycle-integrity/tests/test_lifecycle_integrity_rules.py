@@ -39,9 +39,7 @@ def test_pipeline_exposure_uses_existing_deals_and_no_deal_contacts_have_no_amou
     )
     exposure = doc["pipeline_exposure"]
     assert exposure["unique_open_deals_with_leakage_signals"] == 2
-    assert exposure["actual_open_deal_amount_by_currency"] == {
-        "portal_default": "65000.00"
-    }
+    assert exposure["actual_open_deal_amount_by_currency"] == {"USD": "65000.00"}
     assert exposure["potential_recoverable_pipeline_population"] == 3
     assert exposure["potential_population_amount"] is None
 

@@ -1,6 +1,6 @@
 {
-  "started_at": "2026-07-15T17:10:02.360983+00:00",
-  "finished_at": "2026-07-15T17:10:02.360987+00:00",
+  "started_at": "2026-07-20T15:17:12.063494+00:00",
+  "finished_at": "2026-07-20T15:17:12.063498+00:00",
   "run_config": {
     "synthetic_dataset": "mixed_motion_scaleup_sample"
   },

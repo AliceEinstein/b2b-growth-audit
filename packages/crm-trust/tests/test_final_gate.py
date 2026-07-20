@@ -46,7 +46,8 @@ def _finding_from(measurement, fid, severity, rec_type):
 
 def _report_text(total: int) -> str:
     sections = [
-        "# HubSpot Marketing-to-Pipeline Trust Audit",
+        "# Example Business CRM Trust Audit",
+        "HubSpot Marketing-to-Pipeline Trust Audit",
         "## Executive Summary", f"Attribution capture is degrading. **{total}/100**",
         "## CRM Snapshot", "Full-history snapshot.",
         "## Data Quality and Usability", "Field-level completeness and validity.",
@@ -65,7 +66,8 @@ def _report_text(total: int) -> str:
 
 def _html_report_text(total: int) -> str:
     sections = [
-        "<h1>HubSpot Marketing-to-Pipeline Trust Audit</h1>",
+        "<h1>Example Business CRM Trust Audit</h1>",
+        "<p>HubSpot Marketing-to-Pipeline Trust Audit</p>",
         f"<p>{total}/100</p>",
         "<h2>Executive Summary</h2>",
         "<h2>CRM Snapshot</h2>",
@@ -197,6 +199,10 @@ def finalized_run(tmp_path) -> Path:
     write_json(run / "score.json", score)
     write_json(run / "findings.json", {"findings": findings})
     consolidate_evidence(run)
+    (run / "report_record_evidence.csv").write_text(
+        "finding_id,measurement_id,object_type,record_id_hash,company_name,deal_name,pipeline_label,deal_stage_label\n",
+        encoding="utf-8",
+    )
 
     (run / "crm_trust_report.md").write_text(
         _report_text(score["total"]), encoding="utf-8"

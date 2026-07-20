@@ -1,0 +1,77 @@
+[
+  {
+    "name": "createdate",
+    "label": "Create Date",
+    "hubspotDefined": true
+  },
+  {
+    "name": "email",
+    "label": "Email",
+    "hubspotDefined": true
+  },
+  {
+    "name": "firstname",
+    "label": "First Name",
+    "hubspotDefined": true
+  },
+  {
+    "name": "lastname",
+    "label": "Last Name",
+    "hubspotDefined": true
+  },
+  {
+    "name": "phone",
+    "label": "Phone",
+    "hubspotDefined": true
+  },
+  {
+    "name": "lifecyclestage",
+    "label": "Lifecycle Stage",
+    "hubspotDefined": true
+  },
+  {
+    "name": "hs_analytics_source",
+    "label": "Original Source",
+    "hubspotDefined": true
+  },
+  {
+    "name": "hubspot_owner_id",
+    "label": "Contact owner",
+    "hubspotDefined": true
+  },
+  {
+    "name": "hs_object_source",
+    "label": "Record source",
+    "hubspotDefined": true
+  },
+  {
+    "name": "sales_motion",
+    "label": "Sales Motion",
+    "hubspotDefined": false
+  },
+  {
+    "name": "account_tier",
+    "label": "Account Tier",
+    "hubspotDefined": false
+  },
+  {
+    "name": "target_account",
+    "label": "Target Account",
+    "hubspotDefined": false
+  },
+  {
+    "name": "partner_source",
+    "label": "Partner Source",
+    "hubspotDefined": false
+  },
+  {
+    "name": "demo_request_status",
+    "label": "Demo Request Status",
+    "hubspotDefined": false
+  },
+  {
+    "name": "engagement_score",
+    "label": "Engagement Score",
+    "hubspotDefined": false
+  }
+]

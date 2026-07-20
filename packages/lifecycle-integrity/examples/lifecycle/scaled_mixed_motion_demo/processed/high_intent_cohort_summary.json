@@ -1,0 +1,53 @@
+{
+  "definition": "Contacts with a qualified pre-deal lifecycle stage or a positive high-intent HubSpot property signal. This identifies a review population, not guaranteed pipeline.",
+  "total": 24,
+  "with_owner": 18,
+  "without_owner": 6,
+  "with_associated_deal": 14,
+  "without_associated_deal": 10,
+  "deal_association_available": true,
+  "by_journey": {
+    "abm_account_based": {
+      "total": 1,
+      "with_owner": 1,
+      "without_owner": 0,
+      "with_associated_deal": 1,
+      "without_associated_deal": 0,
+      "deal_association_available": true
+    },
+    "expansion_renewal": {
+      "total": 4,
+      "with_owner": 4,
+      "without_owner": 0,
+      "with_associated_deal": 4,
+      "without_associated_deal": 0,
+      "deal_association_available": true
+    },
+    "inbound_new_business": {
+      "total": 14,
+      "with_owner": 8,
+      "without_owner": 6,
+      "with_associated_deal": 4,
+      "without_associated_deal": 10,
+      "deal_association_available": true
+    },
+    "outbound_sales_led": {
+      "total": 1,
+      "with_owner": 1,
+      "without_owner": 0,
+      "with_associated_deal": 1,
+      "without_associated_deal": 0,
+      "deal_association_available": true
+    },
+    "unassigned": {
+      "total": 4,
+      "with_owner": 4,
+      "without_owner": 0,
+      "with_associated_deal": 4,
+      "without_associated_deal": 0,
+      "deal_association_available": true
+    }
+  },
+  "currency_amount_available": false,
+  "contains_raw_values": false
+}

@@ -1,7 +1,7 @@
 [project]
 name = "hubspot-crm-trust-audit"
 version = "0.1.0"
-description = "B2B Growth Audit skills for read-only HubSpot CRM trust and lifecycle integrity analysis"
+description = "Read-only HubSpot CRM Trust Audit for B2B marketing-to-pipeline decisions"
 authors = [{ name = "Alice Ren", email = "contact@smartifymarketing.com" }]
 license = "MIT"
 license-files = ["LICENSE"]

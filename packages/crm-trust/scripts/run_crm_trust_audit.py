@@ -1,7 +1,7 @@
 """Fetch a read-only HubSpot CRM snapshot (audit pipeline, Phases 1–2).
 
 Usage:
-    python -m scripts.run_crm_trust_audit                 # full history
+    python -m scripts.run_crm_trust_audit --business-name "Acme"  # full history
     python -m scripts.run_crm_trust_audit --days 90       # recent-only view
 
 Later phases (profiling, schema discovery, audit modules, reports) consume
@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -18,6 +19,7 @@ from rich.console import Console
 from rich.table import Table
 
 from connectors.hubspot import (
+    fetch_account_info,
     fetch_associations,
     fetch_companies,
     fetch_contacts,
@@ -87,6 +89,14 @@ def parse_args() -> argparse.Namespace:
         "--dry-run",
         action="store_true",
         help="Preview raw retention deletions; the audit itself still runs",
+    )
+    parser.add_argument(
+        "--business-name",
+        default=os.getenv("CRM_AUDIT_BUSINESS_NAME"),
+        help=(
+            "Business name shown in the confidential human report. HubSpot's "
+            "account-info endpoint does not guarantee an account display name."
+        ),
     )
     parser.add_argument("--output-root", type=Path, default=default_output_root())
     return parser.parse_args()
@@ -199,6 +209,16 @@ def _run_audit() -> int:
     ensure_output_root_guard(run_dir.parent)
     raw = run_dir / "raw"
     ensure_raw_guard(raw)
+    report_business_name = args.business_name
+    if resumed and not report_business_name:
+        account_path = raw / "account_info.json"
+        if account_path.exists():
+            try:
+                report_business_name = json.loads(
+                    account_path.read_text(encoding="utf-8")
+                ).get("business_name")
+            except (json.JSONDecodeError, OSError, AttributeError):
+                report_business_name = None
     log = AuditLog(run_config={"days": days, "full_history": days is None})
     counts: dict[str, int] = {}
     truncated: dict[str, bool] = {}
@@ -240,6 +260,32 @@ def _run_audit() -> int:
         # 3. Owners and pipelines.
         counts["owners"] = fetch_owners.fetch(client, raw / "owners.json")["count"]
         counts["pipelines"] = fetch_pipelines.fetch(client, raw / "pipelines.json")["count"]
+        try:
+            account_info = fetch_account_info.fetch(
+                client,
+                raw / "account_info.json",
+                business_name=report_business_name,
+            )
+            if account_info.get("business_name"):
+                console.print(f"✅ report business name: {account_info['business_name']}")
+            else:
+                log.warn(
+                    "Business name was not supplied; the report will use a generic title. "
+                    "Re-run with --business-name or CRM_AUDIT_BUSINESS_NAME for the real name."
+                )
+        except HubSpotError:
+            write_json(
+                raw / "account_info.json",
+                {
+                    "status": "unavailable",
+                    "portal_id": None,
+                    "business_name": str(report_business_name or "").strip()[:120] or None,
+                    "business_name_source": "user_supplied" if report_business_name else "unavailable",
+                },
+            )
+            log.warn(
+                "Portal identity unavailable; the report will omit direct HubSpot record links."
+            )
         console.print(
             f"✅ owners: {counts['owners']}, deal pipelines: {counts['pipelines']}"
         )

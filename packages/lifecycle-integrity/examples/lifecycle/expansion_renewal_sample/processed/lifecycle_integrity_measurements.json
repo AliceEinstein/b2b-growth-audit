@@ -252,6 +252,27 @@
       "affected_deals_without_amount": 0,
       "affected_deal_amount_by_currency": {},
       "pipeline_breakdown": []
+    },
+    {
+      "id": "intent_signal_coverage",
+      "journey_pattern": "all_detected_journeys",
+      "integrity_dimension": "handoff_integrity",
+      "object_type": "intent_signals",
+      "field_name": null,
+      "available": false,
+      "denominator": null,
+      "affected_records": 0,
+      "affected_percentage": null,
+      "evidence_file": "evidence.csv",
+      "note": "Intent signal acquisition was not requested or was unavailable.",
+      "leakage_candidate": false,
+      "leakage_point": "",
+      "recoverability": "unknown",
+      "potential_recoverable_pipeline_population": 0,
+      "affected_deals_with_amount": 0,
+      "affected_deals_without_amount": 0,
+      "affected_deal_amount_by_currency": {},
+      "pipeline_breakdown": []
     }
   ],
   "pipeline_exposure": {
@@ -264,7 +285,37 @@
     "potential_recoverable_pipeline_population": 0,
     "potential_population_amount": null,
     "potential_population_amount_rule": "Never assign monetary value when no deal exists.",
+    "active_deal_escalation_deals": 0,
+    "closed_lost_recovery_opportunities": 0,
     "deal_trace_file": "evidence.csv"
+  },
+  "recovery_routing": {
+    "definition": "Commercial routing layered on top of the existing leakage engine. Cohorts are deduplicated within each lane; a contact without a deal never receives a monetary estimate.",
+    "lanes": {
+      "missing_deal_predeal_recovery": {
+        "population_type": "contacts",
+        "count": 0,
+        "amount_by_currency": {},
+        "amount_rule": "No amount assigned without an existing deal.",
+        "trace_file": "evidence.csv"
+      },
+      "active_deal_leakage_and_escalation": {
+        "population_type": "open_deals",
+        "count": 0,
+        "amount_by_currency": {},
+        "amount_rule": "Actual amount on existing open deals only; not a forecast.",
+        "trace_file": "evidence.csv"
+      },
+      "closed_lost_recovery": {
+        "population_type": "closed_lost_deals",
+        "count": 0,
+        "historical_closed_lost_amount_by_currency": {},
+        "historical_deals_with_amount": 0,
+        "amount_rule": "Historical closed-lost amount is context only and is never added to open pipeline or presented as recoverable revenue.",
+        "trace_file": "evidence.csv"
+      }
+    },
+    "score_rule": "Recovery opportunity signals do not lower the integrity score unless a separate reviewer-approved integrity finding does so."
   },
   "evidence_file": "evidence.csv",
   "evidence_columns": [

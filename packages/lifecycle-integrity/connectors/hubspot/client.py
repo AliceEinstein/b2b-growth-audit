@@ -21,11 +21,11 @@ BASE_URL = "https://api.hubapi.com"
 # Every entry is a read operation. POST entries are HubSpot read APIs that
 # happen to use POST (search, batch association read, token introspection).
 READ_ONLY_ALLOWLIST: list[tuple[str, re.Pattern[str]]] = [
-    ("GET", re.compile(r"^/crm/v3/objects/(contacts|companies|deals|tasks|meetings|notes)$")),
-    ("POST", re.compile(r"^/crm/v3/objects/(contacts|companies|deals|tasks|meetings|notes)/search$")),
+    ("GET", re.compile(r"^/crm/v3/objects/(contacts|companies|deals|tasks|meetings|notes|calls|emails|communications|marketing_events)$")),
+    ("POST", re.compile(r"^/crm/v3/objects/(contacts|companies|deals|tasks|meetings|notes|calls|emails|communications|marketing_events)/search$")),
     ("GET", re.compile(r"^/crm/v3/owners/?$")),
     ("GET", re.compile(r"^/crm/v3/pipelines/(deals|tickets)$")),
-    ("GET", re.compile(r"^/crm/v3/properties/(contacts|companies|deals|tasks|meetings|notes)$")),
+    ("GET", re.compile(r"^/crm/v3/properties/(contacts|companies|deals|tasks|meetings|notes|calls|emails|communications|marketing_events)$")),
     ("POST", re.compile(r"^/crm/v4/associations/[a-z0-9_]+/[a-z0-9_]+/batch/read$")),
     # Workflow endpoints are deliberately method-sensitive.  GET retrieves
     # configuration; POST on the same collection path creates a workflow and
@@ -36,7 +36,18 @@ READ_ONLY_ALLOWLIST: list[tuple[str, re.Pattern[str]]] = [
     ("POST", re.compile(r"^/automation/v4/flows/batch/read$")),
     ("GET", re.compile(r"^/automation/v3/performance/workflow/[0-9]+$")),
     ("GET", re.compile(r"^/account-info/v3/details$")),
+    ("GET", re.compile(r"^/settings/currencies/2026-03/company-currency$")),
     ("POST", re.compile(r"^/oauth/v2/private-apps/get/access-token-info$")),
+    # Marketing read APIs.  These paths are intentionally explicit: the
+    # allowlist must never become a broad prefix that could reach write APIs.
+    ("GET", re.compile(r"^/events/event-occurrences/2026-03/?$")),
+    ("GET", re.compile(r"^/events/event-occurrences/2026-03/event-types/?$")),
+    ("GET", re.compile(r"^/forms/v2/forms/?$")),
+    ("GET", re.compile(r"^/form-integrations/v1/submissions/forms/[A-Za-z0-9_-]+$")),
+    ("GET", re.compile(r"^/marketing/campaigns/2026-03/?$")),
+    ("GET", re.compile(r"^/marketing/campaigns/2026-03/[A-Za-z0-9-]+$")),
+    ("GET", re.compile(r"^/marketing/campaigns/2026-03/[A-Za-z0-9-]+/assets/[A-Z_]+$")),
+    ("GET", re.compile(r"^/marketing/campaigns/2026-03/[A-Za-z0-9-]+/reports/metrics$")),
 ]
 
 

@@ -1,7 +1,7 @@
 {
   "contacts": [
     {
-      "record_id_hash": "7740bbe9e3c700b2b86ddcdb3847b441ebd5875ba1a5a961b340cb6e3f27c2d6",
+      "record_id_hash": "5eae4543a43be0851df49bf8d0cb464564be1129ff4846741095e3e0677a5e8d",
       "properties": {
         "createdate": "[PRESENT]",
         "lifecyclestage": "[PRESENT]",
@@ -10,7 +10,7 @@
       }
     },
     {
-      "record_id_hash": "a3d5089bc382d35377f3355fdfb187c869e6a823ab93ca7de3ad3be0a1aa6309",
+      "record_id_hash": "a87ffc0b373f098af8124fcf05e1d3e47ed198f712bcae31503536aaadfb9e2b",
       "properties": {
         "createdate": "[PRESENT]",
         "lifecyclestage": "[PRESENT]",
@@ -19,7 +19,7 @@
       }
     },
     {
-      "record_id_hash": "9ae2eac19e3258f817c52b5f955a93e5268fa7b9bee9d769153b1ae42a905095",
+      "record_id_hash": "c23b9889193e2fd840d953239bcb198a6583f28b5f7e59b076273b6ed7643c80",
       "properties": {
         "createdate": "[PRESENT]",
         "lifecyclestage": "[PRESENT]",
@@ -28,7 +28,7 @@
       }
     },
     {
-      "record_id_hash": "fb0686b59392ca69ddc3e30b9e220ee928257f111e84adb79c6ed5b5743e4211",
+      "record_id_hash": "e9665b5b534b0cec1fa9e14f2b0ff6b420f1b359d0e575694335af8eefbdab17",
       "properties": {
         "createdate": "[PRESENT]",
         "lifecyclestage": "[PRESENT]",
@@ -37,7 +37,7 @@
       }
     },
     {
-      "record_id_hash": "28e69cfbee6d36f5a3e42f6b8bbf1b298feafc4857ff9d0da1e5ebc2228f4028",
+      "record_id_hash": "b9b09e192acd996c3201e3424df817f1eaa1c3bb66e7e69bb8a46e4737d8241c",
       "properties": {
         "createdate": "[PRESENT]",
         "lifecyclestage": "[PRESENT]",
@@ -48,7 +48,7 @@
   ],
   "companies": [
     {
-      "record_id_hash": "b70b2c1b9e99a819101e0f116c1da19f3bc1de08643688a0a60d7794d08b2d25",
+      "record_id_hash": "277d39b5fa113f4d113e9042e2ebb7bea52e7ac835539a8ecc63e3a89762620e",
       "properties": {
         "createdate": "[PRESENT]",
         "domain": "[PRESENT]",
@@ -59,34 +59,40 @@
   ],
   "deals": [
     {
-      "record_id_hash": "c55ce1be32bc82d3bcee6e44b9372bf1e1109603ff80d64c445330585a44574f",
+      "record_id_hash": "50c76ba3adf48f4e3c166cbbbf5e98b8be243dbde9d0e96783b787415f8d1a02",
       "properties": {
         "createdate": "[PRESENT]",
         "pipeline": "[PRESENT]",
         "dealstage": "[PRESENT]",
         "amount": "[PRESENT]",
+        "dealname": "[PRESENT]",
+        "hs_currency": "[PRESENT]",
         "hubspot_owner_id": "[PRESENT]",
         "closedate": "[MISSING]"
       }
     },
     {
-      "record_id_hash": "cd0f426b992a953f04ca607be31257fbb0ae2b05f678b44397585a7e1a2310ba",
+      "record_id_hash": "8a4e9105c7c2b1f10b46f7c177d42303a31e1cfe6c88838b30ba90e6405146ce",
       "properties": {
         "createdate": "[PRESENT]",
         "pipeline": "[PRESENT]",
         "dealstage": "[PRESENT]",
         "amount": "[PRESENT]",
+        "dealname": "[PRESENT]",
+        "hs_currency": "[PRESENT]",
         "hubspot_owner_id": "[PRESENT]",
         "closedate": "[MISSING]"
       }
     },
     {
-      "record_id_hash": "0c501fe2efbcbb62d0fb7d7225e3d5230eb5e19a3d18a2a9dec322e6b90171d8",
+      "record_id_hash": "be8d97798e696c679c1ff02903c56861e1b812eef6d272437f0f8b9ad450388f",
       "properties": {
         "createdate": "[PRESENT]",
         "pipeline": "[PRESENT]",
         "dealstage": "[PRESENT]",
         "amount": "[PRESENT]",
+        "dealname": "[PRESENT]",
+        "hs_currency": "[PRESENT]",
         "hubspot_owner_id": "[PRESENT]",
         "closedate": "[MISSING]"
       }

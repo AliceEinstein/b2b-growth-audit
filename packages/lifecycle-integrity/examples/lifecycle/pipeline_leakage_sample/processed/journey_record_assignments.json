@@ -1,6 +1,6 @@
 [
   {
-    "record_id_hash": "5f1a4e15972558cbbb306411f5db270ac4924576ae9065166fe876d0009d1d0d",
+    "record_id_hash": "7cf8508d128affed01ad4e4667345ac3bc91cadf9699928696c09965390709a9",
     "object_type": "deals",
     "assigned_journey": "inbound_new_business",
     "assignment_confidence": 75,
@@ -9,7 +9,7 @@
     ]
   },
   {
-    "record_id_hash": "15bcf3af7696da4ef65353b6a1b827dbb1135601a275914c7424bd5fe67d36d1",
+    "record_id_hash": "2e3527e570ce2f7620828ad2b9c5ceee0a4e23605f8adbb84a301c45cfddd24a",
     "object_type": "deals",
     "assigned_journey": "inbound_new_business",
     "assignment_confidence": 75,
@@ -18,7 +18,7 @@
     ]
   },
   {
-    "record_id_hash": "d37330eae68bb5600ecdff32c17977278cde1c231fc811f3652d7a18b0ac5db2",
+    "record_id_hash": "707beef5326f95049de85f20b85e31bf59fef39c37ba6eda937131c571b35f2d",
     "object_type": "deals",
     "assigned_journey": "inbound_new_business",
     "assignment_confidence": 75,
@@ -27,7 +27,7 @@
     ]
   },
   {
-    "record_id_hash": "e5f02d4e8236fbe3226b47924beef9d1d3a5895fbc4944be01c9c5009a870f1d",
+    "record_id_hash": "9ab745348ec9fe9cfec1cc4dfc91e587203f1e7eab1d7f476602eec0f3c833a9",
     "object_type": "contacts",
     "assigned_journey": "inbound_new_business",
     "assignment_confidence": 60,
@@ -37,10 +37,11 @@
     ],
     "high_intent": true,
     "has_owner": true,
-    "has_associated_deal": true
+    "has_associated_deal": true,
+    "intent_signal_count": 0
   },
   {
-    "record_id_hash": "e235c3241d60b52964cddf35579f4ea24dfa363eb2661cf7e9e0da9ed96a0562",
+    "record_id_hash": "b80a888ea6c9e4aa7bbd6c3ccf6bed053dd68b4c49193b959de1cfc61d19c1a6",
     "object_type": "contacts",
     "assigned_journey": "inbound_new_business",
     "assignment_confidence": 60,
@@ -50,10 +51,11 @@
     ],
     "high_intent": true,
     "has_owner": false,
-    "has_associated_deal": false
+    "has_associated_deal": false,
+    "intent_signal_count": 0
   },
   {
-    "record_id_hash": "74644e807acacaea9cb7a49e7c7c5b24a636a89f7c2cfd0e3832cdc1d571ea1b",
+    "record_id_hash": "545d20ce905fbc2a9b31433c1c65a289f7a942c67433069ade9faaefd49c1b90",
     "object_type": "contacts",
     "assigned_journey": "inbound_new_business",
     "assignment_confidence": 70,
@@ -63,10 +65,11 @@
     ],
     "high_intent": true,
     "has_owner": false,
-    "has_associated_deal": false
+    "has_associated_deal": false,
+    "intent_signal_count": 0
   },
   {
-    "record_id_hash": "e9dbc03f090b462dcae925ff05cc9b4feac66379bd47ed08f06a0a13b6250c44",
+    "record_id_hash": "7482dce357be90ccb0ad9d38ae1eacf0004fbeb92c304e2b78784badbb7875cf",
     "object_type": "contacts",
     "assigned_journey": "inbound_new_business",
     "assignment_confidence": 60,
@@ -76,10 +79,11 @@
     ],
     "high_intent": true,
     "has_owner": true,
-    "has_associated_deal": true
+    "has_associated_deal": true,
+    "intent_signal_count": 0
   },
   {
-    "record_id_hash": "321873d9eed8f0eb6d3fd8314aac3203836e2b528480830d4e700ebaaaee080d",
+    "record_id_hash": "4786b40a0e4b1223d2cce2ca6e88043c1659d2f414f850aabb4974da564c2604",
     "object_type": "contacts",
     "assigned_journey": "inbound_new_business",
     "assignment_confidence": 60,
@@ -89,10 +93,11 @@
     ],
     "high_intent": true,
     "has_owner": true,
-    "has_associated_deal": false
+    "has_associated_deal": false,
+    "intent_signal_count": 0
   },
   {
-    "record_id_hash": "e05a2e0f6283de7524e50c4b57f7778307ec1e5c1b0a0f678b8da702144fd18a",
+    "record_id_hash": "f1bbef73e9f3bd53b69dcbe0be83f2f4e085e675e4c0c842996ca03fe11bdf0c",
     "object_type": "contacts",
     "assigned_journey": "inbound_new_business",
     "assignment_confidence": 70,
@@ -102,6 +107,7 @@
     ],
     "high_intent": true,
     "has_owner": true,
-    "has_associated_deal": true
+    "has_associated_deal": true,
+    "intent_signal_count": 0
   }
 ]

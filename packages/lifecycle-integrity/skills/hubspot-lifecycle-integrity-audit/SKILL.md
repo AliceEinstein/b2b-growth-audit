@@ -42,21 +42,27 @@ Read these files as needed:
 
 ## Run workflow
 
-Every `python -m scripts.*` command below must run from the repository root
-(the directory containing `pyproject.toml` and `.env`). If this skill was
-installed by symlink, the run's `agent_workspace/task_manifest.json` records
-the absolute `repo_root` to change into.
+Every `python -m scripts.*` command below must run from the package root (the
+directory containing `pyproject.toml` and `.env`). With the normal repository
+or Claude symlink install, that is `packages/lifecycle-integrity`. If Claude
+was installed with `python -m scripts.install_skill --agent claude --copy`,
+the executable package snapshot is the sibling `package/` directory next to
+this `SKILL.md`; run commands from that `package/` directory instead. If this
+skill was installed by symlink, the run's `agent_workspace/task_manifest.json`
+records the absolute `repo_root` to change into.
 
 1. Read `hubspot_scopes.md`. Create one dedicated Private App token with all
-   seven exact CRM object/schema read scopes plus `automation` for the complete
-   workflow/scoring root-cause diagnostic. There is no wildcard schema scope
-   and no separate scoring scope used by this implementation. `automation` is
+   seven exact CRM object/schema read scopes plus `settings.currencies.read`, `automation`, `forms`,
+   `marketing.campaigns.read`, and `sales-email-read` for the complete
+   intent-enabled workflow/scoring root-cause diagnostic. There is no wildcard
+   schema scope and no separate scoring scope used by this implementation. `automation` is
    mutation-capable at the HubSpot platform level, but this connector permits
    only workflow reads and read-style batch reads. Put the token in local
    `.env` as `HUBSPOT_PRIVATE_APP_TOKEN`; never print it.
 2. Run `python -m scripts.check_hubspot_connection`. All core probes must pass.
-   A missing `automation` result means core-only coverage and must be disclosed
-   as incomplete Automation & Scoring Integrity coverage.
+   A missing `automation` result means workflow/scoring root-cause coverage is
+   incomplete and must be disclosed; do not present the run as a complete
+   Automation & Scoring Integrity Audit.
 3. Run `python -m scripts.run_lifecycle_integrity_audit`. Full history is
    the default and the authoritative mode: B2B sales cycles run 6-18 months,
    so a creation-date window truncates journeys and drops the older
@@ -64,9 +70,11 @@ the absolute `repo_root` to change into.
    an explicit quick preliminary scan, and tell the user its three costs: the
    window filters on `createdate`, the search API caps each object at 10,000
    records, and cross-object checks exclude deals whose associated records
-   fall outside the window (exclusions appear as measurement notes). Use
-   `--include-activities` only when activity access is available. This is the
-   only data-acquisition pass.
+   fall outside the window (exclusions appear as measurement notes). Intent and
+   activity acquisition is enabled by default and remains in this same
+   single-token, read-only pass. Use `--core-only` only for an explicitly
+   limited CRM-object run; it cannot support reliable activity-based recovery
+   claims. This is the only data-acquisition pass.
 4. Confirm the run manifest is `completed`. If fetching was interrupted, use
    the runner's resume path; do not consume a partial snapshot.
 5. Read only `processed/`, `evidence/`, `manifest.json`, and the generated
@@ -76,6 +84,11 @@ the absolute `repo_root` to change into.
    `journey_pattern_registry.json`,
    `processed/lifecycle_integrity_measurements.json`,
    `processed/high_intent_cohort_summary.json`,
+   `processed/intent_signal_summary.json`,
+   `processed/intent_signal_coverage.json`,
+   `processed/intent_record_index.json`,
+   `processed/intent_signal_store.jsonl`,
+   `processed/recovery_routing.json`,
    `processed/stage_transition_summary.json`, `evidence.csv`, and
    `outlier_registry.csv`. Do not recalculate or edit code-owned numbers.
    Also confirm `processed/automation_coverage.json`,
@@ -90,7 +103,8 @@ the absolute `repo_root` to change into.
    Stage-entry timestamps are the primary transition evidence; when the
    stage transition summary reports `available: false`, journey paths rest
    on creation order only and conclusions must say so.
-   Run schema, relationship, lifecycle, pipeline, source, activity, and
+   Run schema, relationship, lifecycle, pipeline, source, activity, channel
+   intent, journey-link, active-deal escalation, closed-lost recovery, and
    automation/scoring roles only against those processed artifacts.
 7. Drive every judgment role through the agent-driven harness — do not
    hand-orchestrate the markdown contracts:
@@ -130,7 +144,10 @@ the absolute `repo_root` to change into.
    deterministic measurement and an evidence row; reviewers follow the
    intensity in `output_contract.md`, with at most one revision round.
    Workflow configuration can support a root-cause hypothesis, but never
-   proves per-record execution or the full scoring formula/version.
+   proves per-record execution or the full scoring formula/version. Intent
+   events enrich journey classification and leakage routing; they do not
+   replace the existing leakage measurements. Missing-deal recovery, active
+   deal escalation, and closed-lost recovery are separate commercial lanes.
 9. Never write findings.json, review_trace.json, or any workspace artifact
    directly. The final gate rejects artifacts that were not committed
    through the harness (journal hash check).
@@ -138,8 +155,9 @@ the absolute `repo_root` to change into.
 11. Run `python -m scripts.harness finalize --run <run_dir>`. It validates
     everything (including the harness journal), generates the deterministic
     journey-first report set — `lifecycle_integrity_report.md`, a
-    self-contained responsive `lifecycle_integrity_report.html` with journey,
-    leakage, and pipeline-exposure graphics, and `operator_appendix.md` with
+    self-contained responsive `lifecycle_integrity_report.html` with a score
+    hero, journey rail, chronological leakage lanes, record-level action
+    evidence, and `operator_appendix.md` with
     technical CRM profiling and implementation detail (print the HTML to PDF
     for distribution) — and runs the final gate. The final report
     agent reviews these generated artifacts against the validated evidence and
@@ -157,7 +175,26 @@ the absolute `repo_root` to change into.
 - Do not create, update, merge, delete, reassign, or stage-change CRM records,
   properties, workflows, lists, campaigns, or owners.
 - Do not expose names, emails, phone numbers, note bodies, tokens, or raw
-  contact lists in processed artifacts or final outputs.
+  contact lists in processed artifacts or agent-visible outputs. The local,
+  confidential human report may include sanitized account/contact/deal labels
+  and owner names only when needed to make an action auditable. Its HTML and
+  Markdown may attach direct HubSpot links to those sanitized record names
+  when the portal and record IDs are available; treat the report as
+  confidential. It must never expose contact email/phone or message bodies,
+  and raw IDs/URLs must never enter CSV, processed, or agent-visible evidence.
+- Type and emphasize every named HubSpot asset in the human report, such as
+  `Workflow: ...`, `Pipeline: ...`, `HubSpot form: ...`, and
+  `HubSpot property: ...`. A named account, contact, or deal may link to its
+  HubSpot record; if a safe link cannot be constructed, show emphasized plain
+  text instead.
+- Make every report card prove its conclusion: name the record, show the dated
+  signal chain, explain why it qualifies, state the observed break and its
+  commercial consequence, and give the record-specific next action. Do not
+  replace this with a generic ideal-state or "missing control" paragraph.
+- Name a workflow only when that exact workflow exists in the sanitized
+  inventory. State its enabled status, relevant visible action, applicability,
+  and the lack of per-record execution proof. Never invent a workflow name or
+  claim that a workflow failed without execution evidence.
 - Do not assume `Lead → MQL → SQL → Deal → Closed Won` is the only journey.
 - Do not treat an outbound or expansion journey as broken because it lacks a
   prior MQL.
@@ -177,7 +214,8 @@ The run must produce the files in `output_contract.md`, including:
 `lifecycle_integrity_report.md`, `lifecycle_integrity_report.html`,
 `operator_appendix.md`, `journey_map.md`,
 `journey_pattern_registry.json`, `findings.json`, `recommendations.md`,
-`agent_handoff.md`, `outlier_registry.csv`, `evidence.csv`, `crm_context.yaml`,
+`agent_handoff.md`, `outlier_registry.csv`, `evidence.csv`,
+`report_record_evidence.csv`, `crm_context.yaml`,
 `schema_discovery_report.md`, `review_trace.json`, `audit_log.json`,
 `lifecycle_score.json`, `automation_evidence.csv`, and a passing
 `final_gate_report.json`.

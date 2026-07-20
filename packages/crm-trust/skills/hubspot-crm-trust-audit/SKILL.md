@@ -61,14 +61,17 @@ This audit does not:
 1. Read `hubspot_scopes.md`, grant all seven exact scopes, then run
    `python -m scripts.check_hubspot_connection`. Do not continue if a required
    scope or endpoint probe fails.
-2. Run `python -m scripts.run_crm_trust_audit` — fetches the full-history
+2. Ask the user for the exact business name that should appear in the report,
+   then run `python -m scripts.run_crm_trust_audit --business-name "Business Name"`
+   — fetches the full-history
    read-only snapshot and writes sanitized profiles. Each object page and
    association batch is checkpointed under `raw/.checkpoints/`; if the
    process times out, rerun with `--resume <run_dir>`. Only a manifest with
    `status: completed` can enter later phases. Use `--days 90` only for an
    additional recent-only view. The local raw snapshot includes contact
-   identity fields only to measure completeness; those raw values never enter
-   LLM-facing artifacts or final reports.
+   identity fields only to measure completeness; contact names/emails/phones
+   never enter LLM-facing artifacts or final reports. Sanitized Company/Deal
+   names and owner labels may appear in the confidential local report.
    Raw trees from completed/failed runs older than 365 days are removed by
    default; change this with `--raw-retention-days N`. In-progress runs are
    retained so they remain resumable. Use `--dry-run` to preview retention
@@ -143,6 +146,7 @@ Snapshot safety and recovery:
 - `agent_handoff.md`
 - `findings.json`
 - `evidence.csv`
+- `report_record_evidence.csv`
 - `crm_context.yaml`
 - `schema_discovery_report.md`
 - `audit_log.json`
@@ -153,3 +157,8 @@ The report renderer follows `reporting_standard.md`: the HTML/Markdown report
 is written for decision use, while the operator appendix carries complete
 finding and implementation detail. PDF or Word exports must derive from the
 same validated report content rather than a separate rewrite.
+
+The supplied business name becomes the report title. Deterministic local
+rendering may show sanitized HubSpot Company and Deal names for representative
+evidence and link them to their HubSpot record pages when the portal ID is
+available. Contact names, emails, phones, raw IDs, and tokens remain excluded.

@@ -133,6 +133,19 @@
         "Automation coverage was unavailable; workflow root cause was not inspected."
       ],
       "evidence_refs": []
+    },
+    {
+      "measurement_id": "intent_signal_coverage",
+      "workflow_aliases": [],
+      "score_fields": [],
+      "issue_types": [],
+      "configuration_status": "unknown",
+      "causal_status": "unverified",
+      "confidence": 0,
+      "limitations": [
+        "Automation coverage was unavailable; workflow root cause was not inspected."
+      ],
+      "evidence_refs": []
     }
   ],
   "workflow_count": 0,

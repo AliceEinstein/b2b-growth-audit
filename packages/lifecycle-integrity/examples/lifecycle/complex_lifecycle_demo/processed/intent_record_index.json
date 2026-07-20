@@ -1,0 +1,262 @@
+{
+  "contacts": {
+    "37cc19d465ac589c1c6f6c08b26e58a45f5c8e03f8d9ad714db28886378d85ca": [
+      {
+        "signal_type": "task activity",
+        "signal_strength": "low",
+        "source": "tasks",
+        "occurred_at": "2026-06-15T00:00:00+00:00",
+        "deal_id_hashes": [
+          "a90d7dc8c5f0f1a1cf1b2db02847fe55e52879c2d75ef3924afa6826fe92b245"
+        ]
+      },
+      {
+        "signal_type": "call connected",
+        "signal_strength": "medium",
+        "source": "calls",
+        "occurred_at": "2026-06-12T00:00:00+00:00",
+        "deal_id_hashes": [
+          "a90d7dc8c5f0f1a1cf1b2db02847fe55e52879c2d75ef3924afa6826fe92b245"
+        ]
+      },
+      {
+        "signal_type": "email reply",
+        "signal_strength": "high",
+        "source": "emails",
+        "occurred_at": "2026-06-14T00:00:00+00:00",
+        "deal_id_hashes": [
+          "a90d7dc8c5f0f1a1cf1b2db02847fe55e52879c2d75ef3924afa6826fe92b245"
+        ]
+      }
+    ],
+    "9f46665821b0ad04b37fcb3a6a8f36992e3bf0aab231d80d56b9857ab49c52fb": [
+      {
+        "signal_type": "task activity",
+        "signal_strength": "low",
+        "source": "tasks",
+        "occurred_at": "2026-06-12T00:00:00+00:00",
+        "deal_id_hashes": [
+          "d1566e44dffd64448e8e6451dcb0828e673ffb27d683fb6694d6a966896e0d4a",
+          "2f5ee61189f10bb9ca173f90ae2e249485f993ebe7751a25db3e0346f5b7b1fc"
+        ]
+      },
+      {
+        "signal_type": "email activity",
+        "signal_strength": "medium",
+        "source": "emails",
+        "occurred_at": "2026-06-10T00:00:00+00:00",
+        "deal_id_hashes": [
+          "d1566e44dffd64448e8e6451dcb0828e673ffb27d683fb6694d6a966896e0d4a",
+          "2f5ee61189f10bb9ca173f90ae2e249485f993ebe7751a25db3e0346f5b7b1fc"
+        ]
+      },
+      {
+        "signal_type": "commercial page or visit",
+        "signal_strength": "medium",
+        "source": "events",
+        "occurred_at": "2026-06-02T00:00:00+00:00",
+        "deal_id_hashes": [
+          "d1566e44dffd64448e8e6451dcb0828e673ffb27d683fb6694d6a966896e0d4a",
+          "2f5ee61189f10bb9ca173f90ae2e249485f993ebe7751a25db3e0346f5b7b1fc"
+        ]
+      }
+    ],
+    "54cff7924edac9c422deb13966bd1119787d63824b71c8223f4e38d7384826a1": [
+      {
+        "signal_type": "call connected",
+        "signal_strength": "high",
+        "source": "calls",
+        "occurred_at": "2026-06-22T00:00:00+00:00",
+        "deal_id_hashes": [
+          "c07a16e9e7b19d5579e27a75c48b037c6b5e15af1d05ffde3f9640fdff6cd75f"
+        ]
+      },
+      {
+        "signal_type": "commercial page or visit",
+        "signal_strength": "medium",
+        "source": "events",
+        "occurred_at": "2026-06-20T00:00:00+00:00",
+        "deal_id_hashes": [
+          "c07a16e9e7b19d5579e27a75c48b037c6b5e15af1d05ffde3f9640fdff6cd75f"
+        ]
+      },
+      {
+        "signal_type": "form submission",
+        "signal_strength": "high",
+        "source": "forms",
+        "occurred_at": "2026-07-08T00:00:00+00:00",
+        "deal_id_hashes": [
+          "c07a16e9e7b19d5579e27a75c48b037c6b5e15af1d05ffde3f9640fdff6cd75f"
+        ]
+      }
+    ],
+    "536995d1fe6f60259868cb4f3d7be9bd798fc79e4e18a5b896feb1de61d2c7ba": [
+      {
+        "signal_type": "call connected",
+        "signal_strength": "high",
+        "source": "calls",
+        "occurred_at": "2026-07-10T00:00:00+00:00",
+        "deal_id_hashes": []
+      },
+      {
+        "signal_type": "commercial page or visit",
+        "signal_strength": "medium",
+        "source": "events",
+        "occurred_at": "2026-07-12T00:00:00+00:00",
+        "deal_id_hashes": []
+      }
+    ],
+    "20d064dd135a1d87369ee4fcf3d43e4f6a341a1893d216b93ffa5a1abb44d96e": [
+      {
+        "signal_type": "high intent event",
+        "signal_strength": "high",
+        "source": "events",
+        "occurred_at": "2026-07-10T00:00:00+00:00",
+        "deal_id_hashes": []
+      },
+      {
+        "signal_type": "form submission",
+        "signal_strength": "high",
+        "source": "forms",
+        "occurred_at": "2026-07-11T00:00:00+00:00",
+        "deal_id_hashes": []
+      }
+    ],
+    "1c26e566c39e72e76cadb48c7d51a5edd141a423402d795de52f97ca75e48717": [
+      {
+        "signal_type": "commercial page or visit",
+        "signal_strength": "low",
+        "source": "events",
+        "occurred_at": "2026-06-05T00:00:00+00:00",
+        "deal_id_hashes": [
+          "be7b1fe3f1773ada7dff06ba1f819f69710edc42c788da720c954481004a4488"
+        ]
+      },
+      {
+        "signal_type": "form submission",
+        "signal_strength": "medium",
+        "source": "forms",
+        "occurred_at": "2026-06-08T00:00:00+00:00",
+        "deal_id_hashes": [
+          "be7b1fe3f1773ada7dff06ba1f819f69710edc42c788da720c954481004a4488"
+        ]
+      }
+    ],
+    "72bae07e09b6e16cdc8c456e9fe3847396c96a263ea69d5725d1cd511561853b": [
+      {
+        "signal_type": "form submission",
+        "signal_strength": "high",
+        "source": "forms",
+        "occurred_at": "2026-07-12T00:00:00+00:00",
+        "deal_id_hashes": [
+          "42670adc506837eafdfa990aee96ada0bfedb727720e7238f9a3ef8f823c577a"
+        ]
+      }
+    ]
+  },
+  "deals": {
+    "a90d7dc8c5f0f1a1cf1b2db02847fe55e52879c2d75ef3924afa6826fe92b245": [
+      {
+        "signal_type": "task activity",
+        "signal_strength": "low",
+        "source": "tasks",
+        "occurred_at": "2026-06-15T00:00:00+00:00"
+      },
+      {
+        "signal_type": "call connected",
+        "signal_strength": "medium",
+        "source": "calls",
+        "occurred_at": "2026-06-12T00:00:00+00:00"
+      },
+      {
+        "signal_type": "email reply",
+        "signal_strength": "high",
+        "source": "emails",
+        "occurred_at": "2026-06-14T00:00:00+00:00"
+      }
+    ],
+    "d1566e44dffd64448e8e6451dcb0828e673ffb27d683fb6694d6a966896e0d4a": [
+      {
+        "signal_type": "task activity",
+        "signal_strength": "low",
+        "source": "tasks",
+        "occurred_at": "2026-06-12T00:00:00+00:00"
+      },
+      {
+        "signal_type": "email activity",
+        "signal_strength": "medium",
+        "source": "emails",
+        "occurred_at": "2026-06-10T00:00:00+00:00"
+      },
+      {
+        "signal_type": "commercial page or visit",
+        "signal_strength": "medium",
+        "source": "events",
+        "occurred_at": "2026-06-02T00:00:00+00:00"
+      }
+    ],
+    "c07a16e9e7b19d5579e27a75c48b037c6b5e15af1d05ffde3f9640fdff6cd75f": [
+      {
+        "signal_type": "call connected",
+        "signal_strength": "high",
+        "source": "calls",
+        "occurred_at": "2026-06-22T00:00:00+00:00"
+      },
+      {
+        "signal_type": "commercial page or visit",
+        "signal_strength": "medium",
+        "source": "events",
+        "occurred_at": "2026-06-20T00:00:00+00:00"
+      },
+      {
+        "signal_type": "form submission",
+        "signal_strength": "high",
+        "source": "forms",
+        "occurred_at": "2026-07-08T00:00:00+00:00"
+      }
+    ],
+    "42670adc506837eafdfa990aee96ada0bfedb727720e7238f9a3ef8f823c577a": [
+      {
+        "signal_type": "form submission",
+        "signal_strength": "high",
+        "source": "forms",
+        "occurred_at": "2026-07-12T00:00:00+00:00"
+      }
+    ],
+    "2f5ee61189f10bb9ca173f90ae2e249485f993ebe7751a25db3e0346f5b7b1fc": [
+      {
+        "signal_type": "task activity",
+        "signal_strength": "low",
+        "source": "tasks",
+        "occurred_at": "2026-06-12T00:00:00+00:00"
+      },
+      {
+        "signal_type": "email activity",
+        "signal_strength": "medium",
+        "source": "emails",
+        "occurred_at": "2026-06-10T00:00:00+00:00"
+      },
+      {
+        "signal_type": "commercial page or visit",
+        "signal_strength": "medium",
+        "source": "events",
+        "occurred_at": "2026-06-02T00:00:00+00:00"
+      }
+    ],
+    "be7b1fe3f1773ada7dff06ba1f819f69710edc42c788da720c954481004a4488": [
+      {
+        "signal_type": "commercial page or visit",
+        "signal_strength": "low",
+        "source": "events",
+        "occurred_at": "2026-06-05T00:00:00+00:00"
+      },
+      {
+        "signal_type": "form submission",
+        "signal_strength": "medium",
+        "source": "forms",
+        "occurred_at": "2026-06-08T00:00:00+00:00"
+      }
+    ]
+  },
+  "contains_raw_values": false
+}

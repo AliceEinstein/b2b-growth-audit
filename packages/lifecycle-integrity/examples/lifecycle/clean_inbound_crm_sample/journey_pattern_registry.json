@@ -116,7 +116,8 @@
     }
   ],
   "ambiguous_areas": [
-    "Activity-level handoff evidence unavailable"
+    "Activity-level handoff evidence unavailable",
+    "Record-linked intent signals unavailable; journey classification uses CRM properties only"
   ],
   "human_confirmation_needed": [
     "Confirm whether outbound_sales_led is represented by an unmapped custom field",

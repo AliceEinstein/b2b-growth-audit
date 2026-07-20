@@ -13,9 +13,12 @@ merge, delete, overwrite, stage-change, or reassign HubSpot records. The client
 in `connectors/hubspot/client.py` enforces a read-endpoint allowlist; do not
 weaken or bypass it.
 
-Do not print API tokens or include raw PII in processed artifacts or final
-reports. Identity values may exist only in the local raw snapshot. Use
-aggregates, redaction, and per-run salted record hashes downstream.
+Do not print API tokens or include raw PII such as email addresses, phone
+numbers, message bodies, or form values in processed artifacts or final
+reports. Local final reports may include minimum account, contact, deal, and
+owner names for actionable review; keep them confidential. Identity values
+must never enter agent task inputs. Use aggregates, redaction, and per-run
+salted record hashes downstream.
 
 Use deterministic code for data fetching, sanitization, profiling, metrics,
 journey confidence arithmetic, scoring, adjudication, and safety validation.

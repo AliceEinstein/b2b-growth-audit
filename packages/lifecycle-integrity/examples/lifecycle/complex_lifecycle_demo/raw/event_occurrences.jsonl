@@ -1,0 +1,5 @@
+{"id": "ev1", "objectId": "c1", "objectType": "contact", "eventType": "pricing_page_view", "occurredAt": "2026-06-20T00:00:00Z", "pageUrl": "https://example.test/pricing"}
+{"id": "ev2", "objectId": "c2", "objectType": "contact", "eventType": "demo_page_view", "occurredAt": "2026-07-10T00:00:00Z", "pageUrl": "https://example.test/demo"}
+{"id": "ev3", "objectId": "c4", "objectType": "contact", "eventType": "account_security_page_view", "occurredAt": "2026-06-02T00:00:00Z", "pageUrl": "https://example.test/security"}
+{"id": "ev4", "objectId": "c7", "objectType": "contact", "eventType": "renewal_page_view", "occurredAt": "2026-06-05T00:00:00Z", "pageUrl": "https://example.test/renewal"}
+{"id": "ev5", "objectId": "c9", "objectType": "contact", "eventType": "social_click", "occurredAt": "2026-07-12T00:00:00Z", "pageUrl": "https://example.test/product"}

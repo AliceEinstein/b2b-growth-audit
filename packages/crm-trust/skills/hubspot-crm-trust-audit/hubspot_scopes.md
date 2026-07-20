@@ -16,8 +16,8 @@ select every scope below exactly as written.
 | `crm.schemas.companies.read` | Company property definitions, types, options, and governance signals. |
 | `crm.schemas.deals.read` | Deal property definitions, types, options, and governance signals. |
 
-HubSpot does not support a wildcard such as `crm.schemas.*.read`; the three
-schema scopes must be selected separately.
+Do not enter a wildcard such as `crm.schemas.*.read`; the three exact schema
+scopes must be selected separately.
 
 There is no `crm.pipelines.deals.read` scope in HubSpot's current scope list.
 Deal pipeline and stage reads are covered by `crm.objects.deals.read` and are
@@ -36,6 +36,12 @@ for **Order** pipelines and is not needed here.
 Granting unused scopes does not add report coverage. The connector also has an
 endpoint allowlist, so a broader token cannot make this audit write to HubSpot
 or silently inspect an unsupported object.
+
+No additional scope is required for report identity. The connector reads the
+portal ID from HubSpot's account-info endpoint to construct local navigation
+links. Because that endpoint does not guarantee a business display name, pass
+the exact name with `--business-name` or `CRM_AUDIT_BUSINESS_NAME`; never use a
+customer Company record as the portal's identity.
 
 ## Verify before running
 

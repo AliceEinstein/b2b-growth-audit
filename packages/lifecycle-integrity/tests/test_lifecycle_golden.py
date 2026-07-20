@@ -64,7 +64,7 @@ def test_lifecycle_dataset_golden_contract(tmp_path, name):
     findings = json.loads((run_dir / "findings.json").read_text(encoding="utf-8"))
     assert all(row["auto_fix_allowed"] is False for row in findings["findings"])
     report = (run_dir / "lifecycle_integrity_report.md").read_text(encoding="utf-8")
-    assert "# HubSpot Lifecycle Integrity Audit" in report
+    assert report.startswith("# ") and "Lifecycle Integrity Audit" in report.splitlines()[0]
     handoff = (run_dir / "agent_handoff.md").read_text(encoding="utf-8")
     assert "read-only mode" in handoff
     assert "Do not" in handoff

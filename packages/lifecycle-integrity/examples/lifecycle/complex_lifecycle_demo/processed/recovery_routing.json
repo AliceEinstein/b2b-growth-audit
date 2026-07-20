@@ -1,0 +1,32 @@
+{
+  "definition": "Commercial routing layered on top of the existing leakage engine. Cohorts are deduplicated within each lane; a contact without a deal never receives a monetary estimate.",
+  "lanes": {
+    "missing_deal_predeal_recovery": {
+      "population_type": "contacts",
+      "count": 2,
+      "amount_by_currency": {},
+      "amount_rule": "No amount assigned without an existing deal.",
+      "trace_file": "evidence.csv"
+    },
+    "active_deal_leakage_and_escalation": {
+      "population_type": "open_deals",
+      "count": 2,
+      "amount_by_currency": {
+        "USD": "60000.00"
+      },
+      "amount_rule": "Actual amount on existing open deals only; not a forecast.",
+      "trace_file": "evidence.csv"
+    },
+    "closed_lost_recovery": {
+      "population_type": "closed_lost_deals",
+      "count": 1,
+      "historical_closed_lost_amount_by_currency": {
+        "USD": "24000.00"
+      },
+      "historical_deals_with_amount": 1,
+      "amount_rule": "Historical closed-lost amount is context only and is never added to open pipeline or presented as recoverable revenue.",
+      "trace_file": "evidence.csv"
+    }
+  },
+  "score_rule": "Recovery opportunity signals do not lower the integrity score unless a separate reviewer-approved integrity finding does so."
+}

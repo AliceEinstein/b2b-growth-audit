@@ -38,6 +38,7 @@ CONTEXT: Dict[str, Any] = {
 }
 
 BUSINESS_CONTEXT = {
+    "business_name": "Smartify",
     "crm_complexity_tier": "lean_smb",
     "likely_motion": "b2b_sales_led",
     "pipeline_complexity": "single_pipeline",
@@ -71,9 +72,11 @@ COMPANY_DEFS = [
 ]
 DEAL_DEFS = [
     {"name": "createdate", "label": "Create Date", "hubspotDefined": True},
+    {"name": "dealname", "label": "Deal Name", "hubspotDefined": True},
     {"name": "dealstage", "label": "Deal Stage", "hubspotDefined": True},
     {"name": "pipeline", "label": "Pipeline", "hubspotDefined": True},
     {"name": "amount", "label": "Amount", "hubspotDefined": True},
+    {"name": "hs_currency", "label": "Deal Currency", "hubspotDefined": True},
     {"name": "closedate", "label": "Close Date", "hubspotDefined": True},
     {"name": "hubspot_owner_id", "label": "Deal owner", "hubspotDefined": True},
 ]
@@ -141,6 +144,8 @@ def _deal(
     amount: str = "1000",
     owner: str = "901",
     closedate: str = "",
+    dealname: str = "",
+    currency: str = "USD",
 ) -> Dict[str, Any]:
     return {
         "id": f"d{i}",
@@ -149,6 +154,8 @@ def _deal(
             "pipeline": pipeline,
             "dealstage": stage,
             "amount": amount,
+            "dealname": dealname or f"Synthetic deal {i}",
+            "hs_currency": currency,
             "hubspot_owner_id": owner,
             "closedate": closedate,
         },
@@ -195,7 +202,13 @@ def make_run(
     )
     _write_json(raw / "properties_companies.json", COMPANY_DEFS + list(extra_company_defs))
     _write_json(raw / "properties_deals.json", DEAL_DEFS + list(extra_deal_defs))
-    _write_json(raw / "owners.json", [{"id": "901"}, {"id": "902"}])
+    _write_json(
+        raw / "owners.json",
+        [
+            {"id": "901", "firstName": "Maya", "lastName": "Chen"},
+            {"id": "902", "firstName": "Jonas", "lastName": "de Vries"},
+        ],
+    )
     _write_json(raw / "pipelines.json", pipelines)
 
     for filename, rows in [
@@ -219,10 +232,15 @@ def make_run(
                 "companies": len(companies),
                 "deals": len(deals),
             },
+            "portal_currency": "USD",
             "truncated": {"contacts": False, "companies": False, "deals": False},
             "source_candidates": {},
             "warnings": [],
         },
+    )
+    _write_json(
+        raw / "account_info.json",
+        {"status": "available", "currency": "USD", "portal_id": "123456"},
     )
     # Valid Phase 3 judgment artifacts so the sample is runnable end-to-end.
     (run / "crm_context.yaml").write_text(yaml.safe_dump(CONTEXT), encoding="utf-8")

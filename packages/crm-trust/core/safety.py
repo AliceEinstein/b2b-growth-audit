@@ -129,6 +129,7 @@ FINAL_DELIVERABLES = [
     "agent_handoff.md",
     "findings.json",
     "evidence.csv",
+    "report_record_evidence.csv",
     "crm_context.yaml",
     "schema_discovery_report.md",
     "audit_log.json",

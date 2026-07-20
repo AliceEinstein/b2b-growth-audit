@@ -9,11 +9,72 @@
     "companies": 1,
     "deals": 4
   },
+  "portal_currency": "USD",
   "truncated": {
     "contacts": false,
     "companies": false,
     "deals": false
   },
   "source_candidates": {},
-  "warnings": []
+  "warnings": [],
+  "intent": {
+    "status": "not_requested",
+    "sources": {
+      "activities": {
+        "status": "not_requested",
+        "files_present": [],
+        "activity_objects": {
+          "tasks": {
+            "count": 0,
+            "contact_association_available": false,
+            "deal_association_available": false
+          },
+          "meetings": {
+            "count": 0,
+            "contact_association_available": false,
+            "deal_association_available": false
+          },
+          "notes": {
+            "count": 0,
+            "contact_association_available": false,
+            "deal_association_available": false
+          },
+          "calls": {
+            "count": 0,
+            "contact_association_available": false,
+            "deal_association_available": false
+          },
+          "emails": {
+            "count": 0,
+            "contact_association_available": false,
+            "deal_association_available": false
+          },
+          "communications": {
+            "count": 0,
+            "contact_association_available": false,
+            "deal_association_available": false
+          }
+        }
+      },
+      "events": {
+        "status": "not_requested",
+        "files_present": []
+      },
+      "forms": {
+        "status": "not_requested",
+        "files_present": [],
+        "unlinked_submission_count": 0
+      },
+      "campaigns": {
+        "status": "not_requested",
+        "files_present": []
+      }
+    },
+    "metadata_only": true,
+    "limitations": [
+      "Marketing email opens/clicks and aggregate social/ad metrics are context signals, not person-level proof.",
+      "A source with a successful endpoint and zero rows is reported as observed_no_events; this is different from unavailable access.",
+      "Missing activity associations prevent record-level recovery claims for that activity type."
+    ]
+  }
 }

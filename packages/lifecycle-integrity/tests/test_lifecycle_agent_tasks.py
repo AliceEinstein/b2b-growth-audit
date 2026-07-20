@@ -8,7 +8,7 @@ def test_task_manifest_declares_isolated_artifacts_and_no_raw_access(tmp_path):
     run_dir, _ = build_lifecycle_run(tmp_path, "clean_inbound_crm_sample")
     manifest = write_agent_task_manifest(run_dir)
     assert manifest["execution_model"] == "artifact_based_no_free_chat"
-    assert len(manifest["tasks"]) == 27
+    assert len(manifest["tasks"]) == 31
     outputs = [task["output"] for task in manifest["tasks"]]
     assert len(outputs) == len(set(outputs))
     assert all(task["raw_access_allowed"] is False for task in manifest["tasks"])
@@ -40,6 +40,17 @@ def test_task_manifest_declares_isolated_artifacts_and_no_raw_access(tmp_path):
         "processed/high_intent_cohort_summary.json" in task["inputs"]
         for task in audit_tasks
     )
+    intent_audits = {
+        task["role"]: task
+        for task in audit_tasks
+        if task["role"] in {
+            "journey_link_integrity_agent",
+            "deal_escalation_agent",
+            "closed_lost_recovery_agent",
+        }
+    }
+    assert len(intent_audits) == 3
+    assert all("processed/intent_signal_store.jsonl" in task["inputs"] for task in intent_audits.values())
     final_task = next(task for task in manifest["tasks"] if task["role"] == "final_report_agent")
     assert "agent_workspace/hypotheses" in final_task["inputs"]
     assert "processed/high_intent_cohort_summary.json" in final_task["inputs"]

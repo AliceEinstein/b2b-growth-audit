@@ -1,10 +1,13 @@
 """Generate the synthetic lifecycle audit portals."""
 from __future__ import annotations
 
+import argparse
+import shutil
 from pathlib import Path
 
 from core.audit_logger import AuditLog
 from core.automation_integrity import build_automation_integrity_artifacts
+from core.intent_evidence import build_intent_evidence
 from core.journey_evidence import build_journey_evidence_store
 from core.lifecycle_agent_tasks import write_agent_task_manifest
 from core.lifecycle_rules import measure_lifecycle_integrity
@@ -12,12 +15,27 @@ from core.lifecycle_synthetic_datasets import LIFECYCLE_DATASETS, write_expectat
 from core.profiler import profile_run
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--overwrite",
+        action="store_true",
+        help="replace existing generated sample directories; required for regeneration",
+    )
+    args = parser.parse_args(argv)
     root = Path(__file__).resolve().parents[1] / "examples" / "lifecycle"
     root.mkdir(parents=True, exist_ok=True)
     for name, builder in LIFECYCLE_DATASETS.items():
+        destination = root / name
+        if destination.exists():
+            if not args.overwrite:
+                parser.error(
+                    f"{destination} already exists; rerun with --overwrite to regenerate public fixtures"
+                )
+            shutil.rmtree(destination)
         run_dir, expectations = builder(root)
         profile_run(run_dir)
+        build_intent_evidence(run_dir)
         build_journey_evidence_store(run_dir)
         measure_lifecycle_integrity(run_dir)
         build_automation_integrity_artifacts(run_dir)

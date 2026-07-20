@@ -116,6 +116,7 @@
   ],
   "ambiguous_areas": [
     "Activity-level handoff evidence unavailable",
+    "Record-linked intent signals unavailable; journey classification uses CRM properties only",
     "Stage-entry timestamps unavailable; journey paths are inferred from record creation order only"
   ],
   "human_confirmation_needed": [

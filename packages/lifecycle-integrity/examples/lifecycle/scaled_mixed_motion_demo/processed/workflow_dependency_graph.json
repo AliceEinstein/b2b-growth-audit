@@ -1,0 +1,114 @@
+{
+  "workflow_count": 4,
+  "relevant_workflow_count": 4,
+  "workflows": [
+    {
+      "workflow_alias": "WF-001",
+      "workflow_id": "wf-owner",
+      "workflow_name_redacted": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Assign inbound owner",
+      "object_type_id": "",
+      "is_enabled": false,
+      "revision_id": "",
+      "created_at": null,
+      "updated_at": null,
+      "enrollment_type": "contact",
+      "should_re_enroll": null,
+      "references": [],
+      "unknown_references": [],
+      "action_type_ids": [],
+      "action_writes": [
+        {
+          "field": "hubspot_owner_id",
+          "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 901"
+        }
+      ],
+      "relevant": true,
+      "performance": {
+        "enrolled": 31,
+        "completed": 0,
+        "unenrolled": 0
+      }
+    },
+    {
+      "workflow_alias": "WF-002",
+      "workflow_id": "wf-score-a",
+      "workflow_name_redacted": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Route high engagement",
+      "object_type_id": "",
+      "is_enabled": true,
+      "revision_id": "",
+      "created_at": null,
+      "updated_at": null,
+      "enrollment_type": "contact",
+      "should_re_enroll": null,
+      "references": [],
+      "unknown_references": [],
+      "action_type_ids": [],
+      "action_writes": [
+        {
+          "field": "engagement_score",
+          "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 80"
+        }
+      ],
+      "relevant": true,
+      "performance": {
+        "enrolled": 0,
+        "completed": 0,
+        "unenrolled": 0
+      }
+    },
+    {
+      "workflow_alias": "WF-003",
+      "workflow_id": "wf-score-b",
+      "workflow_name_redacted": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Route low engagement",
+      "object_type_id": "",
+      "is_enabled": true,
+      "revision_id": "",
+      "created_at": null,
+      "updated_at": null,
+      "enrollment_type": "contact",
+      "should_re_enroll": null,
+      "references": [],
+      "unknown_references": [],
+      "action_type_ids": [],
+      "action_writes": [
+        {
+          "field": "engagement_score",
+          "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] 20"
+        }
+      ],
+      "relevant": true,
+      "performance": {
+        "enrolled": 0,
+        "completed": 0,
+        "unenrolled": 0
+      }
+    },
+    {
+      "workflow_alias": "WF-004",
+      "workflow_id": "wf-stage",
+      "workflow_name_redacted": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Create deal after demo request",
+      "object_type_id": "",
+      "is_enabled": true,
+      "revision_id": "",
+      "created_at": null,
+      "updated_at": null,
+      "enrollment_type": "contact",
+      "should_re_enroll": null,
+      "references": [],
+      "unknown_references": [],
+      "action_type_ids": [],
+      "action_writes": [
+        {
+          "field": "dealstage",
+          "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] qualified"
+        }
+      ],
+      "relevant": true,
+      "performance": {
+        "enrolled": 8,
+        "completed": 3,
+        "unenrolled": 0
+      }
+    }
+  ]
+}

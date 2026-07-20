@@ -34,7 +34,9 @@ of the same validated report content, never a separate model rewrite.
   There is no write code in this repository — enforced by tests.
 - **Local-only identity check**: contact emails, names, and phone numbers may
   be fetched into the owner-authorized local raw snapshot to measure
-  completeness, but never enter processed LLM artifacts or final reports.
+  completeness. Sanitized Company/Deal names and owner labels may appear in
+  the confidential local report for action; contact names, emails, and phone
+  numbers do not.
 - **Raw snapshots stay local**: snapshots live in `outputs/` (gitignored) and
   are never sent to a Smartify backend. The user-selected host agent may read
   bounded processed CRM values needed for analysis; contact identity fields,
@@ -57,7 +59,8 @@ crm.schemas.companies.read
 crm.schemas.deals.read
 ```
 
-HubSpot does not accept `crm.schemas.*.read`. See
+Do not enter the wildcard string `crm.schemas.*.read`; select each of the
+three exact schema scopes above. See
 [`hubspot_scopes.md`](skills/hubspot-crm-trust-audit/hubspot_scopes.md) for the
 click-by-click setup, scope-to-endpoint mapping, and scopes not to grant.
 
@@ -68,7 +71,7 @@ cp .env.example .env
 pip install -e ".[dev]"
 
 python -m scripts.check_hubspot_connection
-python -m scripts.run_crm_trust_audit
+python -m scripts.run_crm_trust_audit --business-name "Your Business Name"
 # Optional recent-only view:
 # python -m scripts.run_crm_trust_audit --days 90
 # Resume a timed-out or failed snapshot:
@@ -95,6 +98,12 @@ Retention removes the entire expired `raw/` tree, including its local
 `run_salt.txt`. This is privacy-positive but means old evidence hashes are no
 longer reversible or operationally matchable to CRM records after retention.
 
+The business name is supplied explicitly because HubSpot's account-info API
+does not guarantee a display name. The portal ID is read automatically and is
+used only to build direct Company/Deal links in the local report. The report
+labels HubSpot-origin properties, stages, pipelines, Companies, and Deals so
+configured CRM terms are not mistaken for audit prose.
+
 ## Use with your coding agent
 
 The skill is agent-agnostic: deterministic Python scripts + markdown role
@@ -113,6 +122,15 @@ the scripts, use `python -m scripts.run_audit_harness`, perform the generated
 judgment tasks in `skills/hubspot-crm-trust-audit/subagents/`, and validate
 its outputs against the deterministic gates. The harness never requires a
 model API key in V1.
+
+Claude's default global install is a symlink and keeps the executable package
+in this repository. If you use `--copy`, the installer copies the skill plus a
+complete package snapshot to
+`~/.claude/skills/hubspot-crm-trust-audit/package/`; run the audit from that
+`package/` directory and provide its own local `.env` or an environment
+variable. The copied snapshot does not receive repository updates
+automatically. Codex and Gemini remain repository-native and need no global
+install.
 
 For a completed snapshot, the explicit loop is:
 

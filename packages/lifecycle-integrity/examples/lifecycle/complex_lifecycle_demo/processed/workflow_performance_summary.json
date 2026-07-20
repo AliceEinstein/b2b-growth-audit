@@ -1,0 +1,15 @@
+{
+  "window": {
+    "label": "90 days"
+  },
+  "by_workflow": {
+    "wf-owner": {
+      "ENROLLED": 31,
+      "COMPLETED": 0
+    },
+    "wf-stage": {
+      "ENROLLED": 8,
+      "COMPLETED": 3
+    }
+  }
+}

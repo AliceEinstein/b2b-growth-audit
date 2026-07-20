@@ -1,0 +1,30 @@
+{
+  "available": true,
+  "metadata_only": true,
+  "objects": {
+    "tasks": {
+      "count": 2,
+      "owner_coverage_pct": 0.0
+    },
+    "meetings": {
+      "count": 0,
+      "owner_coverage_pct": null
+    },
+    "notes": {
+      "count": 0,
+      "owner_coverage_pct": null
+    },
+    "calls": {
+      "count": 3,
+      "owner_coverage_pct": 0.0
+    },
+    "emails": {
+      "count": 2,
+      "owner_coverage_pct": 0.0
+    },
+    "communications": {
+      "count": 0,
+      "owner_coverage_pct": null
+    }
+  }
+}

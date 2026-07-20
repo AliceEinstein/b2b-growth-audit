@@ -1,0 +1,80 @@
+{
+  "pipelines": [
+    {
+      "pipeline_id": "inbound",
+      "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Inbound New Business",
+      "stage_count": 2,
+      "deal_count": 2,
+      "stages": [
+        {
+          "stage_id": "qualified",
+          "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Sales Qualified",
+          "deal_count": 1
+        },
+        {
+          "stage_id": "proposal",
+          "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Proposal",
+          "deal_count": 1
+        }
+      ]
+    },
+    {
+      "pipeline_id": "outbound",
+      "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Outbound Sales",
+      "stage_count": 1,
+      "deal_count": 1,
+      "stages": [
+        {
+          "stage_id": "discovery",
+          "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Discovery",
+          "deal_count": 1
+        }
+      ]
+    },
+    {
+      "pipeline_id": "abm",
+      "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ABM Named Accounts",
+      "stage_count": 1,
+      "deal_count": 2,
+      "stages": [
+        {
+          "stage_id": "engaged",
+          "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Target Account Engaged",
+          "deal_count": 2
+        }
+      ]
+    },
+    {
+      "pipeline_id": "partner",
+      "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Partner Referral",
+      "stage_count": 1,
+      "deal_count": 1,
+      "stages": [
+        {
+          "stage_id": "qualified",
+          "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Partner Qualified",
+          "deal_count": 1
+        }
+      ]
+    },
+    {
+      "pipeline_id": "renewal",
+      "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Expansion and Renewal",
+      "stage_count": 2,
+      "deal_count": 2,
+      "stages": [
+        {
+          "stage_id": "open",
+          "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Renewal Open",
+          "deal_count": 1
+        },
+        {
+          "stage_id": "lost",
+          "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Closed Lost",
+          "deal_count": 1
+        }
+      ]
+    }
+  ],
+  "deals_in_unknown_pipeline": 0
+}

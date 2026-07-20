@@ -1,0 +1,12 @@
+{
+  "contacts": 30,
+  "companies": 15,
+  "deals": 18,
+  "owners": 2,
+  "deal_pipelines": 5,
+  "truncated": {
+    "contacts": false,
+    "companies": false,
+    "deals": false
+  }
+}

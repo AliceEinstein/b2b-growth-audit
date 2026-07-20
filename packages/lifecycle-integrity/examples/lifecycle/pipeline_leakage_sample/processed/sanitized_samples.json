@@ -1,7 +1,7 @@
 {
   "contacts": [
     {
-      "record_id_hash": "e5f02d4e8236fbe3226b47924beef9d1d3a5895fbc4944be01c9c5009a870f1d",
+      "record_id_hash": "9ab745348ec9fe9cfec1cc4dfc91e587203f1e7eab1d7f476602eec0f3c833a9",
       "properties": {
         "createdate": "[PRESENT]",
         "lifecyclestage": "[PRESENT]",
@@ -10,7 +10,7 @@
       }
     },
     {
-      "record_id_hash": "e235c3241d60b52964cddf35579f4ea24dfa363eb2661cf7e9e0da9ed96a0562",
+      "record_id_hash": "b80a888ea6c9e4aa7bbd6c3ccf6bed053dd68b4c49193b959de1cfc61d19c1a6",
       "properties": {
         "createdate": "[PRESENT]",
         "lifecyclestage": "[PRESENT]",
@@ -19,7 +19,7 @@
       }
     },
     {
-      "record_id_hash": "74644e807acacaea9cb7a49e7c7c5b24a636a89f7c2cfd0e3832cdc1d571ea1b",
+      "record_id_hash": "545d20ce905fbc2a9b31433c1c65a289f7a942c67433069ade9faaefd49c1b90",
       "properties": {
         "createdate": "[PRESENT]",
         "lifecyclestage": "[PRESENT]",
@@ -29,7 +29,7 @@
       }
     },
     {
-      "record_id_hash": "e9dbc03f090b462dcae925ff05cc9b4feac66379bd47ed08f06a0a13b6250c44",
+      "record_id_hash": "7482dce357be90ccb0ad9d38ae1eacf0004fbeb92c304e2b78784badbb7875cf",
       "properties": {
         "createdate": "[PRESENT]",
         "lifecyclestage": "[PRESENT]",
@@ -38,7 +38,7 @@
       }
     },
     {
-      "record_id_hash": "321873d9eed8f0eb6d3fd8314aac3203836e2b528480830d4e700ebaaaee080d",
+      "record_id_hash": "4786b40a0e4b1223d2cce2ca6e88043c1659d2f414f850aabb4974da564c2604",
       "properties": {
         "createdate": "[PRESENT]",
         "lifecyclestage": "[PRESENT]",
@@ -49,7 +49,7 @@
   ],
   "companies": [
     {
-      "record_id_hash": "91361163ba7a324b318d22b7d4c2d2061250387f0dfe781a71335c1e7614e8a7",
+      "record_id_hash": "3c0ea3df78d536ed8288a2188c5a060478a3f5a7f5e21e23da5a897661abd7b4",
       "properties": {
         "createdate": "[PRESENT]",
         "domain": "[PRESENT]",
@@ -58,7 +58,7 @@
       }
     },
     {
-      "record_id_hash": "d6461bbac90a96f779cf55cd5e5ac4622065303c787ccd5d85a893e9843bc02a",
+      "record_id_hash": "fd3c3359c307793b6fb867f909cf6db3a6f54b502638110ba5a8b8dd9c39a841",
       "properties": {
         "createdate": "[PRESENT]",
         "domain": "[PRESENT]",
@@ -67,7 +67,7 @@
       }
     },
     {
-      "record_id_hash": "2f1e22c0c839c5f1ba5eb03889dcebf9ff603dfd14899113305db1e109f08b34",
+      "record_id_hash": "4a2a5fdaa236d781a0f63b6e3ff394534e9b95d4a48a9ff3019b28332dae97b0",
       "properties": {
         "createdate": "[PRESENT]",
         "domain": "[PRESENT]",
@@ -78,34 +78,40 @@
   ],
   "deals": [
     {
-      "record_id_hash": "5f1a4e15972558cbbb306411f5db270ac4924576ae9065166fe876d0009d1d0d",
+      "record_id_hash": "7cf8508d128affed01ad4e4667345ac3bc91cadf9699928696c09965390709a9",
       "properties": {
         "createdate": "[PRESENT]",
         "pipeline": "[PRESENT]",
         "dealstage": "[PRESENT]",
         "amount": "[PRESENT]",
+        "dealname": "[PRESENT]",
+        "hs_currency": "[PRESENT]",
         "hubspot_owner_id": "[MISSING]",
         "closedate": "[MISSING]"
       }
     },
     {
-      "record_id_hash": "15bcf3af7696da4ef65353b6a1b827dbb1135601a275914c7424bd5fe67d36d1",
+      "record_id_hash": "2e3527e570ce2f7620828ad2b9c5ceee0a4e23605f8adbb84a301c45cfddd24a",
       "properties": {
         "createdate": "[PRESENT]",
         "pipeline": "[PRESENT]",
         "dealstage": "[PRESENT]",
         "amount": "[PRESENT]",
+        "dealname": "[PRESENT]",
+        "hs_currency": "[PRESENT]",
         "hubspot_owner_id": "[PRESENT]",
         "closedate": "[MISSING]"
       }
     },
     {
-      "record_id_hash": "d37330eae68bb5600ecdff32c17977278cde1c231fc811f3652d7a18b0ac5db2",
+      "record_id_hash": "707beef5326f95049de85f20b85e31bf59fef39c37ba6eda937131c571b35f2d",
       "properties": {
         "createdate": "[PRESENT]",
         "pipeline": "[PRESENT]",
         "dealstage": "[PRESENT]",
         "amount": "[PRESENT]",
+        "dealname": "[PRESENT]",
+        "hs_currency": "[PRESENT]",
         "hubspot_owner_id": "[PRESENT]",
         "closedate": "[MISSING]"
       }

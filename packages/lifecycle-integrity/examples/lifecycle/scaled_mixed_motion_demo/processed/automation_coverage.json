@@ -1,0 +1,9 @@
+{
+  "status": "full",
+  "performance_window": {
+    "label": "90 days"
+  },
+  "limitations": [
+    "Synthetic execution counts are illustrative."
+  ]
+}

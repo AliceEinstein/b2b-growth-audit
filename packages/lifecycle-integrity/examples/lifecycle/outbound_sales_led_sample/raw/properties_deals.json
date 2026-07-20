@@ -5,6 +5,11 @@
     "hubspotDefined": true
   },
   {
+    "name": "dealname",
+    "label": "Deal Name",
+    "hubspotDefined": true
+  },
+  {
     "name": "dealstage",
     "label": "Deal Stage",
     "hubspotDefined": true
@@ -17,6 +22,11 @@
   {
     "name": "amount",
     "label": "Amount",
+    "hubspotDefined": true
+  },
+  {
+    "name": "hs_currency",
+    "label": "Deal Currency",
     "hubspotDefined": true
   },
   {

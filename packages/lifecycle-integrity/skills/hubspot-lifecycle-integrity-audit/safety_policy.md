@@ -10,10 +10,13 @@
 - The acquisition pass may store full workflow responses under the local,
   gitignored `raw/automation/` directory for deterministic parsing. Never read
   `outputs/*/raw/` in an LLM or agent role, and never share the raw directory.
-- Never copy identity fields, note bodies, tokens, or raw snapshot records into
-  agent tasks or final reports. Selected bounded CRM property values may be
-  retained in processed artifacts when needed to identify a journey or explain
-  a finding; they are marked as untrusted data and remain local to the
+- Never copy contact email/phone, note bodies, tokens, or raw snapshot records
+  into agent tasks or processed evidence. The local confidential human report
+  may include sanitized account/contact/deal labels and owner names when
+  needed to make an action auditable; it must never expose contact email/phone,
+  message bodies, raw IDs, or raw URLs. Selected bounded CRM property values
+  may be retained in processed artifacts when needed to identify a journey or
+  explain a finding; they are marked as untrusted data and remain local to the
   user-selected host workflow.
 - `auto_fix_allowed` is always `false`.
 - Every scored finding needs evidence, a denominator or materiality rationale,

@@ -36,6 +36,7 @@ REQUIRED_DELIVERABLES = [
     "agent_handoff.md",
     "findings.json",
     "evidence.csv",
+    "report_record_evidence.csv",
     "score.json",
     "recommendations.json",
     "crm_context.yaml",

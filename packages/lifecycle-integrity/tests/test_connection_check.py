@@ -36,10 +36,25 @@ def test_connection_check_passes_when_all_required_reads_work(monkeypatch):
     FakeClient.scopes = [
         *check_hubspot_connection.CORE_REQUIRED_SCOPES,
         check_hubspot_connection.FULL_DIAGNOSTIC_SCOPE,
+        *check_hubspot_connection.INTENT_SCOPES,
     ]
     monkeypatch.setattr(check_hubspot_connection, "load_token", lambda: "pat-na1-test")
     monkeypatch.setattr(check_hubspot_connection, "HubSpotClient", FakeClient)
     assert check_hubspot_connection.main() == 0
+
+
+def test_connection_check_uses_endpoint_probes_for_intent_readiness(monkeypatch, capsys):
+    FakeClient.failed_path = "/forms/v2/forms"
+    FakeClient.scopes = [
+        *check_hubspot_connection.CORE_REQUIRED_SCOPES,
+        check_hubspot_connection.FULL_DIAGNOSTIC_SCOPE,
+        *check_hubspot_connection.INTENT_SCOPES,
+    ]
+    monkeypatch.setattr(check_hubspot_connection, "load_token", lambda: "pat-na1-test")
+    monkeypatch.setattr(check_hubspot_connection, "HubSpotClient", FakeClient)
+    assert check_hubspot_connection.main() == 0
+    output = capsys.readouterr().out
+    assert "intent source probes are partial" in output
 
 
 def test_connection_check_fails_when_required_read_scope_is_missing(monkeypatch):

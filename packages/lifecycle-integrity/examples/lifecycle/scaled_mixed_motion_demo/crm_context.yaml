@@ -1,0 +1,206 @@
+audit_focus: lifecycle_integrity
+primary_journey_model: multi_motion
+mapping_confidence: 58
+canonical_fields:
+  lifecycle_stage:
+    object: contact
+    field: lifecyclestage
+    confidence: high
+    requires_confirmation: false
+    evidence: HubSpot-defined lifecycle field present in the snapshot
+  original_source:
+    object: contact
+    field: hs_analytics_source
+    confidence: high
+    requires_confirmation: false
+    evidence: HubSpot-defined original source field present in the snapshot
+candidate_fields:
+  lifecycle:
+  - object_type: contacts
+    field: lifecyclestage
+    label: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Lifecycle Stage'
+    hubspot_defined: true
+    fill_rate: 100.0
+    fill_rate_recent_half: 100.0
+    distinct_count: 4
+    top_values:
+    - value: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] salesqualifiedlead'
+      count: 11
+    - value: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] customer'
+      count: 9
+    - value: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] marketingqualifiedlead'
+      count: 5
+    - value: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] lead'
+      count: 5
+  - object_type: companies
+    field: lifecyclestage
+    label: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Lifecycle Stage'
+    hubspot_defined: true
+    fill_rate: 20.0
+    fill_rate_recent_half: 0.0
+    distinct_count: 2
+    top_values:
+    - value: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] customer'
+      count: 2
+    - value: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] lead'
+      count: 1
+  - object_type: deals
+    field: dealstage
+    label: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Deal Stage'
+    hubspot_defined: true
+    fill_rate: 100.0
+    fill_rate_recent_half: 100.0
+    distinct_count: 6
+    top_values:
+    - value: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] qualified'
+      count: 5
+    - value: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] engaged'
+      count: 4
+    - value: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] lost'
+      count: 4
+    - value: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] discovery'
+      count: 2
+    - value: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] open'
+      count: 2
+    - value: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] proposal'
+      count: 1
+  source:
+  - object_type: contacts
+    field: hs_analytics_source
+    label: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Original Source'
+    hubspot_defined: true
+    fill_rate: 43.3
+    fill_rate_recent_half: 35.7
+    distinct_count: 4
+    top_values:
+    - value: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] ORGANIC_SEARCH'
+      count: 6
+    - value: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] PAID_SEARCH'
+      count: 5
+    - value: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] REFERRALS'
+      count: 1
+    - value: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] SOCIAL_MEDIA'
+      count: 1
+  - object_type: contacts
+    field: hs_object_source
+    label: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Record source'
+    hubspot_defined: true
+    fill_rate: 3.3
+    fill_rate_recent_half: 0.0
+    distinct_count: 1
+    top_values:
+    - value: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] IMPORT'
+      count: 1
+  - object_type: contacts
+    field: partner_source
+    label: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Partner Source'
+    hubspot_defined: false
+    fill_rate: 3.3
+    fill_rate_recent_half: 0.0
+    distinct_count: 1
+    top_values: &id001
+    - value: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Northstar Referral'
+      count: 1
+  - object_type: deals
+    field: partner_source
+    label: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Partner Source'
+    hubspot_defined: false
+    fill_rate: null
+    fill_rate_recent_half: null
+    distinct_count: null
+    top_values: null
+  deal_type:
+  - object_type: contacts
+    field: sales_motion
+    label: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Sales Motion'
+    hubspot_defined: false
+    fill_rate: 3.3
+    fill_rate_recent_half: 0.0
+    distinct_count: 1
+    top_values:
+    - value: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Outbound SDR'
+      count: 1
+  - object_type: deals
+    field: sales_motion
+    label: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Sales Motion'
+    hubspot_defined: false
+    fill_rate: null
+    fill_rate_recent_half: null
+    distinct_count: null
+    top_values: null
+  - object_type: deals
+    field: dealtype
+    label: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Deal Type'
+    hubspot_defined: true
+    fill_rate: null
+    fill_rate_recent_half: null
+    distinct_count: null
+    top_values: null
+  account_tier:
+  - object_type: contacts
+    field: account_tier
+    label: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Account Tier'
+    hubspot_defined: false
+    fill_rate: 3.3
+    fill_rate_recent_half: 0.0
+    distinct_count: 1
+    top_values:
+    - value: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Tier 1'
+      count: 1
+  - object_type: contacts
+    field: target_account
+    label: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Target Account'
+    hubspot_defined: false
+    fill_rate: 3.3
+    fill_rate_recent_half: 0.0
+    distinct_count: 1
+    top_values:
+    - value: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] true'
+      count: 1
+  - object_type: companies
+    field: account_tier
+    label: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Account Tier'
+    hubspot_defined: false
+    fill_rate: null
+    fill_rate_recent_half: null
+    distinct_count: null
+    top_values: null
+  - object_type: companies
+    field: target_account
+    label: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Target Account'
+    hubspot_defined: false
+    fill_rate: null
+    fill_rate_recent_half: null
+    distinct_count: null
+    top_values: null
+  partner:
+  - object_type: contacts
+    field: partner_source
+    label: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Partner Source'
+    hubspot_defined: false
+    fill_rate: 3.3
+    fill_rate_recent_half: 0.0
+    distinct_count: 1
+    top_values: *id001
+  - object_type: deals
+    field: partner_source
+    label: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Partner Source'
+    hubspot_defined: false
+    fill_rate: null
+    fill_rate_recent_half: null
+    distinct_count: null
+    top_values: null
+  expansion: []
+  high_intent:
+  - object_type: contacts
+    field: demo_request_status
+    label: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Demo Request Status'
+    hubspot_defined: false
+    fill_rate: 30.0
+    fill_rate_recent_half: 35.7
+    distinct_count: 1
+    top_values:
+    - value: '[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] submitted'
+      count: 9
+suspected_legacy_fields: []
+manual_confirmation_needed: []

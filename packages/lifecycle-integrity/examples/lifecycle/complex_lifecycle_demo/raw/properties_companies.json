@@ -1,0 +1,32 @@
+[
+  {
+    "name": "createdate",
+    "label": "Create Date",
+    "hubspotDefined": true
+  },
+  {
+    "name": "domain",
+    "label": "Domain",
+    "hubspotDefined": true
+  },
+  {
+    "name": "name",
+    "label": "Name",
+    "hubspotDefined": true
+  },
+  {
+    "name": "lifecyclestage",
+    "label": "Lifecycle Stage",
+    "hubspotDefined": true
+  },
+  {
+    "name": "account_tier",
+    "label": "Account Tier",
+    "hubspotDefined": false
+  },
+  {
+    "name": "target_account",
+    "label": "Target Account",
+    "hubspotDefined": false
+  }
+]

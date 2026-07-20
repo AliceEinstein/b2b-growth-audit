@@ -1,0 +1,181 @@
+[
+  {
+    "record_id_hash": "c07a16e9e7b19d5579e27a75c48b037c6b5e15af1d05ffde3f9640fdff6cd75f",
+    "object_type": "deals",
+    "assigned_journey": "inbound_new_business",
+    "assignment_confidence": 75,
+    "evidence": [
+      "matched journey terms: inbound, organic"
+    ]
+  },
+  {
+    "record_id_hash": "42670adc506837eafdfa990aee96ada0bfedb727720e7238f9a3ef8f823c577a",
+    "object_type": "deals",
+    "assigned_journey": "inbound_new_business",
+    "assignment_confidence": 75,
+    "evidence": [
+      "matched journey terms: inbound, organic"
+    ]
+  },
+  {
+    "record_id_hash": "a90d7dc8c5f0f1a1cf1b2db02847fe55e52879c2d75ef3924afa6826fe92b245",
+    "object_type": "deals",
+    "assigned_journey": "outbound_sales_led",
+    "assignment_confidence": 85,
+    "evidence": [
+      "matched journey terms: outbound, sdr, import"
+    ]
+  },
+  {
+    "record_id_hash": "d1566e44dffd64448e8e6451dcb0828e673ffb27d683fb6694d6a966896e0d4a",
+    "object_type": "deals",
+    "assigned_journey": "abm_account_based",
+    "assignment_confidence": 95,
+    "evidence": [
+      "matched journey terms: abm, target account, account tier"
+    ]
+  },
+  {
+    "record_id_hash": "bfad0061595bf7ec18191e6b6cbaf61d1dbf8f4ca36497f1c361ee2f715ba8e7",
+    "object_type": "deals",
+    "assigned_journey": "partner_led",
+    "assignment_confidence": 75,
+    "evidence": [
+      "matched journey terms: partner, referral"
+    ]
+  },
+  {
+    "record_id_hash": "51dad1baf0edd76a15afed49650fdd383d6610004534c5f2854dc7d7c5220194",
+    "object_type": "deals",
+    "assigned_journey": "expansion_renewal",
+    "assignment_confidence": 85,
+    "evidence": [
+      "matched journey terms: expansion, renewal, renew"
+    ]
+  },
+  {
+    "record_id_hash": "be7b1fe3f1773ada7dff06ba1f819f69710edc42c788da720c954481004a4488",
+    "object_type": "deals",
+    "assigned_journey": "expansion_renewal",
+    "assignment_confidence": 85,
+    "evidence": [
+      "matched journey terms: expansion, renewal, renew"
+    ]
+  },
+  {
+    "record_id_hash": "2f5ee61189f10bb9ca173f90ae2e249485f993ebe7751a25db3e0346f5b7b1fc",
+    "object_type": "deals",
+    "assigned_journey": "abm_account_based",
+    "assignment_confidence": 95,
+    "evidence": [
+      "matched journey terms: abm, target account, account tier"
+    ]
+  },
+  {
+    "record_id_hash": "54cff7924edac9c422deb13966bd1119787d63824b71c8223f4e38d7384826a1",
+    "object_type": "contacts",
+    "assigned_journey": "inbound_new_business",
+    "assignment_confidence": 70,
+    "evidence": [
+      "matched contact journey terms: organic, form",
+      "lifecycle stage salesqualifiedlead",
+      "observed high-strength calls call connected signal",
+      "observed medium-strength events commercial page or visit signal",
+      "observed high-strength forms form submission signal"
+    ],
+    "high_intent": true,
+    "has_owner": true,
+    "has_associated_deal": true,
+    "intent_signal_count": 3
+  },
+  {
+    "record_id_hash": "20d064dd135a1d87369ee4fcf3d43e4f6a341a1893d216b93ffa5a1abb44d96e",
+    "object_type": "contacts",
+    "assigned_journey": "inbound_new_business",
+    "assignment_confidence": 70,
+    "evidence": [
+      "matched contact journey terms: paid, form",
+      "lifecycle stage marketingqualifiedlead",
+      "observed high-strength events high intent event signal",
+      "observed high-strength forms form submission signal"
+    ],
+    "high_intent": true,
+    "has_owner": false,
+    "has_associated_deal": false,
+    "intent_signal_count": 2
+  },
+  {
+    "record_id_hash": "37cc19d465ac589c1c6f6c08b26e58a45f5c8e03f8d9ad714db28886378d85ca",
+    "object_type": "contacts",
+    "assigned_journey": "outbound_sales_led",
+    "assignment_confidence": 80,
+    "evidence": [
+      "matched contact journey terms: outbound, sdr, import",
+      "observed medium-strength calls call connected signal",
+      "observed high-strength emails email reply signal"
+    ],
+    "high_intent": true,
+    "has_owner": true,
+    "has_associated_deal": true,
+    "intent_signal_count": 2
+  },
+  {
+    "record_id_hash": "9f46665821b0ad04b37fcb3a6a8f36992e3bf0aab231d80d56b9857ab49c52fb",
+    "object_type": "contacts",
+    "assigned_journey": "abm_account_based",
+    "assignment_confidence": 70,
+    "evidence": [
+      "matched contact journey terms: target account, account tier",
+      "observed medium-strength emails email activity signal",
+      "observed medium-strength events commercial page or visit signal"
+    ],
+    "high_intent": true,
+    "has_owner": true,
+    "has_associated_deal": true,
+    "intent_signal_count": 2
+  },
+  {
+    "record_id_hash": "1c26e566c39e72e76cadb48c7d51a5edd141a423402d795de52f97ca75e48717",
+    "object_type": "contacts",
+    "assigned_journey": "expansion_renewal",
+    "assignment_confidence": 60,
+    "evidence": [
+      "matched contact journey terms: expansion",
+      "observed medium-strength forms form submission signal"
+    ],
+    "high_intent": true,
+    "has_owner": true,
+    "has_associated_deal": true,
+    "intent_signal_count": 1
+  },
+  {
+    "record_id_hash": "72bae07e09b6e16cdc8c456e9fe3847396c96a263ea69d5725d1cd511561853b",
+    "object_type": "contacts",
+    "assigned_journey": "inbound_new_business",
+    "assignment_confidence": 80,
+    "evidence": [
+      "matched contact journey terms: organic, demo, form",
+      "positive signal in demo_request_status",
+      "observed high-strength forms form submission signal"
+    ],
+    "high_intent": true,
+    "has_owner": false,
+    "has_associated_deal": true,
+    "intent_signal_count": 1
+  },
+  {
+    "record_id_hash": "536995d1fe6f60259868cb4f3d7be9bd798fc79e4e18a5b896feb1de61d2c7ba",
+    "object_type": "contacts",
+    "assigned_journey": "inbound_new_business",
+    "assignment_confidence": 60,
+    "evidence": [
+      "matched contact journey terms: social",
+      "observed high-strength calls call connected signal",
+      "observed medium-strength events commercial page or visit signal"
+    ],
+    "high_intent": true,
+    "has_owner": true,
+    "has_associated_deal": false,
+    "intent_signal_count": 2
+  }
+]

@@ -6,11 +6,18 @@ import shutil
 from pathlib import Path
 
 import pytest
+import yaml
 
+from connectors.hubspot.normalize import write_json
+from core.profiler import profile_run
+from core.rules import measure_all
+from core.schemas import CrmContext
 from harness.engine import advance
 from harness.providers.base import ProviderNotConfigured, unavailable_provider
+from harness.render import render_reports
 from harness.state import expand_input_patterns
 from harness.validation import validate_stage_output
+from scripts.generate_reports import consolidate_evidence
 
 
 FIXTURE = Path(__file__).resolve().parents[1] / "examples" / "mock_midmarket_abm_sales"
@@ -101,3 +108,42 @@ def test_privacy_clearance_is_reopened_for_current_report_bytes(tmp_path):
 def test_provider_stub_is_not_a_v1_dependency():
     with pytest.raises(ProviderNotConfigured):
         unavailable_provider({"stage": "example"})
+
+
+def test_report_uses_business_name_typed_hubspot_assets_and_safe_record_links(tmp_path):
+    run = _copy_fixture(tmp_path)
+    profile_run(run)
+    context = CrmContext.model_validate(
+        yaml.safe_load((run / "crm_context.yaml").read_text(encoding="utf-8"))
+    )
+    for module, document in measure_all(run, context).items():
+        write_json(run / "processed" / "measurements" / f"{module}.json", document)
+    consolidate_evidence(run)
+    write_json(
+        run / "raw" / "account_info.json",
+        {
+            "status": "available",
+            "portal_id": "123456",
+            "business_name": "Northstar Systems",
+            "business_name_source": "synthetic_fixture",
+        },
+    )
+    _write_narrative(run)
+
+    render_reports(run)
+
+    report = (run / "crm_trust_report.html").read_text(encoding="utf-8")
+    markdown = (run / "crm_trust_report.md").read_text(encoding="utf-8")
+    record_csv = (run / "report_record_evidence.csv").read_text(encoding="utf-8")
+    assert "Northstar Systems CRM Trust Audit" in report
+    assert "# Northstar Systems CRM Trust Audit" in markdown
+    assert 'class="hubspot-asset"' in report
+    assert "HubSpot property:" in report
+    assert "HubSpot pipeline:" in report
+    assert "HubSpot Company:" in report or "HubSpot Deal:" in report
+    assert "https://app.hubspot.com/contacts/123456/record/0-" in report
+    assert 'target="_blank" rel="noopener noreferrer"' in report
+    assert "app.hubspot.com" not in record_csv
+    assert "123456" not in record_csv
+    assert ",co001," not in record_csv
+    assert ",d001," not in record_csv

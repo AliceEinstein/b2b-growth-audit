@@ -47,6 +47,9 @@ most exposed decisions immediately visible. The report must include contacts,
 companies, deals, and pipeline totals; key-field completeness and identity
 validity; recent, active, aging, and stale record distribution; lifecycle,
 pipeline, and association coverage; and every material validated finding.
+Use the exact user-supplied business name in the report title. If no name was
+supplied, use the generic HubSpot audit title; never infer the audited business
+from a Company record.
 
 ## Finding presentation
 
@@ -60,6 +63,12 @@ Each material finding states:
   forecast confidence;
 - the business impact in plain language; and
 - direct links to the evidence CSV and measurement file.
+
+Where record-level evidence maps to a HubSpot Company or Deal, show up to
+three representative named records per finding and link each name directly to
+its HubSpot record page. Keep the complete mapped set in
+`report_record_evidence.csv` so large portals remain readable. Do not expose
+Contact names.
 
 Root causes are hypotheses, never facts unless independently verified. Show
 the confidence, linked finding IDs, supporting artifacts, and the question
@@ -93,6 +102,10 @@ confirmation, or explicit approval before a CRM change.
   technical terms.
 - Never claim that CRM data quality proves revenue performance, return on
   investment, or business effectiveness.
+- Prefix and bold values that originate from the portal so report language is
+  not confused with configured CRM language: `HubSpot property:`, `HubSpot
+  lifecycle stage:`, `HubSpot pipeline:`, `HubSpot deal stage:`, `HubSpot
+  Company:`, and `HubSpot Deal:`.
 
 ## Data graphic principles
 
@@ -141,7 +154,9 @@ the HTML file will break links to the evidence CSV and supporting artifacts.
 
 ## Evidence boundary
 
-The main report shows enough evidence to evaluate each claim and links to the
-supporting artifact. It does not reproduce row-level evidence or schema detail.
-The appendix carries full audit detail for an operator or a later authorized
-agent. Raw CRM identity values never enter either report.
+The main report shows enough representative evidence to evaluate each claim
+and links to the supporting artifact. It does not reproduce the full row-level
+dataset or schema detail. The appendix carries full audit detail for an
+operator or a later authorized agent. Sanitized Company and Deal names may
+appear as evidence; Contact identity values, raw IDs, portal IDs outside link
+targets, and tokens never enter either report.

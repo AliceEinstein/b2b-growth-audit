@@ -8,6 +8,7 @@ the judgment itself is *right* is reviewed by other LLM roles in Phase 5.
 from __future__ import annotations
 
 import csv
+import html
 import json
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set
@@ -517,7 +518,7 @@ def validate_recommendations(run_dir: Path) -> List[str]:
 
 
 REQUIRED_REPORT_SECTIONS = [
-    "# HubSpot Marketing-to-Pipeline Trust Audit",
+    "HubSpot Marketing-to-Pipeline Trust Audit",
     "## Executive Summary",
     "## CRM Snapshot",
     "## Data Quality and Usability",
@@ -591,6 +592,19 @@ MAIN_REPORT_BANNED_TERMS = [
 def validate_report_structure(run_dir: Path) -> List[str]:
     run_dir = Path(run_dir)
     problems: List[str] = []
+    account_info_path = run_dir / "raw" / "account_info.json"
+    business_name = ""
+    if account_info_path.exists():
+        try:
+            account_info = json.loads(account_info_path.read_text(encoding="utf-8"))
+            business_name = str(account_info.get("business_name") or "").strip()
+        except (json.JSONDecodeError, OSError, AttributeError):
+            business_name = ""
+    expected_title = (
+        f"{business_name} CRM Trust Audit"
+        if business_name
+        else "HubSpot Marketing-to-Pipeline Trust Audit"
+    )
     for filename, sections in [
         ("crm_trust_report.md", REQUIRED_REPORT_SECTIONS),
         ("crm_trust_report.html", REQUIRED_HTML_SECTIONS),
@@ -602,6 +616,21 @@ def validate_report_structure(run_dir: Path) -> List[str]:
             problems.append(f"{filename} not found — the report role has not run.")
             continue
         text = path.read_text(encoding="utf-8")
+        if filename == "crm_trust_report.md":
+            first_heading = next(
+                (line.strip() for line in text.splitlines() if line.startswith("# ")),
+                "",
+            )
+            if first_heading != f"# {expected_title}":
+                problems.append(
+                    "crm_trust_report.md: title does not match the supplied business name."
+                )
+        if filename == "crm_trust_report.html" and (
+            f"<h1>{html.escape(expected_title)}</h1>" not in text
+        ):
+            problems.append(
+                "crm_trust_report.html: title does not match the supplied business name."
+            )
         for section in sections:
             if section not in text:
                 problems.append(f"{filename}: missing required section '{section}'.")

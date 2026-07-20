@@ -9,6 +9,7 @@ from core.adjudication import action_lane, aggregate_review_status
 from core.audit_logger import AuditLog
 from core.harness import submit_task
 from core.integrity import hash_files
+from core.intent_evidence import build_intent_evidence
 from core.journey_evidence import build_journey_evidence_store
 from core.lifecycle_agent_tasks import TASKS, write_agent_task_manifest
 from core.lifecycle_consolidation import consolidate_candidates, consolidate_reviews
@@ -24,6 +25,7 @@ from core.safety import scan_file
 def build_lifecycle_run(root: Path, name: str) -> tuple[Path, dict[str, Any]]:
     run_dir, expectations = LIFECYCLE_DATASETS[name](root)
     profile_run(run_dir)
+    build_intent_evidence(run_dir)
     build_journey_evidence_store(run_dir)
     measure_lifecycle_integrity(run_dir)
     write_agent_task_manifest(run_dir)
@@ -44,14 +46,16 @@ def write_judgment_artifacts(
     run_dir: Path,
     measurement_id: str | None = None,
     *,
+    measurement_ids: list[str] | None = None,
     journey_pattern: str = "all_detected_journeys",
     severity: str = "medium",
     recommendation_type: str = "safe_operational_action",
 ) -> None:
     findings: list[dict[str, Any]] = []
     reviews: list[dict[str, Any]] = []
-    if measurement_id is not None:
-        row = measurement(run_dir, measurement_id)
+    selected_ids = list(measurement_ids or ([] if measurement_id is None else [measurement_id]))
+    for selected_id in selected_ids:
+        row = measurement(run_dir, selected_id)
         recoverability = row.get("recoverability")
         if recoverability == "open_deal_review":
             business_impact = (
@@ -85,7 +89,7 @@ def write_judgment_artifacts(
             else "low"
         )
         finding = {
-            "finding_id": measurement_id,
+            "finding_id": selected_id,
             "journey_pattern": journey_pattern,
             "integrity_dimension": row["integrity_dimension"],
             "severity": severity,
@@ -101,7 +105,7 @@ def write_judgment_artifacts(
                 if row.get("denominator") is None
                 else None
             ),
-            "evidence_refs": [f"evidence.csv#finding_id={measurement_id}"],
+            "evidence_refs": [f"evidence.csv#finding_id={selected_id}"],
             "business_impact": business_impact,
             "recommended_action": recommended_action,
             "recommendation_type": recommendation_type,
@@ -127,17 +131,17 @@ def write_judgment_artifacts(
                 "privacy_safety_reviewer",
             ],
         }[intensity]
-        reviews = [
+        reviews.extend(
             {
-                "finding_id": measurement_id,
+                "finding_id": selected_id,
                 "reviewer": reviewer,
                 "verdict": "approved",
                 "reason": "Synthetic golden evidence and arithmetic match.",
-                "evidence_refs": [f"evidence.csv#finding_id={measurement_id}"],
+                "evidence_refs": [f"evidence.csv#finding_id={selected_id}"],
                 "revision_round": 0,
             }
             for reviewer in required
-        ]
+        )
     write_workspace_artifacts(run_dir, findings, reviews)
     count, problems = consolidate_candidates(run_dir)
     assert not problems, problems

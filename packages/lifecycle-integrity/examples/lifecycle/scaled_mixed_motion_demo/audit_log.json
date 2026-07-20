@@ -1,0 +1,9 @@
+{
+  "started_at": "2026-07-20T15:17:12.155247+00:00",
+  "finished_at": "2026-07-20T15:17:12.155251+00:00",
+  "run_config": {
+    "synthetic_dataset": "scaled_mixed_motion_demo"
+  },
+  "events": [],
+  "warnings": []
+}

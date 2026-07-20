@@ -1,7 +1,7 @@
 {
   "contacts": [
     {
-      "record_id_hash": "0475a1516d37779cb09b3cfa5d6918524af0eb005cf18ef199e26e7d199197ff",
+      "record_id_hash": "ce83c9ef5e8cee498619ca6776e197c9db7033ff4d2e0abc8902e667be3a2e91",
       "properties": {
         "createdate": "[PRESENT]",
         "lifecyclestage": "[PRESENT]",
@@ -12,7 +12,7 @@
   ],
   "companies": [
     {
-      "record_id_hash": "2e802613bfd10777f45af57469595a7c2e4f2465d937808803d6b379a478828f",
+      "record_id_hash": "4700ef8e036b4ca743eaf045531ceaf65305e103efcbdf478c6fd70fff6ca2a3",
       "properties": {
         "createdate": "[PRESENT]",
         "domain": "[PRESENT]",
@@ -23,36 +23,42 @@
   ],
   "deals": [
     {
-      "record_id_hash": "b20b3a08bc68def709061898f6a3cc4a4f364f106bff47a9809bd1d991dff826",
+      "record_id_hash": "f30791632b0b7a899c7f66e21a2e96a715c184c04653260b9556266588d3462f",
       "properties": {
         "createdate": "[PRESENT]",
         "pipeline": "[PRESENT]",
         "dealstage": "[PRESENT]",
         "amount": "[PRESENT]",
+        "dealname": "[PRESENT]",
+        "hs_currency": "[PRESENT]",
         "hubspot_owner_id": "[PRESENT]",
         "closedate": "[MISSING]",
         "dealtype": "[PRESENT]"
       }
     },
     {
-      "record_id_hash": "24d6a30bb507d1faf5c03ddf40293b63b0f35199b2dc7830c330d1226ddb0ec4",
+      "record_id_hash": "a6c7c5ddd4b9dba5e2973f0698328629de19ae01974bb7edd0b82d085d641fda",
       "properties": {
         "createdate": "[PRESENT]",
         "pipeline": "[PRESENT]",
         "dealstage": "[PRESENT]",
         "amount": "[PRESENT]",
+        "dealname": "[PRESENT]",
+        "hs_currency": "[PRESENT]",
         "hubspot_owner_id": "[PRESENT]",
         "closedate": "[MISSING]",
         "dealtype": "[PRESENT]"
       }
     },
     {
-      "record_id_hash": "bfe5f3f638bd605e4a52e09ba7c24b852f1f56369ce46c2ff70bb86a231058b5",
+      "record_id_hash": "a71108ed0d23a564a4cf4c54b70c2d0983d720cc01bad78115f01ff709cdd683",
       "properties": {
         "createdate": "[PRESENT]",
         "pipeline": "[PRESENT]",
         "dealstage": "[PRESENT]",
         "amount": "[PRESENT]",
+        "dealname": "[PRESENT]",
+        "hs_currency": "[PRESENT]",
         "hubspot_owner_id": "[PRESENT]",
         "closedate": "[MISSING]",
         "dealtype": "[PRESENT]"

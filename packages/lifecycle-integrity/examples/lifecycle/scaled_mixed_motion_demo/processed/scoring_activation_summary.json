@@ -1,0 +1,48 @@
+{
+  "definition_visibility": "output_and_activation_only",
+  "score_candidates": [
+    {
+      "object_type": "contacts",
+      "field": "engagement_score",
+      "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Engagement Score",
+      "classification": "possible_score_output",
+      "signals": [
+        "score_like_label"
+      ],
+      "record_count": 30,
+      "non_empty": 0,
+      "coverage_pct": 0.0,
+      "numeric_count": 0,
+      "distinct_numeric": 0,
+      "minimum": null,
+      "maximum": null,
+      "median": null,
+      "zero_count": 0,
+      "workflow_activation_visible": false
+    },
+    {
+      "object_type": "deals",
+      "field": "engagement_score",
+      "label": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] Engagement Score",
+      "classification": "confirmed_score_output",
+      "signals": [
+        "hubspot_defined",
+        "score_like_label"
+      ],
+      "record_count": 18,
+      "non_empty": 0,
+      "coverage_pct": 0.0,
+      "numeric_count": 0,
+      "distinct_numeric": 0,
+      "minimum": null,
+      "maximum": null,
+      "median": null,
+      "zero_count": 0,
+      "workflow_activation_visible": false
+    }
+  ],
+  "limitations": [
+    "Full score-model criteria, weights, status, and version history are not read from the public API.",
+    "A single snapshot cannot prove that an unchanged score property is active or stale."
+  ]
+}

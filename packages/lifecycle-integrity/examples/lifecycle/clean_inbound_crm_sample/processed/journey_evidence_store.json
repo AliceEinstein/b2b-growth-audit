@@ -186,6 +186,156 @@
     "objects": {},
     "limitation": "Activity metadata was not requested or unavailable."
   },
+  "intent_signal_summary": {
+    "run_id": "clean_inbound_crm_sample",
+    "coverage": {
+      "status": "not_requested",
+      "sources": {
+        "activities": {
+          "status": "not_requested",
+          "files_present": [],
+          "activity_objects": {
+            "tasks": {
+              "count": 0,
+              "contact_association_available": false,
+              "deal_association_available": false
+            },
+            "meetings": {
+              "count": 0,
+              "contact_association_available": false,
+              "deal_association_available": false
+            },
+            "notes": {
+              "count": 0,
+              "contact_association_available": false,
+              "deal_association_available": false
+            },
+            "calls": {
+              "count": 0,
+              "contact_association_available": false,
+              "deal_association_available": false
+            },
+            "emails": {
+              "count": 0,
+              "contact_association_available": false,
+              "deal_association_available": false
+            },
+            "communications": {
+              "count": 0,
+              "contact_association_available": false,
+              "deal_association_available": false
+            }
+          }
+        },
+        "events": {
+          "status": "not_requested",
+          "files_present": []
+        },
+        "forms": {
+          "status": "not_requested",
+          "files_present": [],
+          "unlinked_submission_count": 0
+        },
+        "campaigns": {
+          "status": "not_requested",
+          "files_present": []
+        }
+      },
+      "metadata_only": true,
+      "limitations": [
+        "Marketing email opens/clicks and aggregate social/ad metrics are context signals, not person-level proof.",
+        "A source with a successful endpoint and zero rows is reported as observed_no_events; this is different from unavailable access.",
+        "Missing activity associations prevent record-level recovery claims for that activity type."
+      ]
+    },
+    "event_count": 0,
+    "counts_by_source": {},
+    "counts_by_strength": {},
+    "counts_by_signal_type": {},
+    "linked_to_contact_count": 0,
+    "linked_to_deal_count": 0,
+    "high_intent_contact_count": 0,
+    "high_intent_deal_count": 0,
+    "campaign_context": {
+      "campaign_count": 0,
+      "asset_count": 0,
+      "metric_count": 0,
+      "campaigns_with_assets": 0,
+      "asset_type_counts": {},
+      "channel_counts": {},
+      "metrics_available": 0,
+      "context_only": true,
+      "evidence_scope": "aggregate_channel_context_only; not person-level proof"
+    },
+    "source_row_counts": {
+      "activities": 0,
+      "events": 0,
+      "forms": 0,
+      "campaigns": 0
+    },
+    "contains_raw_values": false,
+    "contains_raw_pii": false
+  },
+  "intent_signal_coverage": {
+    "status": "not_requested",
+    "sources": {
+      "activities": {
+        "status": "not_requested",
+        "files_present": [],
+        "activity_objects": {
+          "tasks": {
+            "count": 0,
+            "contact_association_available": false,
+            "deal_association_available": false
+          },
+          "meetings": {
+            "count": 0,
+            "contact_association_available": false,
+            "deal_association_available": false
+          },
+          "notes": {
+            "count": 0,
+            "contact_association_available": false,
+            "deal_association_available": false
+          },
+          "calls": {
+            "count": 0,
+            "contact_association_available": false,
+            "deal_association_available": false
+          },
+          "emails": {
+            "count": 0,
+            "contact_association_available": false,
+            "deal_association_available": false
+          },
+          "communications": {
+            "count": 0,
+            "contact_association_available": false,
+            "deal_association_available": false
+          }
+        }
+      },
+      "events": {
+        "status": "not_requested",
+        "files_present": []
+      },
+      "forms": {
+        "status": "not_requested",
+        "files_present": [],
+        "unlinked_submission_count": 0
+      },
+      "campaigns": {
+        "status": "not_requested",
+        "files_present": []
+      }
+    },
+    "metadata_only": true,
+    "limitations": [
+      "Marketing email opens/clicks and aggregate social/ad metrics are context signals, not person-level proof.",
+      "A source with a successful endpoint and zero rows is reported as observed_no_events; this is different from unavailable access.",
+      "Missing activity associations prevent record-level recovery claims for that activity type."
+    ]
+  },
   "relationship_signals": {
     "contact_before_deal": 4,
     "contact_deal_pairs_with_dates": 4,
@@ -319,7 +469,8 @@
     "contains_raw_values": false
   },
   "ambiguous_areas": [
-    "Activity-level handoff evidence unavailable"
+    "Activity-level handoff evidence unavailable",
+    "Record-linked intent signals unavailable; journey classification uses CRM properties only"
   ],
   "warnings": [],
   "contains_raw_pii": false

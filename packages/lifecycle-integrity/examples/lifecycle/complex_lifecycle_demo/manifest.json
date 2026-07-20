@@ -1,0 +1,100 @@
+{
+  "run_id": "complex_lifecycle_demo",
+  "created_at": "2026-07-12T00:00:00+00:00",
+  "status": "completed",
+  "days": null,
+  "full_history": true,
+  "counts": {
+    "contacts": 10,
+    "companies": 5,
+    "deals": 8
+  },
+  "portal_currency": "USD",
+  "truncated": {
+    "contacts": false,
+    "companies": false,
+    "deals": false
+  },
+  "source_candidates": {},
+  "warnings": [],
+  "automation": {
+    "status": "full",
+    "performance_window": {
+      "label": "90 days"
+    },
+    "limitations": [
+      "Synthetic execution counts are illustrative."
+    ]
+  },
+  "intent": {
+    "status": "available",
+    "sources": {
+      "activities": {
+        "status": "not_requested",
+        "files_present": [],
+        "activity_objects": {
+          "tasks": {
+            "count": 2,
+            "contact_association_available": true,
+            "deal_association_available": true
+          },
+          "meetings": {
+            "count": 0,
+            "contact_association_available": true,
+            "deal_association_available": true
+          },
+          "notes": {
+            "count": 0,
+            "contact_association_available": true,
+            "deal_association_available": true
+          },
+          "calls": {
+            "count": 3,
+            "contact_association_available": true,
+            "deal_association_available": true
+          },
+          "emails": {
+            "count": 2,
+            "contact_association_available": true,
+            "deal_association_available": true
+          },
+          "communications": {
+            "count": 0,
+            "contact_association_available": true,
+            "deal_association_available": true
+          }
+        }
+      },
+      "events": {
+        "status": "available",
+        "files_present": [
+          "event_occurrences.jsonl"
+        ],
+        "metadata_only": true
+      },
+      "forms": {
+        "status": "available",
+        "files_present": [
+          "form_submissions.jsonl"
+        ],
+        "metadata_only": true,
+        "unlinked_submission_count": 0
+      },
+      "campaigns": {
+        "status": "available",
+        "files_present": [
+          "campaigns.json",
+          "campaign_assets.json",
+          "campaign_metrics.json"
+        ],
+        "metadata_only": true
+      }
+    },
+    "metadata_only": true,
+    "limitations": [
+      "Marketing email opens/clicks and aggregate social/ad metrics are context signals, not person-level proof.",
+      "A source with a successful endpoint and zero rows is reported as observed_no_events; this is different from unavailable access.",
+      "Missing activity associations prevent record-level recovery claims for that activity type."
+    ]
+  }
+}

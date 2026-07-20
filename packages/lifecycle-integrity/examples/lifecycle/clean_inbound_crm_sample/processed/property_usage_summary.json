@@ -314,6 +314,31 @@
         }
       ]
     },
+    "dealname": {
+      "total": 4,
+      "non_empty": 4,
+      "fill_rate": 100.0,
+      "empty_rate": 0.0,
+      "fill_rate_older_half": 100.0,
+      "fill_rate_recent_half": 100.0,
+      "distinct_count": 4,
+      "top_values": null
+    },
+    "hs_currency": {
+      "total": 4,
+      "non_empty": 4,
+      "fill_rate": 100.0,
+      "empty_rate": 0.0,
+      "fill_rate_older_half": 100.0,
+      "fill_rate_recent_half": 100.0,
+      "distinct_count": 1,
+      "top_values": [
+        {
+          "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] USD",
+          "count": 4
+        }
+      ]
+    },
     "hubspot_owner_id": {
       "total": 4,
       "non_empty": 4,

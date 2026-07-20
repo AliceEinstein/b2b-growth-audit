@@ -550,7 +550,7 @@ def _measurement_links(
 def _write_evidence(run_dir: Path, rows: list[dict[str, str]]) -> None:
     path = Path(run_dir) / "automation_evidence.csv"
     with path.open("w", encoding="utf-8", newline="") as handle:
-        writer = csv.DictWriter(handle, fieldnames=AUTOMATION_EVIDENCE_COLUMNS)
+        writer = csv.DictWriter(handle, fieldnames=AUTOMATION_EVIDENCE_COLUMNS, lineterminator="\n")
         writer.writeheader()
         writer.writerows(rows)
 

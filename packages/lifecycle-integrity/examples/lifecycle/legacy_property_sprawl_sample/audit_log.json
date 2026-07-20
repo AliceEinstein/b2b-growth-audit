@@ -1,6 +1,6 @@
 {
-  "started_at": "2026-07-15T17:10:02.392370+00:00",
-  "finished_at": "2026-07-15T17:10:02.392378+00:00",
+  "started_at": "2026-07-20T15:17:12.095930+00:00",
+  "finished_at": "2026-07-20T15:17:12.095933+00:00",
   "run_config": {
     "synthetic_dataset": "legacy_property_sprawl_sample"
   },

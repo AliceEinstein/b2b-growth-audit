@@ -120,6 +120,7 @@ def prepare(run_dir: Path) -> int:
    {run_dir}/crm_trust_report.md
    {run_dir}/operator_appendix.md
    {run_dir}/agent_handoff.md
+   {run_dir}/report_record_evidence.csv
 4. {SUBAGENT_DIR}/privacy_safety_reviewer.md (clearance duty)
    write: {run_dir}/safety_clearance.json for any flagged phrase
 

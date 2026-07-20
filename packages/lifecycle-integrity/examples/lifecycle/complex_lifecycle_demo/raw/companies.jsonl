@@ -1,0 +1,5 @@
+{"id": "co1", "properties": {"createdate": "2025-01-06T00:00:00Z", "domain": "inbound.demo.test", "name": "Inbound Demo Account", "lifecyclestage": ""}}
+{"id": "co2", "properties": {"createdate": "2025-02-06T00:00:00Z", "domain": "target.demo.test", "name": "Tier One Target", "lifecyclestage": "lead"}}
+{"id": "co3", "properties": {"createdate": "2025-03-06T00:00:00Z", "domain": "partner.demo.test", "name": "Partner Account", "lifecyclestage": ""}}
+{"id": "co4", "properties": {"createdate": "2025-04-06T00:00:00Z", "domain": "customer.demo.test", "name": "Existing Customer", "lifecyclestage": "customer"}}
+{"id": "co5", "properties": {"createdate": "2025-05-06T00:00:00Z", "domain": "lost-customer.demo.test", "name": "Reactivation Customer", "lifecyclestage": "customer"}}

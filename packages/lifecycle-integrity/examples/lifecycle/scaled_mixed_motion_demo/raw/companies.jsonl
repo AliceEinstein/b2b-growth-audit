@@ -1,0 +1,15 @@
+{"id": "co1", "properties": {"createdate": "2025-01-06T00:00:00Z", "domain": "inbound.demo.test", "name": "Inbound Demo Account", "lifecyclestage": ""}}
+{"id": "co2", "properties": {"createdate": "2025-02-06T00:00:00Z", "domain": "target.demo.test", "name": "Tier One Target", "lifecyclestage": "lead"}}
+{"id": "co3", "properties": {"createdate": "2025-03-06T00:00:00Z", "domain": "partner.demo.test", "name": "Partner Account", "lifecyclestage": ""}}
+{"id": "co4", "properties": {"createdate": "2025-04-06T00:00:00Z", "domain": "customer.demo.test", "name": "Existing Customer", "lifecyclestage": "customer"}}
+{"id": "co5", "properties": {"createdate": "2025-05-06T00:00:00Z", "domain": "lost-customer.demo.test", "name": "Reactivation Customer", "lifecyclestage": "customer"}}
+{"id": "co6", "properties": {"createdate": "2026-06-15T00:00:00Z", "domain": "northwind.demo.test", "name": "Northwind Labs", "lifecyclestage": ""}}
+{"id": "co7", "properties": {"createdate": "2026-07-15T00:00:00Z", "domain": "atlas.demo.test", "name": "Atlas Manufacturing", "lifecyclestage": ""}}
+{"id": "co8", "properties": {"createdate": "2026-08-15T00:00:00Z", "domain": "summit.demo.test", "name": "Summit Health", "lifecyclestage": ""}}
+{"id": "co9", "properties": {"createdate": "2026-09-15T00:00:00Z", "domain": "brightline.demo.test", "name": "Brightline Systems", "lifecyclestage": ""}}
+{"id": "co10", "properties": {"createdate": "2026-10-15T00:00:00Z", "domain": "orbit.demo.test", "name": "Orbit Security", "lifecyclestage": ""}}
+{"id": "co11", "properties": {"createdate": "2026-11-15T00:00:00Z", "domain": "harbor.demo.test", "name": "Harbor Logistics", "lifecyclestage": ""}}
+{"id": "co12", "properties": {"createdate": "2026-12-15T00:00:00Z", "domain": "cedar.demo.test", "name": "Cedar Partners", "lifecyclestage": ""}}
+{"id": "co13", "properties": {"createdate": "2027-01-15T00:00:00Z", "domain": "lumen.demo.test", "name": "Lumen Retail", "lifecyclestage": ""}}
+{"id": "co14", "properties": {"createdate": "2027-02-15T00:00:00Z", "domain": "veridian.demo.test", "name": "Veridian Group", "lifecyclestage": ""}}
+{"id": "co15", "properties": {"createdate": "2027-03-15T00:00:00Z", "domain": "pioneer.demo.test", "name": "Pioneer Energy", "lifecyclestage": ""}}

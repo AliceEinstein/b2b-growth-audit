@@ -19,6 +19,7 @@ from rich.table import Table
 
 from connectors.hubspot import (
     fetch_activities,
+    fetch_account_settings,
     fetch_associations,
     fetch_companies,
     fetch_contacts,
@@ -28,6 +29,7 @@ from connectors.hubspot import (
     fetch_properties,
 )
 from connectors.hubspot import fetch_automation
+from connectors.hubspot import fetch_intent_sources
 from connectors.hubspot.auth import TokenError, load_token
 from connectors.hubspot.client import HubSpotClient, HubSpotError
 from connectors.hubspot.normalize import write_json
@@ -50,6 +52,15 @@ ASSOCIATION_PAIRS = [
     ("deals", "companies", "associations_deal_company.jsonl"),
     ("deals", "contacts", "associations_deal_contact.jsonl"),
 ]
+ACTIVITY_ASSOCIATION_OBJECTS = (
+    "tasks",
+    "meetings",
+    "notes",
+    "calls",
+    "emails",
+    "communications",
+)
+ACTIVITY_ASSOCIATION_TARGETS = ("contacts", "companies", "deals")
 LARGE_OBJECT_WARNING = 100_000
 
 
@@ -103,7 +114,23 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     parser.add_argument(
         "--include-activities",
         action="store_true",
-        help="Fetch task, meeting, and note metadata (never note bodies)",
+        help="Fetch activity metadata (compatibility option; never content)",
+    )
+    parser.add_argument(
+        "--include-intent-signals",
+        action="store_true",
+        help=(
+            "Fetch read-only activity, event, form-submission, and campaign "
+            "metadata for lifecycle intent and recovery analysis"
+        ),
+    )
+    parser.add_argument(
+        "--business-name",
+        default=None,
+        help=(
+            "Business name to use in reports. Recommended when the HubSpot "
+            "account-info endpoint does not expose a display name."
+        ),
     )
     parser.add_argument("--output-root", type=Path, default=default_output_root())
     parser.add_argument(
@@ -129,6 +156,7 @@ def _write_manifest(
     source_candidates: dict[str, list[str]] | None = None,
     warnings: list[str] | None = None,
     automation: dict[str, object] | None = None,
+    intent: dict[str, object] | None = None,
 ) -> None:
     manifest = RunManifest(
         run_id=run_dir.name,
@@ -144,6 +172,7 @@ def _write_manifest(
         source_candidates=source_candidates or {},
         warnings=warnings or [],
         automation=automation or {},
+        intent=intent or {},
     )
     (run_dir / "manifest.json").write_text(
         manifest.model_dump_json(indent=2), encoding="utf-8"
@@ -232,6 +261,12 @@ def _run_audit(argv: list[str] | None = None) -> int:
         "status": "unavailable",
         "limitations": ["Automation acquisition has not run."],
     }
+    intent_coverage: dict[str, object] = {
+        "status": "not_requested",
+        "sources": {},
+        "metadata_only": True,
+        "limitations": ["Intent acquisition was not requested."],
+    }
 
     with HubSpotClient(token) as client:
         # 1. Property definitions first — they scope what we snapshot.
@@ -275,6 +310,31 @@ def _run_audit(argv: list[str] | None = None) -> int:
         # 3. Owners and pipelines.
         counts["owners"] = fetch_owners.fetch(client, raw / "owners.json")["count"]
         counts["pipelines"] = fetch_pipelines.fetch(client, raw / "pipelines.json")["count"]
+        account_settings = {"status": "permission_or_api_unavailable", "currency": None}
+        try:
+            account_settings = fetch_account_settings.fetch_company_currency(
+                client, raw / "account_info.json"
+            )
+            if account_settings.get("currency"):
+                console.print(f"✅ portal currency: {account_settings['currency']}")
+            else:
+                log.warn("Portal currency was not returned; deal amounts will be withheld when unlabeled.")
+        except HubSpotError:
+            # Currency is a display-quality dependency, not a reason to fail
+            # the audit. The report must withhold unlabeled amounts rather than
+            # inventing a unit.
+            log.warn("Portal currency unavailable; unlabeled deal amounts will be withheld.")
+        try:
+            # Portal identity is independent of currency. Preserve the business
+            # name and portal ID for report naming and authenticated record
+            # links even when the optional currency endpoint is unavailable.
+            account_settings.update(fetch_account_settings.fetch_portal_identity(client))
+        except HubSpotError:
+            log.warn("Portal identity unavailable; the report will use generic labels and omit direct record links.")
+        if args.business_name:
+            account_settings["business_name"] = str(args.business_name).strip()[:120]
+            account_settings["business_name_source"] = "user_supplied"
+        write_json(raw / "account_info.json", account_settings)
         console.print(
             f"✅ owners: {counts['owners']}, deal pipelines: {counts['pipelines']}"
         )
@@ -298,7 +358,7 @@ def _run_audit(argv: list[str] | None = None) -> int:
             log.warn(warning)
             console.print(f"[yellow]⚠️ {warning} — continuing with core audit.[/yellow]")
 
-        if args.include_activities:
+        if args.include_activities or args.include_intent_signals:
             try:
                 activity_summaries = fetch_activities.fetch_all(
                     client,
@@ -310,19 +370,163 @@ def _run_audit(argv: list[str] | None = None) -> int:
                 for object_type, summary in activity_summaries.items():
                     counts[object_type] = int(summary["count"])
                     truncated[object_type] = bool(summary["truncated"])
+                    ids[object_type] = summary["ids"]
                 log.event(
                     "activity_metadata_fetched",
                     counts={name: value["count"] for name, value in activity_summaries.items()},
                 )
-                console.print("✅ task, meeting, and note metadata fetched")
+                console.print("✅ activity metadata fetched (metadata-only)")
+                if args.include_intent_signals:
+                    available_objects = [
+                        name for name, value in activity_summaries.items()
+                        if value.get("available")
+                    ]
+                    unavailable_objects = [
+                        name for name, value in activity_summaries.items()
+                        if not value.get("available")
+                    ]
+                    intent_coverage["sources"]["activities"] = {
+                        "status": (
+                            "full"
+                            if not unavailable_objects
+                            else "partial"
+                            if available_objects
+                            else "permission_or_api_unavailable"
+                        ),
+                        "objects": available_objects,
+                        "unavailable_objects": unavailable_objects,
+                        "metadata_only": True,
+                    }
             except HubSpotError:
                 log.warn(
                     "Activity metadata was unavailable. Handoff checks will use "
                     "owner and object-state signals only."
                 )
+                intent_coverage["sources"]["activities"] = {
+                    "status": "permission_or_api_unavailable",
+                    "metadata_only": True,
+                }
                 console.print(
                     "[yellow]⚠️ Activity metadata unavailable — continuing with reduced handoff confidence.[/yellow]"
                 )
+
+        if args.include_intent_signals:
+            # Sources degrade independently. Missing Events, Forms, or
+            # Campaign access is a coverage limitation, not a zero-signal
+            # conclusion and never prevents the core audit from completing.
+            try:
+                event_types = fetch_intent_sources.fetch_event_types(
+                    client, raw / "event_types.json"
+                )
+                selected = fetch_intent_sources.select_event_types(event_types)
+                event_summary = fetch_intent_sources.fetch_event_occurrences(
+                    client,
+                    raw / "event_occurrences.jsonl",
+                    selected,
+                    days=days,
+                )
+                intent_coverage["sources"]["events"] = {
+                    "status": (
+                        "permission_or_api_unavailable"
+                        if event_summary.get("failed_event_type_count", 0)
+                        >= len(selected)
+                        else (
+                            "partial"
+                            if event_summary.get("failed_event_type_count", 0) > 0
+                            or event_summary.get("truncated")
+                            else "available"
+                        )
+                    ),
+                    "event_type_count": len(event_types),
+                    "selected_event_type_count": len(selected),
+                    **event_summary,
+                }
+            except HubSpotError:
+                intent_coverage["sources"]["events"] = {
+                    "status": "permission_or_api_unavailable",
+                    "metadata_only": True,
+                }
+                log.warn("HubSpot Events API unavailable; event intent is uncovered.")
+
+            try:
+                form_summary = fetch_intent_sources.fetch_forms_and_submissions(
+                    client, raw
+                )
+                intent_coverage["sources"]["forms"] = {
+                    "status": "partial" if form_summary.get("truncated") else "available",
+                    "metadata_only": True,
+                    **form_summary,
+                }
+            except HubSpotError:
+                intent_coverage["sources"]["forms"] = {
+                    "status": "permission_or_api_unavailable",
+                    "metadata_only": True,
+                }
+                log.warn("HubSpot Forms API unavailable; form intent is uncovered.")
+
+            try:
+                campaign_summary = fetch_intent_sources.fetch_campaign_context(
+                    client, raw, days=days
+                )
+                intent_coverage["sources"]["campaigns"] = {
+                    "status": "partial" if campaign_summary.get("truncated") else "available",
+                    "metadata_only": True,
+                    **campaign_summary,
+                }
+            except HubSpotError:
+                intent_coverage["sources"]["campaigns"] = {
+                    "status": "permission_or_api_unavailable",
+                    "metadata_only": True,
+                }
+                log.warn("HubSpot Campaigns API unavailable; campaign context is uncovered.")
+
+            # Associations are fetched separately so a record-linked timeline
+            # can distinguish no activity from missing association coverage.
+            for activity_type in ACTIVITY_ASSOCIATION_OBJECTS:
+                activity_summary = activity_summaries.get(activity_type, {})
+                if not activity_summary.get("available"):
+                    intent_coverage.setdefault("association_sources", {})[
+                        f"{activity_type}->record"
+                    ] = {"status": "permission_or_api_unavailable"}
+                    continue
+                activity_ids = ids.get(activity_type, [])
+                for target_type in ACTIVITY_ASSOCIATION_TARGETS:
+                    filename = f"associations_{activity_type}_{target_type}.jsonl"
+                    try:
+                        summary = fetch_associations.fetch(
+                            client,
+                            activity_type,
+                            target_type,
+                            activity_ids,
+                            raw / filename,
+                            resume=args.resume is not None,
+                        )
+                        counts[f"assoc_{activity_type}_{target_type}"] = summary["rows"]
+                        intent_coverage.setdefault("association_sources", {})[
+                            f"{activity_type}->{target_type}"
+                        ] = {"status": "available", "rows": summary["rows"]}
+                    except HubSpotError:
+                        intent_coverage.setdefault("association_sources", {})[
+                            f"{activity_type}->{target_type}"
+                        ] = {"status": "permission_or_api_unavailable"}
+
+            source_statuses = [
+                value.get("status")
+                for value in (intent_coverage.get("sources") or {}).values()
+                if isinstance(value, dict)
+            ]
+            if source_statuses and all(
+                status == "permission_or_api_unavailable" for status in source_statuses
+            ):
+                intent_coverage["status"] = "permission_denied"
+            elif any(status in {"available", "full"} for status in source_statuses):
+                intent_coverage["status"] = (
+                    "full"
+                    if all(status in {"available", "full"} for status in source_statuses)
+                    else "partial"
+                )
+            else:
+                intent_coverage["status"] = "unavailable"
 
         # 4. Associations — degrade gracefully per the connector error-handling policy.
         for from_type, to_type, filename in ASSOCIATION_PAIRS:
@@ -366,6 +570,7 @@ def _run_audit(argv: list[str] | None = None) -> int:
         source_candidates=candidates,
         warnings=log.warnings,
         automation=automation_coverage,
+        intent=intent_coverage,
     )
 
     # 6. Profile: sanitized measurement artifacts for the LLM judgment roles.

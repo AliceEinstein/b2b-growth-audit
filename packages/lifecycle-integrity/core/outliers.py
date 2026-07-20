@@ -134,7 +134,7 @@ def write_outlier_registry(run_dir: Path) -> List[OutlierRecord]:
     rows = classify_outliers(run_dir)
     path = Path(run_dir) / "outlier_registry.csv"
     with path.open("w", encoding="utf-8", newline="") as fh:
-        writer = csv.DictWriter(fh, fieldnames=OUTLIER_COLUMNS)
+        writer = csv.DictWriter(fh, fieldnames=OUTLIER_COLUMNS, lineterminator="\n")
         writer.writeheader()
         for row in rows:
             writer.writerow(row.model_dump())

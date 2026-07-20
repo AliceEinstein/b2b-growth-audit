@@ -30,16 +30,13 @@ from .outliers import OUTLIER_COLUMNS, classify_outliers
 from .validators import validate_snapshot_completed
 
 REQUIRED_REPORT_SECTIONS = [
-    "# HubSpot Lifecycle Integrity Audit",
-    "## 1. Executive Decision Summary",
-    "## 2. Detected Selling Journey Model",
-    "## 3. Journey Evidence and Operating Paths",
-    "## 4. Journey Leakage Map",
-    "## 5. Pipeline Exposure and Recoverable Population",
-    "## 6. Leakage Findings and Root Causes",
-    "## 7. Recovery and System Repair Plan",
-    "## 8. Monitoring and Next Review",
-    "## 9. Evidence, Assumptions, and Limits",
+    "## 1. Executive Verdict",
+    "## 2. How ",
+    "## 3. Where the Journey Breaks by Account, Contact, and Deal",
+    "## 4. Action Queue",
+    "## 5. Why These Breaks Exist",
+    "## 6. 30-Day Recovery Plan",
+    "## 7. Monitor and Verify",
 ]
 REQUIRED_APPENDIX_SECTIONS = [
     "# Operator Appendix: Lifecycle Integrity Audit",

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import json
+import re
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List
@@ -23,6 +24,8 @@ FINAL_DELIVERABLES = [
     "agent_handoff.md",
     "outlier_registry.csv",
     "evidence.csv",
+    "report_record_evidence.csv",
+    "report_account_evidence.csv",
     "crm_context.yaml",
     "schema_discovery_report.md",
     "review_trace.json",
@@ -45,6 +48,13 @@ AUTOMATION_SAFETY_FILES = [
     "agent_workspace/analysis/automation_scoring_analysis_agent.json",
     "agent_workspace/root_cause/automation_root_cause_agent.json",
 ]
+INTENT_SAFETY_FILES = [
+    "processed/intent_signal_summary.json",
+    "processed/intent_signal_coverage.json",
+    "processed/intent_record_index.json",
+    "processed/intent_signal_store.jsonl",
+    "processed/recovery_routing.json",
+]
 
 # Every committed judgment artifact can influence consolidation or the final
 # report. Hash all of them (except the gate report that this module owns) so a
@@ -55,7 +65,12 @@ AGENT_SAFETY_FILES = [
     if task["output"] != "final_gate_report.json"
 ]
 SAFETY_HASH_FILES = list(
-    dict.fromkeys(FINAL_DELIVERABLES + AUTOMATION_SAFETY_FILES + AGENT_SAFETY_FILES)
+    dict.fromkeys(
+        FINAL_DELIVERABLES
+        + AUTOMATION_SAFETY_FILES
+        + INTENT_SAFETY_FILES
+        + AGENT_SAFETY_FILES
+    )
 )
 CLEARABLE_SOFT_SECTIONS = {
     "## Blocked Actions",
@@ -102,7 +117,16 @@ def run_lifecycle_final_gate(run_dir: Path) -> Dict[str, Any]:
     registry, registry_problems = load_registry(run_dir)
     findings, finding_problems = load_findings(run_dir)
     if registry is not None and not (registry_problems or finding_problems):
-        recomputed = compute_lifecycle_score(findings, registry)
+        measurement_path = run_dir / "processed" / "lifecycle_integrity_measurements.json"
+        try:
+            measurement_doc = json.loads(measurement_path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            measurement_doc = {}
+        recomputed = compute_lifecycle_score(
+            findings,
+            registry,
+            measurement_doc.get("measurements", []),
+        )
         score_path = run_dir / "lifecycle_score.json"
         try:
             stored = (
@@ -119,10 +143,18 @@ def run_lifecycle_final_gate(run_dir: Path) -> Dict[str, Any]:
             problems.setdefault("score", []).append("lifecycle_score.json does not match deterministic recomputation")
         for report_name in ("lifecycle_integrity_report.md", "lifecycle_integrity_report.html"):
             report_path = run_dir / report_name
-            if report_path.exists() and f"{recomputed['overall_lifecycle_integrity_score']}/100" not in report_path.read_text(encoding="utf-8"):
-                problems.setdefault("score", []).append(
-                    f"{report_name} does not state the deterministic score verbatim"
+            if report_path.exists():
+                report_text = report_path.read_text(encoding="utf-8")
+                score_text = f"{recomputed['overall_lifecycle_integrity_score']}/100"
+                html_score = re.search(
+                    rf"class=['\"]hero-number['\"][^>]*>\s*{re.escape(str(recomputed['overall_lifecycle_integrity_score']))}\s*</span>.*?class=['\"]hero-denom['\"][^>]*>\s*/100",
+                    report_text,
+                    flags=re.DOTALL,
                 )
+                if score_text not in report_text and html_score is None:
+                    problems.setdefault("score", []).append(
+                        f"{report_name} does not state the deterministic score verbatim"
+                    )
 
     deliverable_hits = []
     for name in FINAL_DELIVERABLES:

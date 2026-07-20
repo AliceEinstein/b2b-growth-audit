@@ -1,0 +1,129 @@
+{
+  "primary_model": "multi_motion",
+  "overall_confidence": 58,
+  "patterns": [
+    {
+      "journey_type": "inbound_new_business",
+      "exists": true,
+      "confidence_score": 69,
+      "confidence_label": "medium",
+      "evidence_components": {
+        "field_signal": 15,
+        "object_path_evidence": 18,
+        "volume_materiality": 9,
+        "temporal_consistency": 10,
+        "pipeline_alignment": 8,
+        "association_coherence": 9,
+        "reviewer_adjustment": 0,
+        "contradiction_penalty": 0
+      },
+      "supporting_evidence": [
+        "3 journey keyword signal(s) in active fields/values",
+        "1 journey keyword signal(s) in pipeline/stage labels",
+        "object-path strength 88.9%"
+      ],
+      "contradicting_evidence": [],
+      "human_confirmation_needed": [],
+      "audit_level": "confidence_capped"
+    },
+    {
+      "journey_type": "outbound_sales_led",
+      "exists": true,
+      "confidence_score": 57,
+      "confidence_label": "medium",
+      "evidence_components": {
+        "field_signal": 15,
+        "object_path_evidence": 6,
+        "volume_materiality": 9,
+        "temporal_consistency": 10,
+        "pipeline_alignment": 8,
+        "association_coherence": 9,
+        "reviewer_adjustment": 0,
+        "contradiction_penalty": 0
+      },
+      "supporting_evidence": [
+        "3 journey keyword signal(s) in active fields/values",
+        "1 journey keyword signal(s) in pipeline/stage labels",
+        "object-path strength 27.8%"
+      ],
+      "contradicting_evidence": [],
+      "human_confirmation_needed": [],
+      "audit_level": "confidence_capped"
+    },
+    {
+      "journey_type": "abm_account_based",
+      "exists": true,
+      "confidence_score": 65,
+      "confidence_label": "medium",
+      "evidence_components": {
+        "field_signal": 10,
+        "object_path_evidence": 12,
+        "volume_materiality": 9,
+        "temporal_consistency": 10,
+        "pipeline_alignment": 15,
+        "association_coherence": 9,
+        "reviewer_adjustment": 0,
+        "contradiction_penalty": 0
+      },
+      "supporting_evidence": [
+        "2 journey keyword signal(s) in active fields/values",
+        "3 journey keyword signal(s) in pipeline/stage labels",
+        "object-path strength 60.0%"
+      ],
+      "contradicting_evidence": [],
+      "human_confirmation_needed": [],
+      "audit_level": "confidence_capped"
+    },
+    {
+      "journey_type": "partner_led",
+      "exists": true,
+      "confidence_score": 50,
+      "confidence_label": "medium",
+      "evidence_components": {
+        "field_signal": 10,
+        "object_path_evidence": 2,
+        "volume_materiality": 4,
+        "temporal_consistency": 10,
+        "pipeline_alignment": 15,
+        "association_coherence": 9,
+        "reviewer_adjustment": 0,
+        "contradiction_penalty": 0
+      },
+      "supporting_evidence": [
+        "2 journey keyword signal(s) in active fields/values",
+        "2 journey keyword signal(s) in pipeline/stage labels",
+        "object-path strength 11.1%"
+      ],
+      "contradicting_evidence": [],
+      "human_confirmation_needed": [],
+      "audit_level": "confidence_capped"
+    },
+    {
+      "journey_type": "expansion_renewal",
+      "exists": true,
+      "confidence_score": 50,
+      "confidence_label": "medium",
+      "evidence_components": {
+        "field_signal": 0,
+        "object_path_evidence": 7,
+        "volume_materiality": 9,
+        "temporal_consistency": 10,
+        "pipeline_alignment": 15,
+        "association_coherence": 9,
+        "reviewer_adjustment": 0,
+        "contradiction_penalty": 0
+      },
+      "supporting_evidence": [
+        "3 journey keyword signal(s) in pipeline/stage labels",
+        "object-path strength 33.3%"
+      ],
+      "contradicting_evidence": [],
+      "human_confirmation_needed": [],
+      "audit_level": "confidence_capped"
+    }
+  ],
+  "ambiguous_areas": [
+    "Stage-entry timestamps unavailable; journey paths are inferred from record creation order only"
+  ],
+  "human_confirmation_needed": []
+}

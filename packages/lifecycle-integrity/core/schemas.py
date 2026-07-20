@@ -94,6 +94,7 @@ class CrmContext(BaseModel):
 class BusinessContext(BaseModel):
     """LLM-produced business_context.json."""
 
+    business_name: str | None = None
     crm_complexity_tier: str = Field(min_length=1)
     likely_motion: str = Field(min_length=1)
     pipeline_complexity: str = Field(min_length=1)
@@ -168,3 +169,4 @@ class RunManifest(BaseModel):
     source_candidates: Dict[str, List[str]] = Field(default_factory=dict)
     warnings: List[str] = Field(default_factory=list)
     automation: Dict[str, Any] = Field(default_factory=dict)
+    intent: Dict[str, Any] = Field(default_factory=dict)

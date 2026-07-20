@@ -20,6 +20,7 @@ from __future__ import annotations
 import re
 from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
 
 EMAIL_PATTERN = re.compile(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}")
 
@@ -127,6 +128,12 @@ def scan_final_outputs(run_dir: Path) -> list[SafetyHit]:
 
 def has_hard_leaks(hits: list[SafetyHit]) -> bool:
     return any(h.hard for h in hits)
+
+
+def csv_safe(value: Any) -> str:
+    """Keep local CSV evidence inert when opened in a spreadsheet."""
+    text = "" if value is None else str(value)
+    return "'" + text if text.startswith(("=", "+", "-", "@")) else text
 
 
 # Final deliverables of the legacy CRM trust audit flow (the lifecycle flow

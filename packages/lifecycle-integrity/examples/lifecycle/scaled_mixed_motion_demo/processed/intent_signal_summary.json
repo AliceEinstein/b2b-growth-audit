@@ -1,0 +1,123 @@
+{
+  "run_id": "scaled_mixed_motion_demo",
+  "coverage": {
+    "status": "available",
+    "sources": {
+      "activities": {
+        "status": "not_requested",
+        "files_present": [],
+        "activity_objects": {
+          "tasks": {
+            "count": 2,
+            "contact_association_available": true,
+            "deal_association_available": true
+          },
+          "meetings": {
+            "count": 0,
+            "contact_association_available": true,
+            "deal_association_available": true
+          },
+          "notes": {
+            "count": 0,
+            "contact_association_available": true,
+            "deal_association_available": true
+          },
+          "calls": {
+            "count": 3,
+            "contact_association_available": true,
+            "deal_association_available": true
+          },
+          "emails": {
+            "count": 2,
+            "contact_association_available": true,
+            "deal_association_available": true
+          },
+          "communications": {
+            "count": 0,
+            "contact_association_available": true,
+            "deal_association_available": true
+          }
+        }
+      },
+      "events": {
+        "status": "available",
+        "files_present": [
+          "event_occurrences.jsonl"
+        ],
+        "metadata_only": true
+      },
+      "forms": {
+        "status": "available",
+        "files_present": [
+          "form_submissions.jsonl"
+        ],
+        "metadata_only": true,
+        "unlinked_submission_count": 0
+      },
+      "campaigns": {
+        "status": "available",
+        "files_present": [
+          "campaigns.json",
+          "campaign_assets.json",
+          "campaign_metrics.json"
+        ],
+        "metadata_only": true
+      }
+    },
+    "metadata_only": true,
+    "limitations": [
+      "Marketing email opens/clicks and aggregate social/ad metrics are context signals, not person-level proof.",
+      "A source with a successful endpoint and zero rows is reported as observed_no_events; this is different from unavailable access.",
+      "Missing activity associations prevent record-level recovery claims for that activity type."
+    ]
+  },
+  "event_count": 42,
+  "counts_by_source": {
+    "tasks": 2,
+    "calls": 3,
+    "emails": 2,
+    "events": 18,
+    "forms": 17
+  },
+  "counts_by_strength": {
+    "low": 6,
+    "high": 17,
+    "medium": 19
+  },
+  "counts_by_signal_type": {
+    "task activity": 2,
+    "call connected": 3,
+    "email reply": 1,
+    "email activity": 1,
+    "commercial page or visit": 17,
+    "high intent event": 1,
+    "form submission": 17
+  },
+  "linked_to_contact_count": 42,
+  "linked_to_deal_count": 26,
+  "high_intent_contact_count": 15,
+  "high_intent_deal_count": 5,
+  "campaign_context": {
+    "campaign_count": 2,
+    "asset_count": 3,
+    "metric_count": 2,
+    "campaigns_with_assets": 0,
+    "asset_type_counts": {
+      "unknown asset": 3
+    },
+    "channel_counts": {
+      "other": 3
+    },
+    "metrics_available": 0,
+    "context_only": true,
+    "evidence_scope": "aggregate_channel_context_only; not person-level proof"
+  },
+  "source_row_counts": {
+    "activities": 7,
+    "events": 18,
+    "forms": 17,
+    "campaigns": 5
+  },
+  "contains_raw_values": false,
+  "contains_raw_pii": false
+}

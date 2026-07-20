@@ -1,0 +1,22 @@
+[
+  {
+    "workflow_id": "wf-owner",
+    "series": "ENROLLED",
+    "frequency": 31
+  },
+  {
+    "workflow_id": "wf-owner",
+    "series": "COMPLETED",
+    "frequency": 0
+  },
+  {
+    "workflow_id": "wf-stage",
+    "series": "ENROLLED",
+    "frequency": 8
+  },
+  {
+    "workflow_id": "wf-stage",
+    "series": "COMPLETED",
+    "frequency": 3
+  }
+]

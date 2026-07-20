@@ -9,6 +9,7 @@ operator_appendix.md         # full findings, implementation detail, evidence in
 agent_handoff.md             # safety-bounded instructions for a later implementation
 findings.json                # machine-readable validated findings
 evidence.csv                 # hashed-record evidence rows
+report_record_evidence.csv   # local Company/Deal labels mapped to hashes
 crm_context.yaml             # inferred CRM operating model
 schema_discovery_report.md   # schema interpretation + confidence notes
 audit_log.json               # run details, no secrets
@@ -35,8 +36,11 @@ final_gate_report.json                 # deterministic gate result (code)
 LLM-facing CRM values are labelled as untrusted data. Selected categorical and
 property values may be present in processed artifacts when they are needed to
 identify the operating model or interpret a finding. Raw snapshots, contact
-identity values, note bodies, and tokens stay local and are not copied into
-agent tasks or final outputs. Users remain responsible for authorizing their
+identity values, note bodies, raw record IDs, portal IDs, and tokens stay
+local and are not copied into agent tasks or the record evidence CSV. The
+deterministic human-report renderer may include sanitized HubSpot Company and
+Deal names and direct HubSpot links as local evidence; these values are never
+used as model instructions. Users remain responsible for authorizing their
 chosen host LLM to process the bounded CRM context.
 
 Snapshot lifecycle:
@@ -102,7 +106,11 @@ The HTML report adds Smartify-styled KPI cards, completeness bars, record-age
 distribution, funnel and association graphics, print styles, and the Smartify
 website/GitHub footer and a sharing note explaining local HTML and PDF
 distribution. The Markdown version preserves the same facts and evidence
-links. `operator_appendix.md` contains every validated finding and detailed
+links. When available, the title uses the user-supplied business name, known
+HubSpot assets are explicitly type-labelled and bold, and representative
+Company/Deal names link directly to their HubSpot records. The local
+`report_record_evidence.csv` contains the full hash-to-label mapping but no
+portal ID, raw record ID, or URL. `operator_appendix.md` contains every validated finding and detailed
 implementation instructions. See `reporting_standard.md` for the full format,
 visual, language, and evidence-boundary rules.
 

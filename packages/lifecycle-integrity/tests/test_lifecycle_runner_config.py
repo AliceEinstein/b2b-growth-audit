@@ -24,6 +24,11 @@ def test_lifecycle_runner_supports_full_history_and_activity_metadata():
     assert args.include_activities is True
 
 
+def test_lifecycle_runner_accepts_explicit_business_name():
+    args = parse_args(["--business-name", "Smartify Marketing"])
+    assert args.business_name == "Smartify Marketing"
+
+
 def test_lifecycle_runner_rejects_conflicting_windows():
     with pytest.raises(SystemExit):
         parse_args(["--days", "30", "--full-history"])

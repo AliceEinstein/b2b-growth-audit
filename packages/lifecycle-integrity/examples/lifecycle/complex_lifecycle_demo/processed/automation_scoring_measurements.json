@@ -1,0 +1,568 @@
+{
+  "coverage": {
+    "status": "full",
+    "performance_window": {
+      "label": "90 days"
+    },
+    "limitations": [
+      "Synthetic execution counts are illustrative."
+    ]
+  },
+  "checks": [
+    {
+      "check_id": "AUTO-001",
+      "issue_type": "relevant_workflow_disabled",
+      "workflow_aliases": [
+        "WF-001"
+      ],
+      "fields": [
+        "hubspot_owner_id"
+      ],
+      "configuration_status": "defect_confirmed",
+      "causal_status": "possible",
+      "confidence": 60,
+      "limitation": "Configuration does not prove a specific record entered this workflow."
+    },
+    {
+      "check_id": "AUTO-005",
+      "issue_type": "relevant_workflow_no_aggregate_activity",
+      "workflow_aliases": [
+        "WF-002"
+      ],
+      "fields": [
+        "engagement_score"
+      ],
+      "configuration_status": "control_present",
+      "causal_status": "possible",
+      "confidence": 35,
+      "limitation": "No eligible-cohort denominator or per-record execution log is available."
+    },
+    {
+      "check_id": "AUTO-005",
+      "issue_type": "relevant_workflow_no_aggregate_activity",
+      "workflow_aliases": [
+        "WF-003"
+      ],
+      "fields": [
+        "engagement_score"
+      ],
+      "configuration_status": "control_present",
+      "causal_status": "possible",
+      "confidence": 35,
+      "limitation": "No eligible-cohort denominator or per-record execution log is available."
+    },
+    {
+      "check_id": "AUTO-002",
+      "issue_type": "conflicting_active_writers",
+      "workflow_aliases": [
+        "WF-002",
+        "WF-003"
+      ],
+      "fields": [
+        "engagement_score"
+      ],
+      "configuration_status": "defect_confirmed",
+      "causal_status": "probable",
+      "confidence": 70,
+      "limitation": "The conflict is configuration evidence; record-level execution order is not available."
+    },
+    {
+      "check_id": "SCORE-006",
+      "issue_type": "score_output_not_referenced_by_workflow",
+      "workflow_aliases": [],
+      "fields": [
+        "engagement_score"
+      ],
+      "configuration_status": "control_absent",
+      "causal_status": "unverified",
+      "confidence": 30,
+      "limitation": "Manual routing or non-workflow activation may exist."
+    }
+  ],
+  "root_cause_links": [
+    {
+      "measurement_id": "contacts_missing_lifecycle",
+      "workflow_aliases": [],
+      "score_fields": [],
+      "issue_types": [],
+      "configuration_status": "unknown",
+      "causal_status": "unverified",
+      "confidence": 0,
+      "limitations": [
+        "No relevant workflow or score link was established for this measurement."
+      ],
+      "evidence_refs": []
+    },
+    {
+      "measurement_id": "customers_without_stage_history",
+      "workflow_aliases": [],
+      "score_fields": [],
+      "issue_types": [],
+      "configuration_status": "unknown",
+      "causal_status": "unverified",
+      "confidence": 0,
+      "limitations": [
+        "No relevant workflow or score link was established for this measurement."
+      ],
+      "evidence_refs": []
+    },
+    {
+      "measurement_id": "contacts_stage_regression",
+      "workflow_aliases": [],
+      "score_fields": [],
+      "issue_types": [],
+      "configuration_status": "unknown",
+      "causal_status": "unverified",
+      "confidence": 0,
+      "limitations": [
+        "No relevant workflow or score link was established for this measurement."
+      ],
+      "evidence_refs": []
+    },
+    {
+      "measurement_id": "deals_without_company",
+      "workflow_aliases": [],
+      "score_fields": [],
+      "issue_types": [],
+      "configuration_status": "unknown",
+      "causal_status": "unverified",
+      "confidence": 0,
+      "limitations": [
+        "No relevant workflow or score link was established for this measurement."
+      ],
+      "evidence_refs": []
+    },
+    {
+      "measurement_id": "deals_without_contact",
+      "workflow_aliases": [],
+      "score_fields": [],
+      "issue_types": [],
+      "configuration_status": "unknown",
+      "causal_status": "unverified",
+      "confidence": 0,
+      "limitations": [
+        "No relevant workflow or score link was established for this measurement."
+      ],
+      "evidence_refs": []
+    },
+    {
+      "measurement_id": "closed_won_company_not_customer",
+      "workflow_aliases": [],
+      "score_fields": [],
+      "issue_types": [],
+      "configuration_status": "unknown",
+      "causal_status": "unverified",
+      "confidence": 0,
+      "limitations": [
+        "No relevant workflow or score link was established for this measurement."
+      ],
+      "evidence_refs": []
+    },
+    {
+      "measurement_id": "abm_account_based_deals_without_owner",
+      "workflow_aliases": [
+        "WF-001"
+      ],
+      "score_fields": [],
+      "issue_types": [
+        "relevant_workflow_disabled"
+      ],
+      "configuration_status": "defect_confirmed",
+      "causal_status": "possible",
+      "confidence": 60,
+      "limitations": [
+        "Configuration does not prove a specific record entered this workflow."
+      ],
+      "evidence_refs": [
+        "automation_evidence.csv#measurement_id=abm_account_based_deals_without_owner"
+      ]
+    },
+    {
+      "measurement_id": "abm_account_based_deals_without_company",
+      "workflow_aliases": [],
+      "score_fields": [],
+      "issue_types": [],
+      "configuration_status": "unknown",
+      "causal_status": "unverified",
+      "confidence": 0,
+      "limitations": [
+        "No relevant workflow or score link was established for this measurement."
+      ],
+      "evidence_refs": []
+    },
+    {
+      "measurement_id": "expansion_renewal_deals_without_owner",
+      "workflow_aliases": [
+        "WF-001"
+      ],
+      "score_fields": [],
+      "issue_types": [
+        "relevant_workflow_disabled"
+      ],
+      "configuration_status": "defect_confirmed",
+      "causal_status": "possible",
+      "confidence": 60,
+      "limitations": [
+        "Configuration does not prove a specific record entered this workflow."
+      ],
+      "evidence_refs": [
+        "automation_evidence.csv#measurement_id=expansion_renewal_deals_without_owner"
+      ]
+    },
+    {
+      "measurement_id": "expansion_renewal_deals_without_company",
+      "workflow_aliases": [],
+      "score_fields": [],
+      "issue_types": [],
+      "configuration_status": "unknown",
+      "causal_status": "unverified",
+      "confidence": 0,
+      "limitations": [
+        "No relevant workflow or score link was established for this measurement."
+      ],
+      "evidence_refs": []
+    },
+    {
+      "measurement_id": "inbound_new_business_deals_without_owner",
+      "workflow_aliases": [
+        "WF-001"
+      ],
+      "score_fields": [],
+      "issue_types": [
+        "relevant_workflow_disabled"
+      ],
+      "configuration_status": "defect_confirmed",
+      "causal_status": "possible",
+      "confidence": 60,
+      "limitations": [
+        "Configuration does not prove a specific record entered this workflow."
+      ],
+      "evidence_refs": [
+        "automation_evidence.csv#measurement_id=inbound_new_business_deals_without_owner"
+      ]
+    },
+    {
+      "measurement_id": "inbound_new_business_deals_without_company",
+      "workflow_aliases": [],
+      "score_fields": [],
+      "issue_types": [],
+      "configuration_status": "unknown",
+      "causal_status": "unverified",
+      "confidence": 0,
+      "limitations": [
+        "No relevant workflow or score link was established for this measurement."
+      ],
+      "evidence_refs": []
+    },
+    {
+      "measurement_id": "outbound_sales_led_deals_without_owner",
+      "workflow_aliases": [
+        "WF-001"
+      ],
+      "score_fields": [],
+      "issue_types": [
+        "relevant_workflow_disabled"
+      ],
+      "configuration_status": "defect_confirmed",
+      "causal_status": "possible",
+      "confidence": 60,
+      "limitations": [
+        "Configuration does not prove a specific record entered this workflow."
+      ],
+      "evidence_refs": [
+        "automation_evidence.csv#measurement_id=outbound_sales_led_deals_without_owner"
+      ]
+    },
+    {
+      "measurement_id": "outbound_sales_led_deals_without_company",
+      "workflow_aliases": [],
+      "score_fields": [],
+      "issue_types": [],
+      "configuration_status": "unknown",
+      "causal_status": "unverified",
+      "confidence": 0,
+      "limitations": [
+        "No relevant workflow or score link was established for this measurement."
+      ],
+      "evidence_refs": []
+    },
+    {
+      "measurement_id": "partner_led_deals_without_owner",
+      "workflow_aliases": [
+        "WF-001"
+      ],
+      "score_fields": [],
+      "issue_types": [
+        "relevant_workflow_disabled"
+      ],
+      "configuration_status": "defect_confirmed",
+      "causal_status": "possible",
+      "confidence": 60,
+      "limitations": [
+        "Configuration does not prove a specific record entered this workflow."
+      ],
+      "evidence_refs": [
+        "automation_evidence.csv#measurement_id=partner_led_deals_without_owner"
+      ]
+    },
+    {
+      "measurement_id": "partner_led_deals_without_company",
+      "workflow_aliases": [],
+      "score_fields": [],
+      "issue_types": [],
+      "configuration_status": "unknown",
+      "causal_status": "unverified",
+      "confidence": 0,
+      "limitations": [
+        "No relevant workflow or score link was established for this measurement."
+      ],
+      "evidence_refs": []
+    },
+    {
+      "measurement_id": "inbound_deals_without_source_trace",
+      "workflow_aliases": [],
+      "score_fields": [],
+      "issue_types": [],
+      "configuration_status": "unknown",
+      "causal_status": "unverified",
+      "confidence": 0,
+      "limitations": [
+        "No relevant workflow or score link was established for this measurement."
+      ],
+      "evidence_refs": []
+    },
+    {
+      "measurement_id": "expansion_deals_without_customer_company",
+      "workflow_aliases": [],
+      "score_fields": [],
+      "issue_types": [],
+      "configuration_status": "unknown",
+      "causal_status": "unverified",
+      "confidence": 0,
+      "limitations": [
+        "No relevant workflow or score link was established for this measurement."
+      ],
+      "evidence_refs": []
+    },
+    {
+      "measurement_id": "abm_account_based_high_intent_contacts_without_owner",
+      "workflow_aliases": [
+        "WF-001"
+      ],
+      "score_fields": [],
+      "issue_types": [
+        "relevant_workflow_disabled"
+      ],
+      "configuration_status": "defect_confirmed",
+      "causal_status": "possible",
+      "confidence": 60,
+      "limitations": [
+        "Configuration does not prove a specific record entered this workflow."
+      ],
+      "evidence_refs": [
+        "automation_evidence.csv#measurement_id=abm_account_based_high_intent_contacts_without_owner"
+      ]
+    },
+    {
+      "measurement_id": "abm_account_based_high_intent_contacts_without_deal",
+      "workflow_aliases": [],
+      "score_fields": [],
+      "issue_types": [],
+      "configuration_status": "unknown",
+      "causal_status": "unverified",
+      "confidence": 0,
+      "limitations": [
+        "No relevant workflow or score link was established for this measurement."
+      ],
+      "evidence_refs": []
+    },
+    {
+      "measurement_id": "expansion_renewal_high_intent_contacts_without_owner",
+      "workflow_aliases": [
+        "WF-001"
+      ],
+      "score_fields": [],
+      "issue_types": [
+        "relevant_workflow_disabled"
+      ],
+      "configuration_status": "defect_confirmed",
+      "causal_status": "possible",
+      "confidence": 60,
+      "limitations": [
+        "Configuration does not prove a specific record entered this workflow."
+      ],
+      "evidence_refs": [
+        "automation_evidence.csv#measurement_id=expansion_renewal_high_intent_contacts_without_owner"
+      ]
+    },
+    {
+      "measurement_id": "expansion_renewal_high_intent_contacts_without_deal",
+      "workflow_aliases": [],
+      "score_fields": [],
+      "issue_types": [],
+      "configuration_status": "unknown",
+      "causal_status": "unverified",
+      "confidence": 0,
+      "limitations": [
+        "No relevant workflow or score link was established for this measurement."
+      ],
+      "evidence_refs": []
+    },
+    {
+      "measurement_id": "inbound_new_business_high_intent_contacts_without_owner",
+      "workflow_aliases": [
+        "WF-001"
+      ],
+      "score_fields": [],
+      "issue_types": [
+        "relevant_workflow_disabled"
+      ],
+      "configuration_status": "defect_confirmed",
+      "causal_status": "possible",
+      "confidence": 60,
+      "limitations": [
+        "Configuration does not prove a specific record entered this workflow."
+      ],
+      "evidence_refs": [
+        "automation_evidence.csv#measurement_id=inbound_new_business_high_intent_contacts_without_owner"
+      ]
+    },
+    {
+      "measurement_id": "inbound_new_business_high_intent_contacts_without_deal",
+      "workflow_aliases": [],
+      "score_fields": [],
+      "issue_types": [],
+      "configuration_status": "unknown",
+      "causal_status": "unverified",
+      "confidence": 0,
+      "limitations": [
+        "No relevant workflow or score link was established for this measurement."
+      ],
+      "evidence_refs": []
+    },
+    {
+      "measurement_id": "outbound_sales_led_high_intent_contacts_without_owner",
+      "workflow_aliases": [
+        "WF-001"
+      ],
+      "score_fields": [],
+      "issue_types": [
+        "relevant_workflow_disabled"
+      ],
+      "configuration_status": "defect_confirmed",
+      "causal_status": "possible",
+      "confidence": 60,
+      "limitations": [
+        "Configuration does not prove a specific record entered this workflow."
+      ],
+      "evidence_refs": [
+        "automation_evidence.csv#measurement_id=outbound_sales_led_high_intent_contacts_without_owner"
+      ]
+    },
+    {
+      "measurement_id": "outbound_sales_led_high_intent_contacts_without_deal",
+      "workflow_aliases": [],
+      "score_fields": [],
+      "issue_types": [],
+      "configuration_status": "unknown",
+      "causal_status": "unverified",
+      "confidence": 0,
+      "limitations": [
+        "No relevant workflow or score link was established for this measurement."
+      ],
+      "evidence_refs": []
+    },
+    {
+      "measurement_id": "lifecycle_field_fragmentation",
+      "workflow_aliases": [],
+      "score_fields": [],
+      "issue_types": [],
+      "configuration_status": "unknown",
+      "causal_status": "unverified",
+      "confidence": 0,
+      "limitations": [
+        "No relevant workflow or score link was established for this measurement."
+      ],
+      "evidence_refs": []
+    },
+    {
+      "measurement_id": "activity_handoff_evidence_available",
+      "workflow_aliases": [
+        "WF-001"
+      ],
+      "score_fields": [],
+      "issue_types": [
+        "relevant_workflow_disabled"
+      ],
+      "configuration_status": "defect_confirmed",
+      "causal_status": "possible",
+      "confidence": 60,
+      "limitations": [
+        "Configuration does not prove a specific record entered this workflow."
+      ],
+      "evidence_refs": [
+        "automation_evidence.csv#measurement_id=activity_handoff_evidence_available"
+      ]
+    },
+    {
+      "measurement_id": "intent_signal_coverage",
+      "workflow_aliases": [],
+      "score_fields": [],
+      "issue_types": [],
+      "configuration_status": "unknown",
+      "causal_status": "unverified",
+      "confidence": 0,
+      "limitations": [
+        "No relevant workflow or score link was established for this measurement."
+      ],
+      "evidence_refs": []
+    },
+    {
+      "measurement_id": "intent_signals_without_deal",
+      "workflow_aliases": [],
+      "score_fields": [],
+      "issue_types": [],
+      "configuration_status": "unknown",
+      "causal_status": "unverified",
+      "confidence": 0,
+      "limitations": [
+        "No relevant workflow or score link was established for this measurement."
+      ],
+      "evidence_refs": []
+    },
+    {
+      "measurement_id": "active_deal_intent_without_escalation",
+      "workflow_aliases": [],
+      "score_fields": [],
+      "issue_types": [],
+      "configuration_status": "unknown",
+      "causal_status": "unverified",
+      "confidence": 0,
+      "limitations": [
+        "No relevant workflow or score link was established for this measurement."
+      ],
+      "evidence_refs": []
+    },
+    {
+      "measurement_id": "closed_lost_recovery_opportunity",
+      "workflow_aliases": [],
+      "score_fields": [],
+      "issue_types": [],
+      "configuration_status": "unknown",
+      "causal_status": "unverified",
+      "confidence": 0,
+      "limitations": [
+        "No relevant workflow or score link was established for this measurement."
+      ],
+      "evidence_refs": []
+    }
+  ],
+  "workflow_count": 4,
+  "relevant_workflow_count": 4,
+  "score_candidate_count": 2,
+  "limitations": [
+    "Synthetic execution counts are illustrative.",
+    "Workflow configuration does not prove per-record execution.",
+    "Missing workflow controls are not defects by default; manual controls may exist."
+  ]
+}

@@ -1,0 +1,12 @@
+[
+  {
+    "campaign_id": "camp1",
+    "metric": "clicks",
+    "value": 340
+  },
+  {
+    "campaign_id": "camp2",
+    "metric": "responses",
+    "value": 28
+  }
+]

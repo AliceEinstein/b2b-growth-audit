@@ -25,6 +25,10 @@ Reject or revise when:
 the final deliverables. Review the current bytes of `crm_trust_report.html`,
 `crm_trust_report.md`, `operator_appendix.md`, and `agent_handoff.md`; the
 visual format and appendix are safety-bound deliverables, not informal copies.
+Also review `report_record_evidence.csv`. Sanitized Company/Deal labels are
+allowed because they ground the local report, but Contact identity, raw record
+IDs, portal IDs, URLs, emails, phones, tokens, or unsafe formula prefixes are
+not allowed in that CSV.
 For each flag, either:
 
 - **fix the document** — if the phrase actually recommends execution; or

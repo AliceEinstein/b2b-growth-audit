@@ -15,7 +15,17 @@ detected and scored separately.
 - pagination, retry/backoff, date windows, checkpointing, and resume
 - one-pass local snapshots for contacts, companies, deals, owners, pipelines,
   properties, and required associations
-- optional task, meeting, and note metadata without note bodies
+- metadata-only activity snapshots for calls, emails, communications, tasks,
+  meetings, and notes, with separate activity-to-record associations
+- record-linked Events and Forms intent evidence plus normalized aggregate
+  Campaign channel context for inbound, outbound, ABM, partner, and expansion
+  mapping; form submissions are linked by the official contact reference when
+  present or by a local-only email match against the fetched contacts snapshot
+- campaign asset acquisition has an explicit request budget; if a large portal
+  exceeds it, the source is marked `partial` and the report does not present
+  channel coverage as complete
+- deterministic intent timelines, journey-link checks, active-deal escalation,
+  and a separate closed-lost recovery lane
 - deterministic profiling, schema discovery, and custom-property candidates
 - stage-entry timestamp capture (hs_v2_date_entered_*) with deterministic
   transition analysis: timestamped funnel progressions, direct-set customers,
@@ -32,7 +42,7 @@ detected and scored separately.
   explicit coverage limitation and never becomes a false defect
 - evidence-backed finding validation, multi-reviewer routing, adjudication,
   deterministic scoring, report generation, and a final privacy/safety gate
-- nine synthetic lifecycle portals and lifecycle-specific golden tests
+- eleven synthetic lifecycle portals and lifecycle-specific golden tests
 
 ## Safety model
 
@@ -53,8 +63,10 @@ detected and scored separately.
 
 ## Quickstart
 
-All commands run from the repository root (where `pyproject.toml` and your
-`.env` live).
+Run all commands from this package directory (`packages/lifecycle-integrity`),
+where its `pyproject.toml` and `.env` live. Do not install this package and
+`packages/crm-trust` into the same virtual environment because both preserve
+agent-native top-level Python modules.
 
 Create one dedicated HubSpot Private App and select these exact scopes:
 
@@ -63,27 +75,36 @@ crm.objects.contacts.read
 crm.objects.companies.read
 crm.objects.deals.read
 crm.objects.owners.read
+settings.currencies.read
 crm.schemas.contacts.read
 crm.schemas.companies.read
 crm.schemas.deals.read
 automation
+forms
+marketing.campaigns.read
+sales-email-read
 ~~~
 
-HubSpot does not accept `crm.schemas.*.read`, and there is no separate scoring
-scope used by this implementation. See
+Do not enter the wildcard string `crm.schemas.*.read`; select each of the
+three exact schema scopes above. There is no separate scoring scope used by
+this implementation. Projects are not read as a separate object;
+project values synced into CRM records are covered by the relevant object read.
+See
 [`hubspot_scopes.md`](skills/hubspot-lifecycle-integrity-audit/hubspot_scopes.md)
 for the scope-to-feature map, the `automation` safety boundary, activity
 coverage, and why Projects/Lead-object scopes are not current report inputs.
 
 ~~~bash
 cp .env.example .env
-# Add HUBSPOT_PRIVATE_APP_TOKEN with all eight scopes listed above.
+# Add HUBSPOT_PRIVATE_APP_TOKEN with all scopes listed above.
 
 python3 -m venv .venv && source .venv/bin/activate
 pip install --upgrade pip   # older bundled pips cannot editable-install a pyproject-only package
 pip install -e ".[dev]"
 python -m scripts.check_hubspot_connection
-python -m scripts.run_lifecycle_integrity_audit
+python -m scripts.run_lifecycle_integrity_audit --business-name "Your Business Name"
+# Explicitly skip intent/activity acquisition only for a core-only scan:
+python -m scripts.run_lifecycle_integrity_audit --core-only
 ~~~
 
 Full history is the default and the authoritative mode. B2B sales cycles run
@@ -111,10 +132,38 @@ The local coding agent then
 follows skills/hubspot-lifecycle-integrity-audit/SKILL.md and its isolated role
 contracts; every role output is schema-checked against the task manifest.
 
-The lifecycle audit can still run without `automation`, but that is a
-core-only run: workflow and scoring root-cause coverage is explicitly
-unavailable and must not be presented as a complete Automation & Scoring
-Integrity Audit.
+The lifecycle audit can still run without `automation`; in that case the
+report labels workflow/scoring root-cause coverage as unavailable and must not
+present the result as a complete Automation & Scoring Integrity Audit.
+`--core-only` is a separate explicit option that skips activity, Events, Forms,
+and Campaign acquisition for a limited CRM-object scan.
+
+### HubSpot API compatibility
+
+The connector deliberately pins each route to the contract it implements. The
+core CRM objects, properties, pipelines, owners, and associations use the
+numeric v3/v4 routes; record-linked Events, Campaigns, and currency metadata
+use HubSpot's date-versioned `2026-03` routes; Forms use the legacy v2 catalog
+plus the legacy v1 submission route; and workflow configuration/performance use
+the legacy v4 automation surface. HubSpot documents the numeric API family as
+legacy and the workflow v4 API as beta, so these are compatibility boundaries,
+not promises that the upstream APIs are stable forever.
+
+There is no silent endpoint fallback. If HubSpot changes or withdraws one of
+these contracts, the preflight probe or fetcher marks that source unavailable
+or partial, and the report must disclose the limitation rather than treating
+the source as zero activity. Updating an API route requires a matching
+allowlist change, sanitization review, contract tests, and a new synthetic
+fixture run before release. See the [HubSpot date-versioned API reference](https://developers.hubspot.com/docs/reference/api?hsLang=en),
+[Events API](https://developers.hubspot.com/docs/api-reference/latest/events/guide),
+[Campaigns API](https://developers.hubspot.com/docs/api-reference/latest/marketing/campaigns/guide),
+[legacy Forms API reference](https://developers.hubspot.com/docs/api-reference/legacy/overview),
+and [workflow v4 API](https://developers.hubspot.com/docs/api-reference/legacy/automation/workflows/guide).
+
+The report may include account, contact, deal, and owner names plus authorized
+HubSpot record links so a reviewer can act on a finding. Keep the report
+confidential. Emails, phone numbers, message bodies, form values, full URLs,
+tokens, and raw snapshots remain outside agent inputs and final reports.
 
 The judgment phase is an agent-driven harness: no LLM provider is built in —
 your own coding agent (Claude Code, Codex, Gemini CLI, …) supplies the
@@ -181,13 +230,13 @@ top of `core/lifecycle_human_report.py`.
 The acquisition pass is paced conservatively (~8 requests/second, stricter on
 search endpoints). Full history uses plain list pagination — no search cap —
 and snapshots roughly 50,000 records in about a minute per object type; even
-large portals complete in tens of minutes. The judgment phase runs 27
+large portals complete in tens of minutes. The judgment phase runs 31
 isolated agent roles over sanitized aggregates — expect it to dominate LLM
 token usage, scaling with findings volume rather than portal size.
 
 ## Try it without HubSpot
 
-Nine generated samples live under examples/lifecycle/:
+Eleven generated samples live under examples/lifecycle/:
 
 ~~~text
 clean_inbound_crm_sample
@@ -199,16 +248,28 @@ expansion_renewal_sample
 legacy_property_sprawl_sample
 broken_association_sample
 pipeline_leakage_sample
+complex_lifecycle_demo
+scaled_mixed_motion_demo
 ~~~
 
-Regenerate them with:
+The checked-in samples are public synthetic fixtures and are kept in the
+current task-manifest format. If you update the package or copy the package
+into a new working directory, regenerate the fixtures before running a full
+report workflow so the code-owned artifact manifest is refreshed:
 
 ~~~bash
-python -m scripts.generate_lifecycle_examples
+python -m scripts.generate_lifecycle_examples --overwrite
 ~~~
+
+`--overwrite` is explicit because regeneration replaces only the named
+synthetic sample directories under `examples/lifecycle/`; it never touches a
+HubSpot portal or an audit output directory.
 
 Each sample includes expected_lifecycle_invariants.json with confidence
 ranges, expected findings or observations, and blocked recommendation classes.
+All checked-in example emails use non-deliverable `.test` domains and all
+example portal labels are synthetic. A CI fixture-safety test prevents a real
+customer identity or credential from being added to the public examples.
 
 ## Tests
 
@@ -219,27 +280,46 @@ pytest
 The suite covers the inherited connector/snapshot safety guarantees plus
 lifecycle confidence, journey assignments, pattern registry integrity,
 pattern-aware rules, outliers, reviewer routing, workspace contracts,
-deterministic consolidation, exact evidence arithmetic, all nine golden
-datasets, report contracts, and final safety blockers.
+deterministic consolidation, exact evidence arithmetic, all golden datasets,
+report contracts, and final safety blockers.
 
 When automation coverage is available, the workflow/scoring layer appears
-inside the same nine-section lifecycle report and operator appendix. It is
+inside the same seven-section lifecycle report and operator appendix. It is
 diagnostic only: the score, finding severity, and action lanes remain owned by
-the existing deterministic lifecycle rules and reviewer gates.
+the existing deterministic lifecycle rules and reviewer gates. The local
+report also includes a sanitized `report_record_evidence.csv` for action: it
+may show local-only sanitized account/contact/deal labels, owner, stage,
+amount/currency, the dated signal chain, the observed break, configuration
+evidence, and next action, but never contact email/phone, message bodies, raw
+HubSpot IDs, or raw URLs. The confidential HTML and Markdown reports may make
+sanitized account/contact/deal names clickable when the portal and record IDs
+are available; those navigation URLs never enter the CSV or processed
+evidence. Named HubSpot assets are type-labeled and emphasized so readers can
+distinguish a workflow, pipeline, form, or property from narrative prose.
+Processed and agent-visible evidence remains hash-only. A workflow is named
+only when it exists in the sanitized inventory; the report distinguishes
+configuration evidence from per-record execution.
+If `settings.currencies.read` is unavailable, unlabeled deal amounts are
+withheld rather than shown with a guessed portal default.
 
 ## Distribution model
 
 This is a repo-native skill by design: the executable pipeline, role
-contracts, examples, and your local `.env` stay in the repository workspace,
-and every command runs from the repository root. The raw snapshot remains
-local; the user-selected host agent may process bounded sanitized CRM values
-needed for the audit. Installing for Claude Code
-(`python -m scripts.install_skill --agent claude`) only registers the skill
-for discovery via a symlink — execution stays here. Codex and Gemini CLI need
-no installation at all; they read AGENTS.md / GEMINI.md when working inside
-the repository. Building a wheel or copying `skills/` elsewhere is not a
-supported deployment: the role contracts and the deterministic gates must
-stay in the same tree to keep the task-manifest paths and validators honest.
+contracts, examples, and your local `.env` stay in the package workspace, and
+every command runs from the package root. The raw snapshot remains local; the
+user-selected host agent may process bounded sanitized CRM values needed for
+the audit. Installing for Claude Code
+(`python -m scripts.install_skill --agent claude`) registers the skill for
+discovery via a symlink while execution stays in this package. With
+`--copy`, the installer copies the skill plus a complete executable package
+snapshot to
+`~/.claude/skills/hubspot-lifecycle-integrity-audit/package/`; run from that
+`package/` directory and provide its own local `.env` or an environment
+variable. The copy is intentionally a frozen snapshot. Codex and Gemini CLI
+need no installation at all; they read AGENTS.md / GEMINI.md when working
+inside the repository. A wheel is not the supported agent-install surface
+because the role contracts and deterministic gates must stay in the same tree
+to keep task-manifest paths and validators honest.
 
 ## Repository layout note
 

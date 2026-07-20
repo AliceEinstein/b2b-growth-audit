@@ -12,6 +12,7 @@ from connectors.hubspot.client import (
     HubSpotError,
     ReadOnlyViolation,
 )
+from connectors.hubspot.fetch_account_info import fetch as fetch_account_info
 from connectors.hubspot.paging import fetch_object_records
 from connectors.hubspot.rate_limit import RateLimitPolicy
 
@@ -62,6 +63,50 @@ def test_allowlist_contains_only_read_operations():
                 or "batch/read" in pattern.pattern
                 or "access-token-info" in pattern.pattern
             ), f"non-read POST in allowlist: {pattern.pattern}"
+
+
+def test_account_info_keeps_only_report_identity_and_prefers_supplied_name(tmp_path):
+    def handler(request):
+        assert request.url.path == "/account-info/v3/details"
+        return httpx.Response(
+            200,
+            json={
+                "portalId": 123456,
+                "companyName": "Wrong Optional Name",
+                "timeZone": "Europe/Amsterdam",
+                "currency": "EUR",
+                "sensitiveFutureField": "must not be persisted",
+            },
+        )
+
+    output = tmp_path / "account_info.json"
+    result = fetch_account_info(
+        make_client(handler), output, business_name="Northstar Systems"
+    )
+    persisted = json.loads(output.read_text(encoding="utf-8"))
+    assert result == persisted == {
+        "status": "available",
+        "portal_id": 123456,
+        "business_name": "Northstar Systems",
+        "business_name_source": "user_supplied",
+    }
+
+
+def test_account_info_does_not_trust_noncontractual_business_name_fields(tmp_path):
+    def handler(request):
+        return httpx.Response(
+            200,
+            json={
+                "portalId": 123456,
+                "timeZone": "UTC",
+                "companyName": "Non-contractual API Field",
+            },
+        )
+
+    result = fetch_account_info(make_client(handler), tmp_path / "account_info.json")
+    assert result["portal_id"] == 123456
+    assert result["business_name"] is None
+    assert result["business_name_source"] == "unavailable"
 
 
 # -- pagination ---------------------------------------------------------------

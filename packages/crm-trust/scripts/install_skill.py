@@ -22,6 +22,28 @@ SKILL_NAME = "hubspot-crm-trust-audit"
 SKILL_SRC = REPO_ROOT / "skills" / SKILL_NAME
 
 
+def _copy_ignore(_directory: str, names: list[str]) -> set[str]:
+    """Keep a global copy runnable without copying local secrets or outputs."""
+    excluded = {
+        ".env",
+        ".env.local",
+        ".envrc",
+        ".git",
+        ".pytest_cache",
+        ".venv",
+        "__pycache__",
+        "build",
+        "dist",
+        "outputs",
+    }
+    return {
+        name
+        for name in names
+        if name in excluded
+        or (name.startswith(".env.") and name != ".env.example")
+    }
+
+
 def install_claude(copy: bool) -> int:
     target_dir = Path.home() / ".claude" / "skills"
     target_dir.mkdir(parents=True, exist_ok=True)
@@ -32,17 +54,27 @@ def install_claude(copy: bool) -> int:
         return 1
 
     if copy:
+        # Claude discovers SKILL.md at the skill root, while the audit itself
+        # needs the package runtime, role contracts, and validators. Keep both
+        # in the copied install so --copy is a real snapshot, not a discovery-
+        # only markdown bundle.
         shutil.copytree(SKILL_SRC, target)
-        print(f"Copied skill to {target}")
-        print("Note: a copy does not update when the repo does; prefer symlink.")
+        shutil.copytree(REPO_ROOT, target / "package", ignore=_copy_ignore)
+        print(f"Copied skill and executable package snapshot to {target}")
+        print(
+            "This snapshot will not update when the repository changes. Run "
+            f"from {target / 'package'} and provide HUBSPOT_PRIVATE_APP_TOKEN "
+            "through that package's local .env or your environment."
+        )
     else:
         target.symlink_to(SKILL_SRC, target_is_directory=True)
         print(f"Symlinked {target} -> {SKILL_SRC}")
 
     print(
         "\nDone. In Claude Code, the skill is now discoverable as "
-        f"'{SKILL_NAME}'.\nScripts still run from the repository root "
-        f"({REPO_ROOT}), where your .env lives."
+        f"'{SKILL_NAME}'.\nScripts run from the package root "
+        f"({target / 'package' if copy else REPO_ROOT}), where the package's "
+        "pyproject.toml and local .env live."
     )
     return 0
 

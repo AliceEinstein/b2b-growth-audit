@@ -12,7 +12,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.9", "3.10", "3.11"]
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
         package:
           - packages/crm-trust
           - packages/lifecycle-integrity
@@ -29,3 +29,23 @@ jobs:
         run: python -m pip install -e ".[dev]"
       - name: Run tests
         run: pytest -q
+
+  packaging:
+    name: Build ${{ matrix.package }} wheel
+    strategy:
+      fail-fast: false
+      matrix:
+        package:
+          - packages/crm-trust
+          - packages/lifecycle-integrity
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: ${{ matrix.package }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build wheel without dependencies
+        run: python -m pip wheel --no-deps --no-build-isolation . --wheel-dir /tmp/audit-wheels

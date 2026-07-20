@@ -88,7 +88,16 @@ def generate_lifecycle_reports(run_dir: Path) -> Dict[str, object]:
     adjudicated = adjudicate_findings(findings, reviews)
     finalized_findings = [LifecycleFinding.model_validate({k: v for k, v in row.items() if k != "action_lane"}) for row in adjudicated]
     write_json(run_dir / "findings.json", {"findings": adjudicated})
-    score = compute_lifecycle_score(finalized_findings, registry)
+    measurement_doc = json.loads(
+        (run_dir / "processed" / "lifecycle_integrity_measurements.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    score = compute_lifecycle_score(
+        finalized_findings,
+        registry,
+        measurement_doc.get("measurements", []),
+    )
     write_json(run_dir / "lifecycle_score.json", score)
 
     lanes: Dict[str, List[dict]] = {}

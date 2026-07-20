@@ -134,7 +134,7 @@ def _owner_summary(records: Dict[str, List[Dict[str, Any]]]) -> Dict[str, Any]:
 
 def _activity_summary(raw: Path) -> Dict[str, Any]:
     result: Dict[str, Any] = {"available": False, "metadata_only": True, "objects": {}}
-    for object_type in ("tasks", "meetings", "notes"):
+    for object_type in ("tasks", "meetings", "notes", "calls", "emails", "communications"):
         path = raw / f"{object_type}.jsonl"
         if not path.exists():
             continue
@@ -148,6 +148,20 @@ def _activity_summary(raw: Path) -> Dict[str, Any]:
     if not result["available"]:
         result["limitation"] = "Activity metadata was not requested or unavailable."
     return result
+
+
+def _intent_contact_signals(index: Dict[str, Any], contact_hash: str) -> List[str]:
+    """Translate sanitized event evidence into journey-classification hints."""
+    rows = index.get(contact_hash) or []
+    signals: List[str] = []
+    for row in rows:
+        strength = str(row.get("signal_strength") or "").lower()
+        if strength not in {"high", "medium"}:
+            continue
+        source = str(row.get("source") or "intent")
+        signal_type = str(row.get("signal_type") or "signal")
+        signals.append(f"observed {strength}-strength {source} {signal_type} signal")
+    return list(dict.fromkeys(signals))
 
 
 def _record_signal_text(record: Dict[str, Any], candidate_names: set[str]) -> str:
@@ -275,6 +289,8 @@ def build_journey_evidence_store(run_dir: Path) -> Dict[str, Any]:
     }
     usage = read_json(processed / "property_usage_summary.json", {})
     fields = _candidate_fields(prop_defs, usage)
+    intent_summary = read_json(processed / "intent_signal_summary.json", {})
+    intent_index = read_json(processed / "intent_record_index.json", {}).get("contacts", {})
     candidate_names = {
         entry["field"] for entries in fields.values() for entry in entries
     }
@@ -390,7 +406,10 @@ def build_journey_evidence_store(run_dir: Path) -> Dict[str, Any]:
 
     for contact in records["contacts"]:
         contact_id = str(contact.get("id"))
+        contact_hash = hash_record_id("contacts", contact_id, salt)
         intent_signals = contact_intent_signals(contact, fields)
+        intent_signals.extend(_intent_contact_signals(intent_index, contact_hash))
+        intent_signals = list(dict.fromkeys(intent_signals))
         if not intent_signals:
             continue
         linked_companies = [
@@ -408,7 +427,7 @@ def build_journey_evidence_store(run_dir: Path) -> Dict[str, Any]:
         has_deal = bool(contact_deals.get(contact_id)) if deal_contact is not None else None
         contact_assignment_counts[journey] += 1
         assignment = {
-            "record_id_hash": hash_record_id("contacts", contact_id, salt),
+            "record_id_hash": contact_hash,
             "object_type": "contacts",
             "assigned_journey": journey,
             "assignment_confidence": confidence,
@@ -416,6 +435,7 @@ def build_journey_evidence_store(run_dir: Path) -> Dict[str, Any]:
             "high_intent": True,
             "has_owner": has_owner,
             "has_associated_deal": has_deal,
+            "intent_signal_count": len(_intent_contact_signals(intent_index, contact_hash)),
         }
         assignments.append(assignment)
         high_intent_rows.append(assignment)
@@ -598,6 +618,8 @@ def build_journey_evidence_store(run_dir: Path) -> Dict[str, Any]:
         "association_summary": association_summary,
         "owner_coverage": owners,
         "activity_summary": activity,
+        "intent_signal_summary": intent_summary,
+        "intent_signal_coverage": intent_summary.get("coverage", {}),
         "relationship_signals": {
             "contact_before_deal": chronological_before,
             "contact_deal_pairs_with_dates": chronological_total,
@@ -619,6 +641,11 @@ def build_journey_evidence_store(run_dir: Path) -> Dict[str, Any]:
                 "Deal-contact associations unavailable" if deal_contact is None else None,
                 "Deal-company associations unavailable" if deal_company is None else None,
                 "Activity-level handoff evidence unavailable" if not activity["available"] else None,
+                (
+                    "Record-linked intent signals unavailable; journey classification uses CRM properties only"
+                    if intent_summary.get("coverage", {}).get("status") in {"not_requested", "unavailable"}
+                    else None
+                ),
                 (
                     "Stage-entry timestamps unavailable; journey paths are "
                     "inferred from record creation order only"
@@ -648,6 +675,7 @@ def build_journey_evidence_store(run_dir: Path) -> Dict[str, Any]:
     write_json(processed / "high_intent_cohort_summary.json", high_intent_summary)
     write_json(processed / "owner_distribution.json", owners)
     write_json(processed / "activity_summary.json", activity)
+    write_json(processed / "intent_signal_summary.json", intent_summary)
     write_json(
         processed / "journey_transition_candidates.json",
         store["relationship_signals"],

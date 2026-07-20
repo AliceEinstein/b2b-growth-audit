@@ -8,7 +8,9 @@ This package is designed for local-first, read-only HubSpot analysis.
   must not read `outputs/*/raw/` or call HubSpot directly.
 - Bounded sanitized CRM values may be passed to the host LLM when the user
   authorizes that processing. Raw snapshots, contact identity, note bodies,
-  and credentials remain outside agent tasks and final reports.
+  and credentials remain outside agent tasks. Local reports may include the
+  minimum company, contact, deal, and owner names needed for action; treat
+  them as confidential and never publish real report artifacts.
 - No recommendation may directly mutate HubSpot. Changes require human
   approval and a separate operator workflow.
 - Deal amounts are valid only for existing HubSpot deals supported by the

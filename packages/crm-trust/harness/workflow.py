@@ -225,6 +225,7 @@ def _build_stages() -> List[StageSpec]:
                     "crm_trust_report.html",
                     "operator_appendix.md",
                     "agent_handoff.md",
+                    "report_record_evidence.csv",
                 ),
             ),
             StageSpec(
@@ -236,6 +237,7 @@ def _build_stages() -> List[StageSpec]:
                     "crm_trust_report.html",
                     "operator_appendix.md",
                     "agent_handoff.md",
+                    "report_record_evidence.csv",
                 ),
                 output_paths=("safety_clearance.json",),
                 role_file=_role("privacy_safety_reviewer.md"),
@@ -252,6 +254,7 @@ def _build_stages() -> List[StageSpec]:
                     "agent_handoff.md",
                     "findings.json",
                     "evidence.csv",
+                    "report_record_evidence.csv",
                     "score.json",
                     "recommendations.json",
                     "crm_context.yaml",

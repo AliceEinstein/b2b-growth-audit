@@ -64,7 +64,7 @@ def test_next_tasks_walks_phases_in_order(tmp_path):
     run_dir, _ = build_lifecycle_run(tmp_path, "clean_inbound_crm_sample")
     phase, pending, problems = next_tasks(run_dir)
     assert (phase, problems) == ("analysis", [])
-    assert len(pending) == 7
+    assert len(pending) == 8
     write_judgment_artifacts(run_dir, None)
     phase, pending, problems = next_tasks(run_dir)
     assert (phase, pending, problems) == (None, [], [])

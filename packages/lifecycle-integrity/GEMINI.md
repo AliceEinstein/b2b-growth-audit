@@ -15,5 +15,6 @@ snapshots as a judgment agent; numbers come from code-owned artifacts; do not
 assume a linear funnel; missing MQL is not an outbound or expansion defect by
 default. The automation scope is required for the complete workflow/scoring
 diagnostic and is used only for workflow reads and aggregate performance; the
-client structurally blocks workflow mutations. Without it, label the run
-core-only.
+client structurally blocks workflow mutations. Without it, label the
+automation/scoring layer incomplete. `--core-only` separately skips intent and
+activity acquisition.

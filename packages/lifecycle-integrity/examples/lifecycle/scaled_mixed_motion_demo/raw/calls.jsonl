@@ -1,0 +1,3 @@
+{"id": "call1", "properties": {"hs_timestamp": "2026-06-22T00:00:00Z", "hs_call_status": "COMPLETED", "hs_call_direction": "INBOUND"}}
+{"id": "call2", "properties": {"hs_timestamp": "2026-06-12T00:00:00Z", "hs_call_status": "COMPLETED", "hs_call_direction": "OUTBOUND"}}
+{"id": "call3", "properties": {"hs_timestamp": "2026-07-10T00:00:00Z", "hs_call_status": "COMPLETED", "hs_call_direction": "INBOUND"}}

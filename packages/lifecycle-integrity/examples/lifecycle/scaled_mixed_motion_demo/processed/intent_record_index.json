@@ -1,0 +1,608 @@
+{
+  "contacts": {
+    "3c6387589ef94d11939c108bc8ffda4691b2ccf1c0032f62da4c48688069d9d3": [
+      {
+        "signal_type": "task activity",
+        "signal_strength": "low",
+        "source": "tasks",
+        "occurred_at": "2026-06-15T00:00:00+00:00",
+        "deal_id_hashes": [
+          "56dc1c25c81764e09305053375377148ceded624db4034a6f3ee171b3ae7d5a7"
+        ]
+      },
+      {
+        "signal_type": "call connected",
+        "signal_strength": "medium",
+        "source": "calls",
+        "occurred_at": "2026-06-12T00:00:00+00:00",
+        "deal_id_hashes": [
+          "56dc1c25c81764e09305053375377148ceded624db4034a6f3ee171b3ae7d5a7"
+        ]
+      },
+      {
+        "signal_type": "email reply",
+        "signal_strength": "high",
+        "source": "emails",
+        "occurred_at": "2026-06-14T00:00:00+00:00",
+        "deal_id_hashes": [
+          "56dc1c25c81764e09305053375377148ceded624db4034a6f3ee171b3ae7d5a7"
+        ]
+      }
+    ],
+    "9f65a4095c8e43e843af1c77341ec47589367df65272ea88ef6620f26fc497a6": [
+      {
+        "signal_type": "task activity",
+        "signal_strength": "low",
+        "source": "tasks",
+        "occurred_at": "2026-06-12T00:00:00+00:00",
+        "deal_id_hashes": [
+          "de14e685933abcee2d3201a76e5194b14015026e40afe3fbc82208e6654eb395",
+          "03ab09f13c9fe539a8f88fd27be6069522d8f3ac20f648bec59a6374b4d4d553"
+        ]
+      },
+      {
+        "signal_type": "email activity",
+        "signal_strength": "medium",
+        "source": "emails",
+        "occurred_at": "2026-06-10T00:00:00+00:00",
+        "deal_id_hashes": [
+          "de14e685933abcee2d3201a76e5194b14015026e40afe3fbc82208e6654eb395",
+          "03ab09f13c9fe539a8f88fd27be6069522d8f3ac20f648bec59a6374b4d4d553"
+        ]
+      },
+      {
+        "signal_type": "commercial page or visit",
+        "signal_strength": "medium",
+        "source": "events",
+        "occurred_at": "2026-06-02T00:00:00+00:00",
+        "deal_id_hashes": [
+          "de14e685933abcee2d3201a76e5194b14015026e40afe3fbc82208e6654eb395",
+          "03ab09f13c9fe539a8f88fd27be6069522d8f3ac20f648bec59a6374b4d4d553"
+        ]
+      }
+    ],
+    "460c9b97996b225679b3148fc1582e5bcc7fd63259abd185520e695adbb8dd16": [
+      {
+        "signal_type": "call connected",
+        "signal_strength": "high",
+        "source": "calls",
+        "occurred_at": "2026-06-22T00:00:00+00:00",
+        "deal_id_hashes": [
+          "c04293f4c9c7c0259639fc11d167c119f04aaee5b0c94087c754ee49853cb8e5"
+        ]
+      },
+      {
+        "signal_type": "commercial page or visit",
+        "signal_strength": "medium",
+        "source": "events",
+        "occurred_at": "2026-06-20T00:00:00+00:00",
+        "deal_id_hashes": [
+          "c04293f4c9c7c0259639fc11d167c119f04aaee5b0c94087c754ee49853cb8e5"
+        ]
+      },
+      {
+        "signal_type": "form submission",
+        "signal_strength": "high",
+        "source": "forms",
+        "occurred_at": "2026-07-08T00:00:00+00:00",
+        "deal_id_hashes": [
+          "c04293f4c9c7c0259639fc11d167c119f04aaee5b0c94087c754ee49853cb8e5"
+        ]
+      }
+    ],
+    "ca567930398e9cdae63aadf6ee0161e0782a184e6cf76b95bffb7f3b325a964f": [
+      {
+        "signal_type": "call connected",
+        "signal_strength": "high",
+        "source": "calls",
+        "occurred_at": "2026-07-10T00:00:00+00:00",
+        "deal_id_hashes": []
+      },
+      {
+        "signal_type": "commercial page or visit",
+        "signal_strength": "medium",
+        "source": "events",
+        "occurred_at": "2026-07-12T00:00:00+00:00",
+        "deal_id_hashes": []
+      }
+    ],
+    "245b6777d141864568483b455ad56ba2a58e6cbdf4d8051f98516ede7b5892eb": [
+      {
+        "signal_type": "high intent event",
+        "signal_strength": "high",
+        "source": "events",
+        "occurred_at": "2026-07-10T00:00:00+00:00",
+        "deal_id_hashes": []
+      },
+      {
+        "signal_type": "form submission",
+        "signal_strength": "high",
+        "source": "forms",
+        "occurred_at": "2026-07-11T00:00:00+00:00",
+        "deal_id_hashes": []
+      }
+    ],
+    "10b14a5d206bf243eba698ed5f876669cf9440591feeaaed3863084c9494b36b": [
+      {
+        "signal_type": "commercial page or visit",
+        "signal_strength": "low",
+        "source": "events",
+        "occurred_at": "2026-06-05T00:00:00+00:00",
+        "deal_id_hashes": [
+          "1c4429ffb6a83624133fcc7b54421383fabab52b3fc7a425c99e3b660742ee32"
+        ]
+      },
+      {
+        "signal_type": "form submission",
+        "signal_strength": "medium",
+        "source": "forms",
+        "occurred_at": "2026-06-08T00:00:00+00:00",
+        "deal_id_hashes": [
+          "1c4429ffb6a83624133fcc7b54421383fabab52b3fc7a425c99e3b660742ee32"
+        ]
+      }
+    ],
+    "91354a48ef3489bfb2929a538b23382a424563f57e56ced708782a679c32938a": [
+      {
+        "signal_type": "commercial page or visit",
+        "signal_strength": "medium",
+        "source": "events",
+        "occurred_at": "2026-07-09T00:00:00+00:00",
+        "deal_id_hashes": []
+      },
+      {
+        "signal_type": "form submission",
+        "signal_strength": "high",
+        "source": "forms",
+        "occurred_at": "2026-07-13T00:00:00+00:00",
+        "deal_id_hashes": []
+      }
+    ],
+    "542ad5c91d1319e347446145d2fc95a48105d4a42632c3cf00828fd832f9a8a6": [
+      {
+        "signal_type": "commercial page or visit",
+        "signal_strength": "medium",
+        "source": "events",
+        "occurred_at": "2026-07-11T00:00:00+00:00",
+        "deal_id_hashes": []
+      },
+      {
+        "signal_type": "form submission",
+        "signal_strength": "high",
+        "source": "forms",
+        "occurred_at": "2026-07-11T00:00:00+00:00",
+        "deal_id_hashes": []
+      }
+    ],
+    "505287695b58baacf8b5e8f3da8b97d679e6e9a050d12c3ecaeba51b2459ee0d": [
+      {
+        "signal_type": "commercial page or visit",
+        "signal_strength": "medium",
+        "source": "events",
+        "occurred_at": "2026-07-08T00:00:00+00:00",
+        "deal_id_hashes": []
+      },
+      {
+        "signal_type": "form submission",
+        "signal_strength": "high",
+        "source": "forms",
+        "occurred_at": "2026-07-13T00:00:00+00:00",
+        "deal_id_hashes": []
+      }
+    ],
+    "34a8c0175a8defd4b234286ca207c5938fa4bd0dd1adb2778f48357f3ea23a6f": [
+      {
+        "signal_type": "commercial page or visit",
+        "signal_strength": "medium",
+        "source": "events",
+        "occurred_at": "2026-07-10T00:00:00+00:00",
+        "deal_id_hashes": []
+      },
+      {
+        "signal_type": "form submission",
+        "signal_strength": "high",
+        "source": "forms",
+        "occurred_at": "2026-07-11T00:00:00+00:00",
+        "deal_id_hashes": []
+      }
+    ],
+    "14cb3c73c9b4ce3adca1e53e34220ccdf508cc4961c11c24bef5aee73e5a09d5": [
+      {
+        "signal_type": "commercial page or visit",
+        "signal_strength": "medium",
+        "source": "events",
+        "occurred_at": "2026-07-12T00:00:00+00:00",
+        "deal_id_hashes": [
+          "610447d133b7761c133bb9e77bdfce979159738377dcd5a56ab98e4167459826"
+        ]
+      },
+      {
+        "signal_type": "form submission",
+        "signal_strength": "high",
+        "source": "forms",
+        "occurred_at": "2026-07-13T00:00:00+00:00",
+        "deal_id_hashes": [
+          "610447d133b7761c133bb9e77bdfce979159738377dcd5a56ab98e4167459826"
+        ]
+      }
+    ],
+    "245d02283c62f77a4eaf2659abc42b213d1fea6d818554052aba8dff6f586d3d": [
+      {
+        "signal_type": "commercial page or visit",
+        "signal_strength": "medium",
+        "source": "events",
+        "occurred_at": "2026-07-08T00:00:00+00:00",
+        "deal_id_hashes": [
+          "6051a9fb7d41d07a21bcc35300ed07a76e78e5faaf19c04761e02103abe4c3b4"
+        ]
+      }
+    ],
+    "10e9d3b48326879e6342bf4b3f9a45e26e2146565519b753c831634e9f80b810": [
+      {
+        "signal_type": "commercial page or visit",
+        "signal_strength": "medium",
+        "source": "events",
+        "occurred_at": "2026-07-09T00:00:00+00:00",
+        "deal_id_hashes": [
+          "000fc6061bea5414abc9a16b503965801ef6ce448002deaa2a1ac8b4a0264359"
+        ]
+      },
+      {
+        "signal_type": "form submission",
+        "signal_strength": "high",
+        "source": "forms",
+        "occurred_at": "2026-07-11T00:00:00+00:00",
+        "deal_id_hashes": [
+          "000fc6061bea5414abc9a16b503965801ef6ce448002deaa2a1ac8b4a0264359"
+        ]
+      }
+    ],
+    "5eb0f82872ef5f9b4b4be3fa8c6ac24ee70abd75e2532f1a4e2f4ce968023bc2": [
+      {
+        "signal_type": "commercial page or visit",
+        "signal_strength": "medium",
+        "source": "events",
+        "occurred_at": "2026-07-10T00:00:00+00:00",
+        "deal_id_hashes": [
+          "fde3c641566bc7c1e9528ca67ef6c62d9fefa1b4df218e802fd48420167f3c35"
+        ]
+      }
+    ],
+    "2d748c89010521a433554cd887f1efe07480a48c37f1b42faf3af974569c9a3d": [
+      {
+        "signal_type": "commercial page or visit",
+        "signal_strength": "medium",
+        "source": "events",
+        "occurred_at": "2026-07-11T00:00:00+00:00",
+        "deal_id_hashes": [
+          "84bc148c3ac2566a8b5eafa0470ac9164d98af6a718e32533e2edd3646213b3b"
+        ]
+      }
+    ],
+    "db7ea663fa615e437f0f54fe7c4aeea177f720714f2c39ab34517c7c1cce288d": [
+      {
+        "signal_type": "commercial page or visit",
+        "signal_strength": "medium",
+        "source": "events",
+        "occurred_at": "2026-07-12T00:00:00+00:00",
+        "deal_id_hashes": [
+          "9cbd56eabe98d46644a55c8de0e4aaa66cd0c822c58c44cc07fa9f7988ffeed7"
+        ]
+      }
+    ],
+    "f8dbd393a27234cbacb33507de8608bc6e54b1c4f9f43bc9906a3ed6721ae021": [
+      {
+        "signal_type": "commercial page or visit",
+        "signal_strength": "low",
+        "source": "events",
+        "occurred_at": "2026-06-13T00:00:00+00:00",
+        "deal_id_hashes": [
+          "3483fc9f42b2a88802cd734bf0c95b3e4ae8d2b66d34e8838ef65c4671478f0c"
+        ]
+      },
+      {
+        "signal_type": "form submission",
+        "signal_strength": "medium",
+        "source": "forms",
+        "occurred_at": "2026-06-11T00:00:00+00:00",
+        "deal_id_hashes": [
+          "3483fc9f42b2a88802cd734bf0c95b3e4ae8d2b66d34e8838ef65c4671478f0c"
+        ]
+      }
+    ],
+    "f0999814dec310af4e7899ffc6e6e765bb9bb5841672cc08ef1df6b170f55ac7": [
+      {
+        "signal_type": "commercial page or visit",
+        "signal_strength": "low",
+        "source": "events",
+        "occurred_at": "2026-06-14T00:00:00+00:00",
+        "deal_id_hashes": [
+          "70cc78aec9efbe340e045e09d1a575b229712da31ab47e48148f9e406dbbecaf"
+        ]
+      },
+      {
+        "signal_type": "form submission",
+        "signal_strength": "medium",
+        "source": "forms",
+        "occurred_at": "2026-06-12T00:00:00+00:00",
+        "deal_id_hashes": [
+          "70cc78aec9efbe340e045e09d1a575b229712da31ab47e48148f9e406dbbecaf"
+        ]
+      }
+    ],
+    "65d89135d60704642264ef42175c35af5283ad53dd72ea8181b504e3ff683d20": [
+      {
+        "signal_type": "commercial page or visit",
+        "signal_strength": "low",
+        "source": "events",
+        "occurred_at": "2026-06-12T00:00:00+00:00",
+        "deal_id_hashes": [
+          "b514865cde662ab6c562855f49bd16e22e7217057ec9ea40c03f6994785862ec"
+        ]
+      },
+      {
+        "signal_type": "form submission",
+        "signal_strength": "medium",
+        "source": "forms",
+        "occurred_at": "2026-06-10T00:00:00+00:00",
+        "deal_id_hashes": [
+          "b514865cde662ab6c562855f49bd16e22e7217057ec9ea40c03f6994785862ec"
+        ]
+      }
+    ],
+    "7aac121bd07a1713a7fdab0f95153cd22a15c82f952ec003acc8b99aa6d1fdb0": [
+      {
+        "signal_type": "form submission",
+        "signal_strength": "high",
+        "source": "forms",
+        "occurred_at": "2026-07-12T00:00:00+00:00",
+        "deal_id_hashes": [
+          "a6149edacca409796a57eccbecbd9a299905a5cd70c522714ca6232a5b22f53b"
+        ]
+      }
+    ],
+    "d271fe33e1b42976b1f34205ea264bce2dfc250736b45f532a53c0ac7881d8b8": [
+      {
+        "signal_type": "form submission",
+        "signal_strength": "high",
+        "source": "forms",
+        "occurred_at": "2026-07-10T00:00:00+00:00",
+        "deal_id_hashes": []
+      }
+    ],
+    "c7902463b56ebb62701f46bddc81ea99cc03fc4a7193188c9bcc06883c98a0d7": [
+      {
+        "signal_type": "form submission",
+        "signal_strength": "high",
+        "source": "forms",
+        "occurred_at": "2026-07-12T00:00:00+00:00",
+        "deal_id_hashes": []
+      }
+    ],
+    "3ab0a74250ec7e1e8828923a4f9fca65260388c5fc73a3788e13e504eabd8ac1": [
+      {
+        "signal_type": "form submission",
+        "signal_strength": "high",
+        "source": "forms",
+        "occurred_at": "2026-07-10T00:00:00+00:00",
+        "deal_id_hashes": []
+      }
+    ],
+    "e707278ccd81b2e27af84cd5bb40eb9be6bd186e0b1efd51d5ae2d918b83dd80": [
+      {
+        "signal_type": "form submission",
+        "signal_strength": "high",
+        "source": "forms",
+        "occurred_at": "2026-07-12T00:00:00+00:00",
+        "deal_id_hashes": []
+      }
+    ]
+  },
+  "deals": {
+    "56dc1c25c81764e09305053375377148ceded624db4034a6f3ee171b3ae7d5a7": [
+      {
+        "signal_type": "task activity",
+        "signal_strength": "low",
+        "source": "tasks",
+        "occurred_at": "2026-06-15T00:00:00+00:00"
+      },
+      {
+        "signal_type": "call connected",
+        "signal_strength": "medium",
+        "source": "calls",
+        "occurred_at": "2026-06-12T00:00:00+00:00"
+      },
+      {
+        "signal_type": "email reply",
+        "signal_strength": "high",
+        "source": "emails",
+        "occurred_at": "2026-06-14T00:00:00+00:00"
+      }
+    ],
+    "de14e685933abcee2d3201a76e5194b14015026e40afe3fbc82208e6654eb395": [
+      {
+        "signal_type": "task activity",
+        "signal_strength": "low",
+        "source": "tasks",
+        "occurred_at": "2026-06-12T00:00:00+00:00"
+      },
+      {
+        "signal_type": "email activity",
+        "signal_strength": "medium",
+        "source": "emails",
+        "occurred_at": "2026-06-10T00:00:00+00:00"
+      },
+      {
+        "signal_type": "commercial page or visit",
+        "signal_strength": "medium",
+        "source": "events",
+        "occurred_at": "2026-06-02T00:00:00+00:00"
+      }
+    ],
+    "c04293f4c9c7c0259639fc11d167c119f04aaee5b0c94087c754ee49853cb8e5": [
+      {
+        "signal_type": "call connected",
+        "signal_strength": "high",
+        "source": "calls",
+        "occurred_at": "2026-06-22T00:00:00+00:00"
+      },
+      {
+        "signal_type": "commercial page or visit",
+        "signal_strength": "medium",
+        "source": "events",
+        "occurred_at": "2026-06-20T00:00:00+00:00"
+      },
+      {
+        "signal_type": "form submission",
+        "signal_strength": "high",
+        "source": "forms",
+        "occurred_at": "2026-07-08T00:00:00+00:00"
+      }
+    ],
+    "a6149edacca409796a57eccbecbd9a299905a5cd70c522714ca6232a5b22f53b": [
+      {
+        "signal_type": "form submission",
+        "signal_strength": "high",
+        "source": "forms",
+        "occurred_at": "2026-07-12T00:00:00+00:00"
+      }
+    ],
+    "03ab09f13c9fe539a8f88fd27be6069522d8f3ac20f648bec59a6374b4d4d553": [
+      {
+        "signal_type": "task activity",
+        "signal_strength": "low",
+        "source": "tasks",
+        "occurred_at": "2026-06-12T00:00:00+00:00"
+      },
+      {
+        "signal_type": "email activity",
+        "signal_strength": "medium",
+        "source": "emails",
+        "occurred_at": "2026-06-10T00:00:00+00:00"
+      },
+      {
+        "signal_type": "commercial page or visit",
+        "signal_strength": "medium",
+        "source": "events",
+        "occurred_at": "2026-06-02T00:00:00+00:00"
+      }
+    ],
+    "1c4429ffb6a83624133fcc7b54421383fabab52b3fc7a425c99e3b660742ee32": [
+      {
+        "signal_type": "commercial page or visit",
+        "signal_strength": "low",
+        "source": "events",
+        "occurred_at": "2026-06-05T00:00:00+00:00"
+      },
+      {
+        "signal_type": "form submission",
+        "signal_strength": "medium",
+        "source": "forms",
+        "occurred_at": "2026-06-08T00:00:00+00:00"
+      }
+    ],
+    "610447d133b7761c133bb9e77bdfce979159738377dcd5a56ab98e4167459826": [
+      {
+        "signal_type": "commercial page or visit",
+        "signal_strength": "medium",
+        "source": "events",
+        "occurred_at": "2026-07-12T00:00:00+00:00"
+      },
+      {
+        "signal_type": "form submission",
+        "signal_strength": "high",
+        "source": "forms",
+        "occurred_at": "2026-07-13T00:00:00+00:00"
+      }
+    ],
+    "6051a9fb7d41d07a21bcc35300ed07a76e78e5faaf19c04761e02103abe4c3b4": [
+      {
+        "signal_type": "commercial page or visit",
+        "signal_strength": "medium",
+        "source": "events",
+        "occurred_at": "2026-07-08T00:00:00+00:00"
+      }
+    ],
+    "000fc6061bea5414abc9a16b503965801ef6ce448002deaa2a1ac8b4a0264359": [
+      {
+        "signal_type": "commercial page or visit",
+        "signal_strength": "medium",
+        "source": "events",
+        "occurred_at": "2026-07-09T00:00:00+00:00"
+      },
+      {
+        "signal_type": "form submission",
+        "signal_strength": "high",
+        "source": "forms",
+        "occurred_at": "2026-07-11T00:00:00+00:00"
+      }
+    ],
+    "fde3c641566bc7c1e9528ca67ef6c62d9fefa1b4df218e802fd48420167f3c35": [
+      {
+        "signal_type": "commercial page or visit",
+        "signal_strength": "medium",
+        "source": "events",
+        "occurred_at": "2026-07-10T00:00:00+00:00"
+      }
+    ],
+    "84bc148c3ac2566a8b5eafa0470ac9164d98af6a718e32533e2edd3646213b3b": [
+      {
+        "signal_type": "commercial page or visit",
+        "signal_strength": "medium",
+        "source": "events",
+        "occurred_at": "2026-07-11T00:00:00+00:00"
+      }
+    ],
+    "9cbd56eabe98d46644a55c8de0e4aaa66cd0c822c58c44cc07fa9f7988ffeed7": [
+      {
+        "signal_type": "commercial page or visit",
+        "signal_strength": "medium",
+        "source": "events",
+        "occurred_at": "2026-07-12T00:00:00+00:00"
+      }
+    ],
+    "3483fc9f42b2a88802cd734bf0c95b3e4ae8d2b66d34e8838ef65c4671478f0c": [
+      {
+        "signal_type": "commercial page or visit",
+        "signal_strength": "low",
+        "source": "events",
+        "occurred_at": "2026-06-13T00:00:00+00:00"
+      },
+      {
+        "signal_type": "form submission",
+        "signal_strength": "medium",
+        "source": "forms",
+        "occurred_at": "2026-06-11T00:00:00+00:00"
+      }
+    ],
+    "70cc78aec9efbe340e045e09d1a575b229712da31ab47e48148f9e406dbbecaf": [
+      {
+        "signal_type": "commercial page or visit",
+        "signal_strength": "low",
+        "source": "events",
+        "occurred_at": "2026-06-14T00:00:00+00:00"
+      },
+      {
+        "signal_type": "form submission",
+        "signal_strength": "medium",
+        "source": "forms",
+        "occurred_at": "2026-06-12T00:00:00+00:00"
+      }
+    ],
+    "b514865cde662ab6c562855f49bd16e22e7217057ec9ea40c03f6994785862ec": [
+      {
+        "signal_type": "commercial page or visit",
+        "signal_strength": "low",
+        "source": "events",
+        "occurred_at": "2026-06-12T00:00:00+00:00"
+      },
+      {
+        "signal_type": "form submission",
+        "signal_strength": "medium",
+        "source": "forms",
+        "occurred_at": "2026-06-10T00:00:00+00:00"
+      }
+    ]
+  },
+  "contains_raw_values": false
+}

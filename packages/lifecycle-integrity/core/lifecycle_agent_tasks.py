@@ -23,6 +23,19 @@ AUDIT_INPUTS = REGISTRY_INPUTS + [
     "evidence.csv",
     "outlier_registry.csv",
 ]
+INTENT_INPUTS = COMMON_ANALYSIS_INPUTS + [
+    "processed/intent_signal_summary.json",
+    "processed/intent_signal_coverage.json",
+    "processed/intent_record_index.json",
+    "processed/intent_signal_store.jsonl",
+]
+INTENT_AUDIT_INPUTS = AUDIT_INPUTS + [
+    "processed/intent_signal_summary.json",
+    "processed/intent_signal_coverage.json",
+    "processed/intent_record_index.json",
+    "processed/intent_signal_store.jsonl",
+    "processed/recovery_routing.json",
+]
 AUTOMATION_INPUTS = COMMON_ANALYSIS_INPUTS + [
     "processed/automation_coverage.json",
     "processed/workflow_inventory.json",
@@ -32,7 +45,7 @@ AUTOMATION_INPUTS = COMMON_ANALYSIS_INPUTS + [
     "processed/automation_scoring_measurements.json",
     "automation_evidence.csv",
 ]
-ROOT_CAUSE_INPUTS = AUDIT_INPUTS + [
+ROOT_CAUSE_INPUTS = INTENT_AUDIT_INPUTS + [
     "processed/automation_coverage.json",
     "processed/workflow_inventory.json",
     "processed/workflow_dependency_graph.json",
@@ -71,6 +84,7 @@ ROLE_MODEL_TIERS = {
     "pipeline_structure_agent": "light",
     "source_attribution_agent": "standard",
     "activity_handoff_agent": "light",
+    "channel_intent_evidence_agent": "standard",
     "automation_scoring_analysis_agent": "standard",
     "inbound_journey_hypothesis_agent": "reasoning",
     "outbound_journey_hypothesis_agent": "reasoning",
@@ -84,6 +98,9 @@ ROLE_MODEL_TIERS = {
     "attribution_continuity_audit_agent": "standard",
     "state_coherence_audit_agent": "standard",
     "outlier_detection_agent": "standard",
+    "journey_link_integrity_agent": "standard",
+    "deal_escalation_agent": "standard",
+    "closed_lost_recovery_agent": "reasoning",
     "automation_root_cause_agent": "reasoning",
     "data_fidelity_reviewer": "light",
     "journey_mapping_skeptic": "reasoning",
@@ -181,8 +198,17 @@ TASKS = [
             "processed/data_age_summary.json",
             "processed/high_intent_cohort_summary.json",
             "processed/owner_distribution.json",
+            "processed/intent_signal_summary.json",
+            "processed/intent_record_index.json",
         ],
         "agent_workspace/analysis/activity_handoff_agent.json",
+        "analysis_result",
+    ),
+    _task(
+        "channel_intent_evidence_agent",
+        "analysis",
+        INTENT_INPUTS + ["processed/source_field_candidates.json", "processed/pipeline_summary.json"],
+        "agent_workspace/analysis/channel_intent_evidence_agent.json",
         "analysis_result",
     ),
     _task(
@@ -208,6 +234,20 @@ TASKS = [
             "expansion_journey_hypothesis_agent",
         )
     ],
+    *[
+        _task(
+            role,
+            "audit",
+            INTENT_AUDIT_INPUTS + ["agent_workspace/hypotheses"],
+            f"agent_workspace/candidates/{role}.json",
+            "candidate_findings",
+        )
+        for role in (
+            "journey_link_integrity_agent",
+            "deal_escalation_agent",
+            "closed_lost_recovery_agent",
+        )
+    ],
     _task(
         "mixed_motion_journey_agent",
         "hypothesis",
@@ -219,7 +259,7 @@ TASKS = [
         _task(
             role,
             "audit",
-            AUDIT_INPUTS + ["agent_workspace/hypotheses"],
+            INTENT_AUDIT_INPUTS + ["agent_workspace/hypotheses"],
             f"agent_workspace/candidates/{role}.json",
             "candidate_findings",
         )
@@ -243,7 +283,7 @@ TASKS = [
         _task(
             role,
             "review",
-            AUDIT_INPUTS
+            INTENT_AUDIT_INPUTS
             + [
                 "findings.json",
                 "agent_workspace/candidates",
@@ -264,6 +304,11 @@ TASKS = [
         "recommendation_agent",
         "recommendation",
         REGISTRY_INPUTS
+        + [
+            "processed/intent_signal_summary.json",
+            "processed/intent_signal_coverage.json",
+            "processed/recovery_routing.json",
+        ]
         + ["findings.json", "review_trace.json"]
         + AUTOMATION_RECOMMENDATION_INPUTS,
         "agent_workspace/recommendation_plan.json",
@@ -278,6 +323,9 @@ TASKS = [
             "processed/high_intent_cohort_summary.json",
             "processed/automation_scoring_measurements.json",
             "processed/scoring_activation_summary.json",
+            "processed/intent_signal_summary.json",
+            "processed/intent_signal_coverage.json",
+            "processed/recovery_routing.json",
             "agent_workspace/hypotheses",
             "agent_workspace/root_cause/automation_root_cause_agent.json",
             "findings.json",
@@ -312,6 +360,9 @@ def expected_manifest_contract() -> dict[str, Any]:
             "processed/workflow_dependency_graph.json",
             "processed/workflow_performance_summary.json",
             "processed/scoring_activation_summary.json",
+            "processed/intent_signal_summary.json",
+            "processed/intent_signal_coverage.json",
+            "processed/recovery_routing.json",
             "processed/automation_scoring_measurements.json",
             "automation_evidence.csv",
         ],

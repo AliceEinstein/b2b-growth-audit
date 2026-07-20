@@ -27,7 +27,7 @@ class ModuleEvidence:
     def __enter__(self) -> "ModuleEvidence":
         self.path.parent.mkdir(parents=True, exist_ok=True)
         self._fh = self.path.open("w", encoding="utf-8", newline="")
-        self._writer = csv.writer(self._fh)
+        self._writer = csv.writer(self._fh, lineterminator="\n")
         self._writer.writerow(EVIDENCE_COLUMNS)
         return self
 

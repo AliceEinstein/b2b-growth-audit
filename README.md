@@ -62,19 +62,29 @@ populations remain in the Lifecycle Integrity report only.
 
 ## Safety boundary
 
-Raw snapshots, tokens, contact identity, note bodies, and local outputs stay
-outside the open-source distribution and are protected by `.gitignore`. The
-user may authorize a host LLM to process bounded, sanitized CRM values needed
-for deep journey and finding analysis. The agent contracts still prohibit raw
-snapshot access, direct HubSpot API calls, token output, and CRM writes.
+Real/customer raw snapshots, tokens, note bodies, and local outputs stay
+outside the open-source distribution and are protected by `.gitignore`. A
+local report may contain the minimum account, contact, deal, and owner names
+needed for a CMO to act; treat it as a confidential business artifact and do
+not publish it. The user may authorize a host LLM to process bounded CRM
+values needed for deep journey and finding analysis. Agent contracts still
+prohibit raw snapshot access, direct HubSpot API calls, token output, and CRM
+writes.
+
+The checked-in `examples/` directories are synthetic QA fixtures, not customer
+exports. Their email identities use reserved non-deliverable domains, and CI
+checks the fixture tree for non-reserved email domains and HubSpot-looking
+tokens before a change can merge.
 
 ## Development
 
-Each package is independently runnable and tested from its own directory:
+Each package is independently runnable and tested from its own directory. Run
+the agent from the selected package directory so that Codex, Claude Code, or
+Gemini CLI loads that package's instructions:
 
 ```bash
-cd packages/crm-trust && pytest
-cd ../lifecycle-integrity && pytest
+(cd packages/crm-trust && pytest)
+(cd packages/lifecycle-integrity && pytest)
 ```
 
 Use one virtual environment per package. The packages intentionally preserve

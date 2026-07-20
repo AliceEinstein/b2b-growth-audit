@@ -14,6 +14,7 @@ from rich.console import Console
 
 from core.config import default_output_root, latest_run
 from core.automation_integrity import build_automation_integrity_artifacts
+from core.intent_evidence import build_intent_evidence
 from core.journey_evidence import build_journey_evidence_store
 from core.lifecycle_agent_tasks import REPO_ROOT, write_agent_task_manifest
 from core.lifecycle_rules import measure_lifecycle_integrity
@@ -51,10 +52,24 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         action="store_true",
         help="fetch full history explicitly (this is already the default)",
     )
-    parser.add_argument("--include-activities", action="store_true")
+    parser.add_argument(
+        "--include-activities",
+        action="store_true",
+        help="Compatibility option; intent-enabled runs fetch activity metadata by default.",
+    )
+    parser.add_argument(
+        "--core-only",
+        action="store_true",
+        help="Skip activity, event, form, and campaign acquisition for a core-only run.",
+    )
     parser.add_argument("--resume", type=Path, default=None)
     parser.add_argument("--output-dir", type=Path, default=None)
     parser.add_argument("--output-root", type=Path, default=default_output_root())
+    parser.add_argument(
+        "--business-name",
+        default=None,
+        help="Business name shown in the report (recommended for a branded report).",
+    )
     parser.add_argument("--raw-retention-days", type=positive_days, default=365)
     parser.add_argument("--dry-run", action="store_true")
     return parser.parse_args(argv)
@@ -90,10 +105,14 @@ def main(argv: list[str] | None = None) -> int:
         snapshot_args.append("--full-history")
     snapshot_args.extend(["--output-root", str(args.output_root)])
     snapshot_args.extend(["--raw-retention-days", str(args.raw_retention_days)])
+    if args.business_name:
+        snapshot_args.extend(["--business-name", args.business_name])
     if args.output_dir is not None:
         snapshot_args.extend(["--output-dir", str(args.output_dir)])
     if args.include_activities:
         snapshot_args.append("--include-activities")
+    if not args.core_only:
+        snapshot_args.append("--include-intent-signals")
     if args.dry_run:
         snapshot_args.append("--dry-run")
 
@@ -106,6 +125,7 @@ def main(argv: list[str] | None = None) -> int:
         return 1
     run_dir = Path(run_dir)
     try:
+        intent = build_intent_evidence(run_dir)
         store = build_journey_evidence_store(run_dir)
         measurements = measure_lifecycle_integrity(run_dir)
         automation = build_automation_integrity_artifacts(run_dir)
@@ -119,6 +139,11 @@ def main(argv: list[str] | None = None) -> int:
     console.print(
         "✅ Automation & scoring coverage: "
         f"{automation.get('coverage', {}).get('status', 'unavailable')}"
+    )
+    console.print(
+        "✅ Intent/activity coverage: "
+        f"{intent.get('coverage', {}).get('status', 'unavailable')} · "
+        f"{intent.get('event_count', 0)} normalized signal(s)"
     )
     console.print(f"✅ Isolated agent task contracts: {len(tasks['tasks'])}")
     console.print(

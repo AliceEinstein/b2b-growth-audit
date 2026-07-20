@@ -1,0 +1,66 @@
+[
+  {
+    "id": "wf-owner",
+    "name": "Assign inbound owner",
+    "isEnabled": false,
+    "actions": [
+      {
+        "type": "PROPERTY_SET",
+        "fields": {
+          "hubspot_owner_id": "901"
+        }
+      }
+    ],
+    "enrollmentCriteria": {
+      "type": "contact"
+    }
+  },
+  {
+    "id": "wf-stage",
+    "name": "Create deal after demo request",
+    "isEnabled": true,
+    "actions": [
+      {
+        "type": "PROPERTY_SET",
+        "fields": {
+          "dealstage": "qualified"
+        }
+      }
+    ],
+    "enrollmentCriteria": {
+      "type": "contact"
+    }
+  },
+  {
+    "id": "wf-score-a",
+    "name": "Route high engagement",
+    "isEnabled": true,
+    "actions": [
+      {
+        "type": "PROPERTY_SET",
+        "fields": {
+          "engagement_score": "80"
+        }
+      }
+    ],
+    "enrollmentCriteria": {
+      "type": "contact"
+    }
+  },
+  {
+    "id": "wf-score-b",
+    "name": "Route low engagement",
+    "isEnabled": true,
+    "actions": [
+      {
+        "type": "PROPERTY_SET",
+        "fields": {
+          "engagement_score": "20"
+        }
+      }
+    ],
+    "enrollmentCriteria": {
+      "type": "contact"
+    }
+  }
+]

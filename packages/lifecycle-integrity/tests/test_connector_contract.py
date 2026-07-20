@@ -12,6 +12,7 @@ from connectors.hubspot.client import (
     HubSpotError,
     ReadOnlyViolation,
 )
+from connectors.hubspot.fetch_account_settings import fetch_company_currency, fetch_portal_identity
 from connectors.hubspot.paging import fetch_object_records
 from connectors.hubspot.rate_limit import RateLimitPolicy
 
@@ -48,6 +49,8 @@ def test_write_requests_are_blocked_before_any_network_call():
         ("DELETE", "/automation/v4/flows/123"),
         ("POST", "/automation/v4/flows/123/enrollments"),
         ("POST", "/automation/v4/actions"),
+        ("PUT", "/settings/currencies/2026-03/company-currency"),
+        ("POST", "/settings/currencies/2026-03/company-currency"),
     ]:
         with pytest.raises(ReadOnlyViolation):
             client.request(method, path)
@@ -56,6 +59,41 @@ def test_write_requests_are_blocked_before_any_network_call():
 def test_credentialed_client_cannot_be_redirected_to_another_host():
     with pytest.raises(ValueError, match="base_url is fixed"):
         HubSpotClient(FAKE_TOKEN, base_url="https://collector.invalid")
+
+
+def test_currency_read_is_allowlisted_and_only_code_is_persisted(tmp_path):
+    def handler(request):
+        assert request.method == "GET"
+        assert request.url.path == "/settings/currencies/2026-03/company-currency"
+        return httpx.Response(200, json={"currencyCode": "eur", "sensitive": "discard"})
+
+    result = fetch_company_currency(
+        make_client(handler), tmp_path / "account_info.json"
+    )
+    assert result == {"status": "available", "currency": "EUR"}
+    assert json.loads((tmp_path / "account_info.json").read_text()) == result
+
+
+def test_portal_identity_keeps_only_report_navigation_fields():
+    def handler(request):
+        assert request.method == "GET"
+        assert request.url.path == "/account-info/v3/details"
+        return httpx.Response(
+            200,
+            json={
+                "portalId": 123456,
+                "companyName": "Smartify",
+                "billingAddress": "must not persist",
+                "sensitive": "discard",
+            },
+        )
+
+    result = fetch_portal_identity(make_client(handler))
+    assert result == {
+        "identity_status": "available",
+        "portal_id": 123456,
+        "business_name": "Smartify",
+    }
 
 
 def test_allowlist_contains_only_read_operations():

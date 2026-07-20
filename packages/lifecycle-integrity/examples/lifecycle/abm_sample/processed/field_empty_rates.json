@@ -64,6 +64,14 @@
       "empty_rate": 0.0,
       "total": 2
     },
+    "dealname": {
+      "empty_rate": 0.0,
+      "total": 2
+    },
+    "hs_currency": {
+      "empty_rate": 0.0,
+      "total": 2
+    },
     "hubspot_owner_id": {
       "empty_rate": 0.0,
       "total": 2

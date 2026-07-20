@@ -179,6 +179,8 @@ def make_run(
     assoc_contact_company: Optional[List[Dict[str, Any]]] = None,
     assoc_deal_company: Optional[List[Dict[str, Any]]] = None,
     assoc_deal_contact: Optional[List[Dict[str, Any]]] = None,
+    business_name: str = "Example Business",
+    portal_id: str = "123456",
 ) -> Path:
     run = Path(root) / name
     raw = run / "raw"
@@ -196,6 +198,15 @@ def make_run(
     _write_json(raw / "properties_deals.json", DEAL_DEFS)
     _write_json(raw / "owners.json", [{"id": "901"}, {"id": "902"}])
     _write_json(raw / "pipelines.json", pipelines)
+    _write_json(
+        raw / "account_info.json",
+        {
+            "status": "available",
+            "portal_id": portal_id,
+            "business_name": business_name,
+            "business_name_source": "synthetic_fixture",
+        },
+    )
 
     for filename, rows in [
         ("associations_contact_company.jsonl", assoc_contact_company),
@@ -815,6 +826,8 @@ def build_mock_midmarket_abm_sales(root: Path) -> BuildResult:
             {"from_id": f"d{i:03d}", "to_ids": [f"c{((i * 7 - 1) % 320) + 1:03d}"]}
             for i in range(1, 31)
         ],
+        business_name="Northstar Systems",
+        portal_id="123456",
     )
 
     manifest = json.loads((run / "manifest.json").read_text(encoding="utf-8"))

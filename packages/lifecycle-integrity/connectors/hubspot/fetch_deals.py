@@ -12,6 +12,7 @@ DEFAULT_PROPERTIES = [
     "hs_lastmodifieddate",
     "dealname",
     "amount",
+    "hs_currency",
     "dealstage",
     "dealtype",
     "pipeline",

@@ -16,8 +16,11 @@ Do not print API tokens.
 
 Do not include raw PII in final reports. Email, name, and phone fields may be
 fetched into the local, owner-authorized raw snapshot because identity
-completeness is part of this audit. They must never be copied into processed
-LLM artifacts or final reports; use aggregate completeness/format counts.
+completeness is part of this audit. Contact names, emails, and phones must
+never be copied into processed LLM artifacts or final reports; sanitized
+Company/Deal names and owner labels may appear in the confidential local
+report as actionable evidence. Use aggregate completeness/format counts for
+contact identity.
 
 Use deterministic code for data fetching, measurement, score arithmetic, and
 leak-format detection.
