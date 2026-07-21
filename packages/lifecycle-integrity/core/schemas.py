@@ -94,7 +94,7 @@ class CrmContext(BaseModel):
 class BusinessContext(BaseModel):
     """LLM-produced business_context.json."""
 
-    business_name: str | None = None
+    business_name: Optional[str] = None
     crm_complexity_tier: str = Field(min_length=1)
     likely_motion: str = Field(min_length=1)
     pipeline_complexity: str = Field(min_length=1)
