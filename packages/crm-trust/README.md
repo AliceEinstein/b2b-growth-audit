@@ -63,7 +63,8 @@ crm.schemas.deals.read
 Do not enter the wildcard string `crm.schemas.*.read`; select each of the
 three exact schema scopes above. See
 [`hubspot_scopes.md`](skills/hubspot-crm-trust-audit/hubspot_scopes.md) for the
-click-by-click setup, scope-to-endpoint mapping, and scopes not to grant.
+click-by-click setup, scope-to-endpoint mapping, write-access warning, and
+read scopes this audit does not use.
 
 ```bash
 cp .env.example .env
@@ -195,6 +196,8 @@ pytest
 
 ## License and authorship
 
-MIT — see [LICENSE](LICENSE). Created by **Alice Ren, Founder of Smartify
-Marketing**. The MIT license covers the source code; Smartify names, logos, and
-brand presentation remain Smartify Marketing brand assets.
+MIT — see [LICENSE](LICENSE). Created by
+[Alice Ren](https://www.linkedin.com/in/b2b-marketing-alice/), Founder of
+[Smartify Marketing](https://smartifymarketing.com). The MIT license covers
+the source code; Smartify names, logos, and brand presentation remain Smartify
+Marketing brand assets.

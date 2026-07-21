@@ -73,10 +73,21 @@ incomplete; the result must not be presented as a complete Automation &
 Scoring Integrity Audit. This is separate from the CLI's `--core-only` option,
 which explicitly skips activity and intent acquisition.
 
-## Scopes that are not current coverage
+## Write access is not required
 
-These are real HubSpot read scopes, but granting them does not change the
-current report because the connector does not call their APIs:
+Do not add any `.write` scope to the audit token. Lifecycle Integrity never
+creates, updates, merges, deletes, enrolls, reassigns, or stage-changes HubSpot
+records. The required `automation` scope is the one platform-level exception
+described above: HubSpot makes it mutation-capable, while this connector
+restricts it to allowlisted read endpoints.
+
+## If the token already has other read scopes
+
+The audit uses only the scopes in the full-diagnostic table. Additional read
+scopes do not expand what the connector fetches or what the report covers
+because the code uses an endpoint allowlist and explicit property selection.
+
+For clarity, the current audit does not use:
 
 - `crm.objects.projects.read` and `crm.schemas.projects.read` — HubSpot
   **Projects object** data is not used in the current lifecycle model. A
@@ -85,7 +96,15 @@ current report because the connector does not call their APIs:
   deterministic journey signal.
 - `crm.objects.leads.read` — the current no-deal recovery population is built
   from high-intent contacts, not HubSpot Lead object records.
-- `crm.lists.read`, custom-object, sequence, and sensitive-data scopes.
+- `.sensitive.read` or `.highly_sensitive.read` scopes — these unlock values
+  in HubSpot Sensitive Data properties, such as personal identification,
+  financial, health/medical, or government-identifier data. Lifecycle
+  Integrity can read the property definitions through its schema scopes but
+  deliberately excludes protected property values from journey-signal
+  candidates. If a business intentionally stores a journey-critical signal in
+  a protected property, that requires a separate privacy and sanitization
+  design; adding the scope alone does not extend this audit.
+- `crm.lists.read`, custom-object, and sequence scopes.
 - `crm.objects.marketing_events.read` — the current implementation uses the
   Events occurrence endpoint and does not read the Marketing Events CRM
   object; add this only if a future adapter explicitly uses that object.
@@ -107,6 +126,7 @@ scope now and imply unsupported report coverage.
    matrix and does not become a false zero.
 
 Official references: [HubSpot app scopes](https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes),
+[HubSpot Sensitive Data API](https://developers.hubspot.com/docs/api-reference/latest/crm/properties/sensitive-data),
 [date-versioned API reference](https://developers.hubspot.com/docs/reference/api?hsLang=en),
 [Events API](https://developers.hubspot.com/docs/api-reference/latest/events/guide),
 [Campaigns API](https://developers.hubspot.com/docs/api-reference/latest/marketing/campaigns/guide),

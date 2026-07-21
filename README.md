@@ -1,24 +1,63 @@
 # B2B Growth Audit
 
-Read-only HubSpot audits for B2B marketing-to-pipeline decisions, created by
-Alice Ren, Founder of Smartify Marketing.
+Find where unreliable CRM data and broken lifecycle execution limit B2B
+growth — and what to fix next.
 
-This distribution contains two complementary skills:
+Created by [Alice Ren](https://www.linkedin.com/in/b2b-marketing-alice/), founder of [Smartify Marketing](https://smartifymarketing.com).
 
-- `packages/crm-trust/` — **CRM Trust Audit**: can HubSpot be trusted as the
-  single source of truth for attribution, lifecycle, associations, pipeline
-  hygiene, and reporting?
-- `packages/lifecycle-integrity/` — **Lifecycle Integrity Audit**: what
-  selling journeys are actually represented, where do those journeys leak,
-  and which existing deals or no-deal high-intent populations need repair?
+B2B Growth Audit is an open-source package of two independent, read-only
+HubSpot audit skills. Together they answer the two questions behind any
+credible marketing-to-pipeline decision:
 
-Start with the package you need:
+1. Is the CRM evidence reliable enough to make a decision?
+2. Is the business turning demand into pipeline without preventable breaks?
 
-- [CRM Trust Audit quickstart](packages/crm-trust/README.md)
-- [Lifecycle Integrity Audit quickstart](packages/lifecycle-integrity/README.md)
+Each report connects its score to the records, properties, associations,
+journeys, and control failures behind the result, then turns that evidence
+into a prioritized review and repair plan.
 
-They answer different questions and their scores must not be averaged. Read
-the outputs in this order:
+## Choose the audit that matches your question
+
+### CRM Trust Audit — establish what the business can trust
+
+Use **CRM Trust Audit** when teams disagree about the numbers, attribution is
+uncertain, reporting depends on fragile properties, or a CMO has inherited a
+HubSpot portal and needs to know whether it is fit for decision-making.
+
+It examines data completeness, identity validity, source capture, lifecycle
+coherence, Company–Contact–Deal associations, pipeline hygiene, property
+governance, and record traceability. The result is a defensible CRM Trust
+Score, a clear boundary around which reports can be trusted, and an
+evidence-backed remediation plan.
+
+[Run the CRM Trust Audit](packages/crm-trust/README.md)
+
+### Lifecycle Integrity Audit — find where demand and pipeline break
+
+Use **Lifecycle Integrity Audit** when the CRM is usable but the business
+needs to understand how it actually sells, whether each journey is fully
+connected, and where qualified demand or active pipeline is being missed.
+
+It identifies inbound, outbound, ABM, partner, expansion/renewal, and
+mixed-motion journeys from HubSpot evidence. It then traces contacts,
+accounts, deals, activities, intent signals, workflows, and scoring controls
+to find broken handoffs, ignored high intent, exposed open deals, and credible
+closed-lost recovery opportunities. The result is a journey-specific
+Lifecycle Integrity Score and an action plan tied to real commercial records.
+
+[Run the Lifecycle Integrity Audit](packages/lifecycle-integrity/README.md)
+
+### How the two audits fit together
+
+Either skill can run independently. When using both, run **CRM Trust Audit
+first**: Lifecycle Integrity relies on CRM evidence, so lifecycle conclusions
+are only as dependable as the underlying data and associations. A weak CRM
+Trust result limits confidence in the affected lifecycle conclusions and
+identifies which evidence needs remediation or confirmation before the
+business acts.
+
+The reports remain separate and their scores must not be averaged. Read the
+outputs in this order:
 
 1. CRM Trust Score — the reliability boundary for the evidence.
 2. Journey Mapping Confidence — how confidently the selling model was
@@ -54,9 +93,9 @@ Lifecycle Integrity report must remain separate files and independently
 distributable. They may be read together by a CMO or CEO, but neither report
 depends on, imports, or replaces the other.
 
-The scores are decision inputs, not a blended score: CRM Trust establishes the
-evidence reliability boundary; Journey Mapping Confidence describes how well
-the lifecycle model was identified; Lifecycle Integrity describes validated
+The scores are separate decision inputs: CRM Trust establishes the evidence
+reliability boundary; Journey Mapping Confidence describes how well the
+lifecycle model was identified; Lifecycle Integrity describes validated
 breaks inside that model. Existing deal exposure and no-deal recoverable
 populations remain in the Lifecycle Integrity report only.
 
@@ -99,5 +138,5 @@ vice versa).
 
 ## License
 
-MIT — see [LICENSE](LICENSE). Smartify Marketing names, logos, and brand
-presentation remain Smartify Marketing brand assets.
+MIT — see [LICENSE](LICENSE). [Smartify Marketing](https://smartifymarketing.com)
+names, logos, and brand presentation remain Smartify Marketing brand assets.

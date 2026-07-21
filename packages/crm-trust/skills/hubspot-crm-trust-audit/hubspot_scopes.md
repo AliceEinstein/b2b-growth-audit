@@ -24,9 +24,25 @@ Deal pipeline and stage reads are covered by `crm.objects.deals.read` and are
 also tested as a separate endpoint probe. `crm.pipelines.orders.read` is only
 for **Order** pipelines and is not needed here.
 
-## Do not grant for this skill
+## Write access is not required
 
-- Any `.write`, `.sensitive.read`, or `.highly_sensitive.read` scope.
+Do not add any `.write` scope to the audit token. CRM Trust never creates,
+updates, merges, deletes, reassigns, or stage-changes HubSpot records. The
+connector also rejects write requests before any network call.
+
+## If the token already has other read scopes
+
+The audit uses only the seven read scopes listed above. Additional read scopes
+do not expand what the connector fetches or what the report covers because the
+code uses an endpoint allowlist and an explicit property selection.
+
+For clarity, the current audit does not use:
+
+- `.sensitive.read` or `.highly_sensitive.read` scopes. These unlock values in
+  HubSpot Sensitive Data properties, such as personal identification,
+  financial, health/medical, or government-identifier data. CRM Trust can read
+  the property definitions through its schema scopes but deliberately excludes
+  protected property values from snapshot candidates.
 - `automation`: CRM Trust does not inspect workflows or scoring automation.
 - `crm.objects.projects.read` or `crm.schemas.projects.read`: the current audit
   does not call the HubSpot Projects API.
@@ -52,5 +68,6 @@ customer Company record as the portal's identity.
    pass.
 
 Official references: [HubSpot app scopes](https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes),
+[HubSpot Sensitive Data API](https://developers.hubspot.com/docs/api-reference/latest/crm/properties/sensitive-data),
 [CRM properties](https://developers.hubspot.com/docs/api-reference/latest/crm/properties/guide),
 and [CRM owners](https://developers.hubspot.com/docs/api-reference/latest/crm/owners/guide).

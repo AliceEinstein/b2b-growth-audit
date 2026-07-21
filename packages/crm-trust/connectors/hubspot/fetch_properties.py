@@ -18,6 +18,17 @@ SOURCE_CANDIDATE_PATTERN = re.compile(
 CANDIDATE_CAP = 40
 
 
+def _is_protected_value_property(definition: dict[str, Any]) -> bool:
+    """Return True when HubSpot marks a property value as protected.
+
+    Schema reads do not require a Sensitive Data value scope.  Keep those
+    definitions available for governance analysis, but never promote their
+    values into an object snapshot merely because the token has extra scopes.
+    """
+    sensitivity = str(definition.get("dataSensitivity") or "").lower()
+    return sensitivity not in {"", "non_sensitive"}
+
+
 def fetch_property_definitions(
     client: HubSpotClient, object_type: str
 ) -> list[dict[str, Any]]:
@@ -32,8 +43,8 @@ def select_source_candidates(
     object_type: str = "",
 ) -> list[str]:
     """Custom (non-HubSpot-defined) properties that look attribution-related."""
-    names = [
-        d["name"]
+    matching = [
+        d
         for d in definitions
         if not d.get("hubspotDefined")
         and (
@@ -41,6 +52,13 @@ def select_source_candidates(
             or SOURCE_CANDIDATE_PATTERN.search(d.get("label", ""))
         )
     ]
+    protected_count = sum(_is_protected_value_property(d) for d in matching)
+    if protected_count and log is not None:
+        log.warn(
+            f"{object_type}: excluded {protected_count} source-like Sensitive "
+            "Data property value(s) from the snapshot candidate list."
+        )
+    names = [d["name"] for d in matching if not _is_protected_value_property(d)]
     if len(names) > cap:
         if log is not None:
             log.warn(

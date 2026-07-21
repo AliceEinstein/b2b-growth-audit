@@ -92,7 +92,8 @@ project values synced into CRM records are covered by the relevant object read.
 See
 [`hubspot_scopes.md`](skills/hubspot-lifecycle-integrity-audit/hubspot_scopes.md)
 for the scope-to-feature map, the `automation` safety boundary, activity
-coverage, and why Projects/Lead-object scopes are not current report inputs.
+coverage, the write-access warning, and read scopes that are not current report
+inputs.
 
 ~~~bash
 cp .env.example .env
@@ -332,6 +333,7 @@ docstring. The lifecycle flow is the maintained entry point.
 
 ## License
 
-MIT — see [LICENSE](LICENSE). Created by **Alice Ren, Founder of Smartify
-Marketing**. Smartify names, logos, and brand presentation remain Smartify
-Marketing brand assets.
+MIT — see [LICENSE](LICENSE). Created by
+[Alice Ren](https://www.linkedin.com/in/b2b-marketing-alice/), Founder of
+[Smartify Marketing](https://smartifymarketing.com). Smartify names, logos,
+and brand presentation remain Smartify Marketing brand assets.

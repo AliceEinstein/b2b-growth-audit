@@ -34,6 +34,17 @@ STAGE_TIMESTAMP_PATTERN = re.compile(r"^hs(_v2)?_date_entered_", re.IGNORECASE)
 STAGE_TIMESTAMP_CAP = 80
 
 
+def _is_protected_value_property(definition: dict[str, Any]) -> bool:
+    """Return True when HubSpot marks a property value as protected.
+
+    Schema reads remain useful for governance without a Sensitive Data value
+    scope.  Never promote a protected value into a journey snapshot merely
+    because the supplied token happens to have additional read permissions.
+    """
+    sensitivity = str(definition.get("dataSensitivity") or "").lower()
+    return sensitivity not in {"", "non_sensitive"}
+
+
 def fetch_property_definitions(
     client: HubSpotClient, object_type: str
 ) -> list[dict[str, Any]]:
@@ -48,8 +59,8 @@ def select_source_candidates(
     object_type: str = "",
 ) -> list[str]:
     """Custom (non-HubSpot-defined) properties that look attribution-related."""
-    names = [
-        d["name"]
+    matching = [
+        d
         for d in definitions
         if not d.get("hubspotDefined")
         and (
@@ -57,6 +68,13 @@ def select_source_candidates(
             or SOURCE_CANDIDATE_PATTERN.search(d.get("label", ""))
         )
     ]
+    protected_count = sum(_is_protected_value_property(d) for d in matching)
+    if protected_count and log is not None:
+        log.warn(
+            f"{object_type}: excluded {protected_count} source-like Sensitive "
+            "Data property value(s) from the snapshot candidate list."
+        )
+    names = [d["name"] for d in matching if not _is_protected_value_property(d)]
     if len(names) > cap:
         if log is not None:
             log.warn(
@@ -82,6 +100,7 @@ def select_stage_timestamp_candidates(
         d["name"]
         for d in definitions
         if STAGE_TIMESTAMP_PATTERN.match(str(d.get("name", "")))
+        and not _is_protected_value_property(d)
     )
     v2 = {name for name in names if name.startswith("hs_v2_date_entered_")}
     names = [
@@ -107,8 +126,8 @@ def select_journey_candidates(
     object_type: str = "",
 ) -> list[str]:
     """Fields whose values can help infer lifecycle and journey intent."""
-    names = [
-        d["name"]
+    matching = [
+        d
         for d in definitions
         if not d.get("hubspotDefined")
         and (
@@ -116,6 +135,13 @@ def select_journey_candidates(
             or JOURNEY_CANDIDATE_PATTERN.search(d.get("label", ""))
         )
     ]
+    protected_count = sum(_is_protected_value_property(d) for d in matching)
+    if protected_count and log is not None:
+        log.warn(
+            f"{object_type}: excluded {protected_count} journey-relevant Sensitive "
+            "Data property value(s) from the snapshot candidate list."
+        )
+    names = [d["name"] for d in matching if not _is_protected_value_property(d)]
     if len(names) > cap:
         if log is not None:
             log.warn(
