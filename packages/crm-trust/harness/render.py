@@ -37,9 +37,16 @@ DECISION_IMPACTS = {
     "property_governance": ["Reporting consistency", "Data governance"],
 }
 CATEGORY_LABELS = {
-    "safe_operational_actions": "Owner review",
+    "safe_operational_actions": "Human review and disposition",
     "needs_business_rule_confirmation": "Business rule confirmation",
     "do_not_auto_fix": "Explicit approval before a CRM change",
+}
+SCORE_CATEGORY_LABELS = {
+    "attribution_trust": "Attribution Trust",
+    "lifecycle_funnel": "Lifecycle + Funnel Trust",
+    "association_architecture": "Association + Account Trust",
+    "pipeline_hygiene": "Pipeline Hygiene",
+    "property_governance": "Property Governance",
 }
 DISPLAY_TERMS = {
     "abm": "ABM",
@@ -73,8 +80,17 @@ def _plain(value: Any) -> str:
     return re.sub(r"\s+", " ", text).strip() or "—"
 
 
+def _narrative_plain(value: Any) -> str:
+    """Normalize whitespace while preserving the author's exact wording."""
+    return _plain(value)
+
+
 def _md(value: Any) -> str:
     return _plain(value).replace("|", "\\|")
+
+
+def _narrative_md(value: Any) -> str:
+    return _narrative_plain(value).replace("|", "\\|")
 
 
 def _asset_md(asset_type: str, label: Any) -> str:
@@ -82,8 +98,13 @@ def _asset_md(asset_type: str, label: Any) -> str:
 
 
 def _record_asset_md(asset_type: str, label: Any, url: Any) -> str:
-    text = _asset_md(asset_type, label)
-    return f"[{text}]({url})" if url else text
+    value = f"**{_md(label)}**"
+    value = f"[{value}]({url})" if url else value
+    return f"{asset_type}: {value}"
+
+
+def _record_term_md(asset_type: str, label: Any) -> str:
+    return f"{asset_type}: **{_md(label)}**"
 
 
 def _property_asset_md(
@@ -121,7 +142,11 @@ def _recommendations(run_dir: Path) -> Recommendations:
 def _finding_title(finding: Finding) -> str:
     if finding.title:
         return _plain(finding.title)
-    words = finding.id.replace("_", " ").split()
+    return _identifier_title(finding.id)
+
+
+def _identifier_title(identifier: str) -> str:
+    words = identifier.replace("_", " ").split()
     return " ".join(DISPLAY_TERMS.get(word.lower(), word.title()) for word in words)
 
 
@@ -152,8 +177,14 @@ def _accepted_findings(findings: List[Finding]) -> List[Finding]:
     )
 
 
-def _major_findings(findings: List[Finding]) -> List[Finding]:
-    return [f for f in _accepted_findings(findings) if f.severity != "low"]
+def _finding_priority(finding: Finding | None) -> int:
+    if finding is None:
+        return 3
+    if finding.severity in {"critical", "high"}:
+        return 1
+    if finding.severity == "medium":
+        return 2
+    return 3
 
 
 def _recommendation_groups(recommendations: Recommendations) -> List[Tuple[str, List[RecommendationItem]]]:
@@ -164,12 +195,29 @@ def _recommendation_groups(recommendations: Recommendations) -> List[Tuple[str, 
     ]
 
 
-def _all_recommendations(recommendations: Recommendations) -> List[Tuple[str, RecommendationItem]]:
-    return [
+def _all_recommendations(
+    recommendations: Recommendations,
+    findings: List[Finding],
+) -> List[Tuple[str, RecommendationItem]]:
+    items = [
         (category, item)
         for category, items in _recommendation_groups(recommendations)
         for item in items
     ]
+    findings_by_id = {finding.id: finding for finding in findings}
+
+    def sort_key(entry: Tuple[str, RecommendationItem]) -> Tuple[int, float, str]:
+        finding = findings_by_id.get(entry[1].finding_id)
+        return (
+            _finding_priority(finding),
+            -(finding.affected_percentage or 0) if finding else 0,
+            entry[1].finding_id,
+        )
+
+    return sorted(
+        items,
+        key=sort_key,
+    )
 
 
 def _snapshot_table(manifest: Dict[str, Any], counts: Dict[str, Any]) -> List[str]:
@@ -300,6 +348,25 @@ def _pipeline_table(pipelines: Dict[str, Any]) -> List[str]:
     return lines
 
 
+def _score_table(score: Dict[str, Any]) -> List[str]:
+    lines = [
+        "| Trust category | Starting points | Deducted | Remaining |",
+        "|---|---:|---:|---:|",
+    ]
+    for category, stats in (score.get("categories", {}) or {}).items():
+        if not isinstance(stats, dict):
+            continue
+        lines.append(
+            f"| {SCORE_CATEGORY_LABELS.get(category, _identifier_title(category))} | "
+            f"{_md(stats.get('max_points', 0))} | "
+            f"−{_md(stats.get('deducted', 0))} | "
+            f"{_md(stats.get('score', 0))} |"
+        )
+    if len(lines) == 2:
+        lines.append("| Score detail unavailable | — | — | — |")
+    return lines
+
+
 def _finding_table(
     findings: List[Finding],
     property_labels: Dict[Tuple[str, str], str],
@@ -317,12 +384,45 @@ def _finding_table(
         lines.append(
             f"| **{_md(_finding_title(finding))}**{field_context}<br><small>{_md(finding.id)}</small> | "
             f"{finding.severity.title()} | {_md(_sample(finding))} | "
-            f"{_md('; '.join(_finding_impacts(finding)))} | {_md(finding.business_impact)} | "
+            f"{_md('; '.join(_finding_impacts(finding)))} | {_narrative_md(finding.business_impact)} | "
             f"{_link(finding.evidence_file, 'CSV')} · "
             f"{_link('processed/measurements/' + finding.module + '.json', 'measurement')} |"
         )
     if len(lines) == 2:
         lines.append("| No major finding was validated | — | — | — | — | — |")
+    return lines
+
+
+def _finding_sections(
+    findings: List[Finding],
+    property_labels: Dict[Tuple[str, str], str],
+) -> List[str]:
+    sections = [
+        (
+            1,
+            "Decisions at immediate risk",
+            [finding for finding in findings if _finding_priority(finding) == 1],
+        ),
+        (
+            2,
+            "Structural trust gaps",
+            [finding for finding in findings if _finding_priority(finding) == 2],
+        ),
+        (
+            3,
+            "Maintenance and hygiene debt",
+            [finding for finding in findings if _finding_priority(finding) == 3],
+        ),
+    ]
+    lines: List[str] = []
+    for priority, label, items in sections:
+        if not items:
+            continue
+        lines.extend([f"### Priority {priority} — {label}", ""])
+        lines.extend(_finding_table(items, property_labels))
+        lines.append("")
+    if not lines:
+        lines.extend(_finding_table([], property_labels))
     return lines
 
 
@@ -340,9 +440,9 @@ def _record_line_md(row: Dict[str, str]) -> str:
     if row.get("deal_name"):
         assets.append(_record_asset_md("Deal", row["deal_name"], row.get("deal_url")))
     if row.get("pipeline_label"):
-        assets.append(_asset_md("pipeline", row["pipeline_label"]))
+        assets.append(_record_term_md("Pipeline", row["pipeline_label"]))
     if row.get("deal_stage_label"):
-        assets.append(_asset_md("deal stage", row["deal_stage_label"]))
+        assets.append(_record_term_md("Deal stage", row["deal_stage_label"]))
     return " · ".join(assets) or "No linked HubSpot Company or Deal is visible for this evidence row."
 
 
@@ -373,11 +473,11 @@ def _root_cause_lines(narrative: ReportNarrative) -> List[str]:
     lines = ["| Hypothesis | Linked findings | Confidence | Evidence and confirmation |", "|---|---|---|---|"]
     for root in narrative.root_causes:
         artifacts = " · ".join(_link(path, Path(path).name) for path in root.supporting_artifacts)
-        detail = _md(root.confirmation_question)
+        detail = _narrative_md(root.confirmation_question)
         if artifacts:
             detail += "<br>" + artifacts
         lines.append(
-            f"| {_md(root.hypothesis)} | {_md(', '.join(root.finding_ids))} | "
+            f"| {_narrative_md(root.hypothesis)} | {_md(', '.join(root.finding_ids))} | "
             f"{root.confidence.title()} | {detail} |"
         )
     if len(lines) == 2:
@@ -385,16 +485,24 @@ def _root_cause_lines(narrative: ReportNarrative) -> List[str]:
     return lines
 
 
-def _recommendation_summary(items: List[Tuple[str, RecommendationItem]]) -> List[str]:
-    lines = ["| Finding | Recommended action | Owner | Approval needed | Expected result | Evidence |", "|---|---|---|---|---|---|"]
+def _recommendation_summary(
+    items: List[Tuple[str, RecommendationItem]],
+    findings: List[Finding],
+) -> List[str]:
+    findings_by_id = {finding.id: finding for finding in findings}
+    lines = [
+        "| Priority | Finding | Human action | Recommended accountable role | Human decision required | Completion condition | Evidence |",
+        "|---:|---|---|---|---|---|---|",
+    ]
     for category, item in items:
+        priority = _finding_priority(findings_by_id.get(item.finding_id))
         lines.append(
-            f"| {_md(item.finding_id)} | {_md(item.action)} | {_md(item.decision_owner)} | "
-            f"{_md(item.approval_required or CATEGORY_LABELS[category])} | "
-            f"{_md(item.expected_outcome)} | {_link(item.evidence_file, 'CSV')} |"
+            f"| P{priority} | {_md(item.finding_id)} | {_narrative_md(item.action)} | {_narrative_md(item.decision_owner)} | "
+            f"{_narrative_md(item.approval_required or CATEGORY_LABELS[category])} | "
+            f"{_narrative_md(item.expected_outcome)} | {_link(item.evidence_file, 'CSV')} |"
         )
     if len(lines) == 2:
-        lines.append("| — | No recommendation was recorded | — | — | — | — |")
+        lines.append("| — | — | No recommendation was recorded | — | — | — | — |")
     return lines
 
 
@@ -402,22 +510,22 @@ def _recommendation_detail(category: str, item: RecommendationItem) -> List[str]
     lines = [
         f"### {_plain(item.finding_id)}",
         "",
-        f"- **Action:** {_plain(item.action)}",
-        f"- **Why:** {_plain(item.basis)}",
-        f"- **Owner:** {_plain(item.decision_owner)}",
-        f"- **Approval:** {_plain(item.approval_required or CATEGORY_LABELS[category])}",
+        f"- **Human action:** {_narrative_plain(item.action)}",
+        f"- **Why:** {_recommendation_basis_plain(item.basis)}",
+        f"- **Recommended accountable role:** {_narrative_plain(item.decision_owner)}",
+        f"- **Human decision required:** {_narrative_plain(item.approval_required or CATEGORY_LABELS[category])}",
     ]
     if item.target:
-        lines.append(f"- **Exact scope:** {_plain(item.target)}")
+        lines.append(f"- **Exact scope:** {_narrative_plain(item.target)}")
     if item.current_state:
-        lines.append(f"- **Current state:** {_plain(item.current_state)}")
+        lines.append(f"- **Current state:** {_narrative_plain(item.current_state)}")
     if item.desired_state:
-        lines.append(f"- **Desired state:** {_plain(item.desired_state)}")
+        lines.append(f"- **Desired state:** {_narrative_plain(item.desired_state)}")
     if item.implementation_steps:
-        lines.extend(["- **Implementation:**"] + [f"  {index}. {_plain(step)}" for index, step in enumerate(item.implementation_steps, 1)])
-    lines.append(f"- **Expected result:** {_plain(item.expected_outcome)}")
+        lines.extend(["- **Implementation:**"] + [f"  {index}. {_narrative_plain(step)}" for index, step in enumerate(item.implementation_steps, 1)])
+    lines.append(f"- **Completion condition:** {_narrative_plain(item.expected_outcome)}")
     if item.success_measure:
-        lines.append(f"- **Success measure:** {_plain(item.success_measure)}")
+        lines.append(f"- **Success measure:** {_narrative_plain(item.success_measure)}")
     lines.append(f"- **Evidence:** {_link(item.evidence_file, 'evidence CSV')}")
     if item.evidence_refs:
         lines.append("- **Additional references:** " + " · ".join(_link(path, Path(path).name) for path in item.evidence_refs))
@@ -454,24 +562,35 @@ def _html_text(value: Any) -> str:
     return html.escape(_plain(value))
 
 
+def _narrative_html(value: Any) -> str:
+    return html.escape(_narrative_plain(value))
+
+
 def _html_link(path: str, label: str) -> str:
     return f'<a href="{html.escape(path.replace(" ", "%20"), quote=True)}">{html.escape(label)}</a>'
 
 
 def _asset_html(asset_type: str, label: Any) -> str:
     return (
-        '<strong class="hubspot-asset">HubSpot '
-        f'{html.escape(asset_type)}: {_html_text(label)}</strong>'
+        '<span class="hubspot-asset"><span class="hubspot-kind">HubSpot '
+        f'{html.escape(asset_type)}:</span> <strong class="hubspot-name">{_html_text(label)}</strong></span>'
     )
 
 
 def _record_asset_html(asset_type: str, label: Any, url: Any) -> str:
-    content = _asset_html(asset_type, label)
-    if not url:
-        return content
+    value = f'<strong class="hubspot-name">{_html_text(label)}</strong>'
+    if url:
+        value = (
+            f'<a class="hubspot-record" href="{html.escape(str(url), quote=True)}" '
+            f'target="_blank" rel="noopener noreferrer">{value}</a>'
+        )
+    return f'<span class="record-kind">{html.escape(asset_type)}:</span> {value}'
+
+
+def _record_term_html(asset_type: str, label: Any) -> str:
     return (
-        f'<a class="hubspot-record" href="{html.escape(str(url), quote=True)}" '
-        f'target="_blank" rel="noopener noreferrer">{content}</a>'
+        f'<span class="record-kind">{html.escape(asset_type)}:</span> '
+        f'<strong class="hubspot-name">{_html_text(label)}</strong>'
     )
 
 
@@ -485,6 +604,31 @@ def _property_asset_html(
     return _asset_html("property", display)
 
 
+def _property_summary_html(
+    object_type: str,
+    field: str,
+    property_labels: Dict[Tuple[str, str], str],
+) -> str:
+    """Compact property reference for narrow visual cards.
+
+    The internal name remains available as a tooltip and in the Markdown and
+    operator evidence, but it does not force unreadable wrapping in the HTML
+    dashboard.
+    """
+    label = property_labels.get((object_type, field), field)
+    return (
+        f'<span class="hubspot-asset" title="Internal name: {html.escape(field, quote=True)}">'
+        '<span class="hubspot-kind">HubSpot property:</span> '
+        f'<strong class="hubspot-name">{_html_text(label)}</strong></span>'
+    )
+
+
+def _recommendation_basis_plain(value: Any) -> str:
+    text = _narrative_plain(value)
+    match = re.match(r"^[a-z][a-z0-9_]*:\s*(.+)$", text)
+    return match.group(1) if match else text
+
+
 def _record_line_html(row: Dict[str, str]) -> str:
     assets: List[str] = []
     if row.get("company_name"):
@@ -494,9 +638,9 @@ def _record_line_html(row: Dict[str, str]) -> str:
     if row.get("deal_name"):
         assets.append(_record_asset_html("Deal", row["deal_name"], row.get("deal_url")))
     if row.get("pipeline_label"):
-        assets.append(_asset_html("pipeline", row["pipeline_label"]))
+        assets.append(_record_term_html("Pipeline", row["pipeline_label"]))
     if row.get("deal_stage_label"):
-        assets.append(_asset_html("deal stage", row["deal_stage_label"]))
+        assets.append(_record_term_html("Deal stage", row["deal_stage_label"]))
     return " <span aria-hidden=\"true\">·</span> ".join(assets)
 
 
@@ -519,7 +663,7 @@ def _representative_record_html(
             "for the full set.</p>"
         )
     return (
-        '<div class="record-samples"><strong>Representative HubSpot records</strong>'
+        '<div class="record-samples"><h4>HubSpot records in this finding</h4>'
         f"<ul>{items}</ul>{remainder}</div>"
     )
 
@@ -530,6 +674,29 @@ def _html_bar(value: float, label_html: str, tone: str = "primary") -> str:
         f'<div class="metric-row"><div class="metric-label">{label_html}</div>'
         f'<div class="bar"><span class="{tone}" style="width:{width:.1f}%"></span></div>'
         f'<div class="metric-value">{width:.1f}%</div></div>'
+    )
+
+
+def _score_explainer_html(score: Dict[str, Any]) -> str:
+    max_total = int(score.get("max_total", 100) or 100)
+    total = int(score.get("total", 0) or 0)
+    deducted = max(0, max_total - total)
+    rows = "".join(
+        "<div class=\"score-row\">"
+        f"<span>{html.escape(SCORE_CATEGORY_LABELS.get(category, _identifier_title(category)))}</span>"
+        f"<strong>{html.escape(str(stats.get('score', 0)))}/{html.escape(str(stats.get('max_points', 0)))}</strong>"
+        f"<small>−{html.escape(str(stats.get('deducted', 0)))}</small>"
+        "</div>"
+        for category, stats in (score.get("categories", {}) or {}).items()
+        if isinstance(stats, dict)
+    )
+    return (
+        '<div class="score-explainer">'
+        '<div class="score-copy"><h3>How this score is calculated</h3>'
+        f'<p><strong>{max_total} starting points − {deducted} deducted points = {total}.</strong> '
+        "Only approved or revised findings count. Critical findings deduct 10 points, high 6, medium 3, and low 1, capped at each category maximum.</p>"
+        f'<p>{_html_link("score.json", "Open the complete score calculation")}</p></div>'
+        f'<div class="score-rows">{rows}</div></div>'
     )
 
 
@@ -545,7 +712,7 @@ def _render_html(
     pipelines: Dict[str, Any],
     score: Dict[str, Any],
     narrative: ReportNarrative,
-    major: List[Finding],
+    report_findings: List[Finding],
     recommendation_items: List[Tuple[str, RecommendationItem]],
     limitations: List[str],
     business_name: str,
@@ -565,22 +732,37 @@ def _render_html(
         ("Pipelines", record_counts.get("deal_pipelines", 0)),
         ("Trust score", f"{score.get('total', '—')}/{score.get('max_total', 100)}"),
     ]
-    completeness = "".join(
-        _html_bar(
-            fill,
-            f"{html.escape(obj.title())} · {_property_asset_html(obj, field, property_labels)}",
-            "accent" if fill >= 90 else "warm",
+    completeness_rows = _completeness_rows(summary, limit=100)
+    completeness_by_object: Dict[str, List[Tuple[str, str, float, int, int]]] = {
+        object_type: [row for row in completeness_rows if row[0] == object_type]
+        for object_type in ("contacts", "companies", "deals")
+    }
+    quality_cards = ""
+    for object_type, rows in completeness_by_object.items():
+        if not rows:
+            continue
+        bars = "".join(
+            _html_bar(
+                fill,
+                _property_summary_html(object_type, field, property_labels),
+                "accent" if fill >= 90 else "warm",
+            )
+            for _object_type, field, fill, _total, _present in rows
         )
-        for obj, field, fill, _total, _present in _completeness_rows(summary, limit=18)
-    ) or "<p>Field completeness was not available.</p>"
+        quality_cards += (
+            f'<article class="quality-card"><div class="quality-card-head"><h3>{html.escape(object_type.title())}</h3>'
+            f'<span>{len(rows)} key properties</span></div>{bars}</article>'
+        )
+    if not quality_cards:
+        quality_cards = '<p class="empty">Field completeness was not available.</p>'
     validity = "".join(
         _html_bar(
             float(stats.get("valid_format_rate_among_present", 0)),
-            _property_asset_html("contacts", field, property_labels),
+            _property_summary_html("contacts", field, property_labels),
             "primary",
         )
         for field, stats in (identity.get("fields", {}) or {}).items()
-    ) or "<p>Identity format checks were not available.</p>"
+    ) or '<p class="empty">Identity format checks were not available.</p>'
     activity_rows = ""
     for object_type, stats in (activity.get("objects", {}) or {}).items():
         buckets = stats.get("recency_buckets", {})
@@ -622,45 +804,85 @@ def _render_html(
         f'<tr><td>{_asset_html("pipeline", p.get("label") or p.get("pipeline_id"))}</td><td>{int(p.get("stage_count", 0))}</td><td>{int(p.get("deal_count", 0))}</td></tr>'
         for p in pipelines.get("pipelines", []) or []
     ) or '<tr><td colspan="3">Pipeline details were not available.</td></tr>'
-    findings_html = ""
-    for finding in major:
+    def render_finding_card(finding: Finding, priority: int) -> str:
         impacts = ", ".join(_finding_impacts(finding))
         property_context = (
             f'<p class="field-context">{_property_asset_html(finding.object_type, finding.field_name, property_labels)}</p>'
             if finding.field_name
             else ""
         )
-        record_context = _representative_record_html(finding, record_groups)
-        findings_html += f"""
-        <article class="finding severity-{html.escape(finding.severity)}">
-          <div class="finding-head"><span class="badge">{html.escape(finding.severity.title())}</span><span>{html.escape(finding.confidence.title())} confidence</span></div>
-          <h3>{html.escape(_finding_title(finding))}</h3>
-          {property_context}
-          <p class="sample">{html.escape(_sample(finding))}</p>
-          <p><strong>Decision impact:</strong> {html.escape(impacts)}</p>
-          <p>{_html_text(finding.business_impact)}</p>
-          {record_context}
-          <p>{_html_link(finding.evidence_file, "Evidence CSV")} · {_html_link('processed/measurements/' + finding.module + '.json', "Measurement")}</p>
+        record_context = _representative_record_html(
+            finding,
+            record_groups,
+            limit=3 if priority == 1 else 2,
+        )
+        detail_class = "finding-detail-grid" if record_context else "finding-detail-grid no-record-context"
+        return f"""
+        <article class="finding finding-priority-{priority} severity-{html.escape(finding.severity)}">
+          <div class="finding-head"><span class="priority-badge">Priority {priority}</span><span>{html.escape(finding.severity.title())} severity · {html.escape(finding.confidence.title())} confidence</span></div>
+          <div class="{detail_class}">
+            <div class="finding-copy">
+              <h3>{html.escape(_finding_title(finding))}</h3>
+              {property_context}
+              <dl class="finding-facts">
+                <div><dt>Records affected</dt><dd>{html.escape(_sample(finding))}</dd></div>
+                <div><dt>Management decisions exposed</dt><dd>{html.escape(impacts)}</dd></div>
+              </dl>
+              <p class="finding-impact">{_narrative_html(finding.business_impact)}</p>
+              <p class="evidence-links">{_html_link(finding.evidence_file, "Evidence CSV")} · {_html_link('processed/measurements/' + finding.module + '.json', "Measurement")}</p>
+            </div>
+            {record_context}
+          </div>
         </article>"""
-    if not findings_html:
-        findings_html = '<p class="empty">No major finding was validated.</p>'
+
+    priority_one = [finding for finding in report_findings if _finding_priority(finding) == 1]
+    priority_two = [finding for finding in report_findings if _finding_priority(finding) == 2]
+    priority_three = [finding for finding in report_findings if _finding_priority(finding) == 3]
+    finding_groups: List[str] = []
+    if priority_one:
+        priority_cards = "".join(render_finding_card(finding, 1) for finding in priority_one)
+        priority_one_label = "finding" if len(priority_one) == 1 else "findings"
+        finding_groups.append(
+            '<div class="finding-group priority-one"><div class="finding-group-head">'
+            f'<div><span class="group-number">P1</span></div><div><h3>Decisions at immediate risk</h3><p>{len(priority_one)} validated {priority_one_label} can materially distort management reporting and should be resolved first.</p></div>'
+            f'</div><div class="finding-list">{priority_cards}</div></div>'
+        )
+    if priority_two:
+        priority_cards = "".join(render_finding_card(finding, 2) for finding in priority_two)
+        priority_two_label = "finding" if len(priority_two) == 1 else "findings"
+        finding_groups.append(
+            '<div class="finding-group priority-two"><div class="finding-group-head">'
+            f'<div><span class="group-number">P2</span></div><div><h3>Structural trust gaps</h3><p>{len(priority_two)} validated {priority_two_label} weaken reporting confidence or CRM operating consistency.</p></div>'
+            f'</div><div class="finding-list secondary-list">{priority_cards}</div></div>'
+        )
+    if priority_three:
+        priority_cards = "".join(render_finding_card(finding, 3) for finding in priority_three)
+        priority_three_label = "finding" if len(priority_three) == 1 else "findings"
+        finding_groups.append(
+            '<div class="finding-group priority-three"><div class="finding-group-head">'
+            f'<div><span class="group-number">P3</span></div><div><h3>Maintenance and hygiene debt</h3><p>{len(priority_three)} validated {priority_three_label} should be resolved after decision-critical gaps.</p></div>'
+            f'</div><div class="finding-list secondary-list">{priority_cards}</div></div>'
+        )
+    findings_html = "".join(finding_groups) or '<p class="empty">No major finding was validated.</p>'
     roots_html = "".join(
-        f'<tr><td>{_html_text(root.hypothesis)}</td><td>{html.escape(", ".join(root.finding_ids))}</td><td>{html.escape(root.confidence.title())}</td><td>{_html_text(root.confirmation_question)}</td></tr>'
+        f'<tr><td>{_narrative_html(root.hypothesis)}</td><td>{html.escape(", ".join(root.finding_ids))}</td><td>{html.escape(root.confidence.title())}</td><td>{_narrative_html(root.confirmation_question)}</td></tr>'
         for root in narrative.root_causes
     ) or '<tr><td colspan="4">No root cause can be stated confidently from the available evidence.</td></tr>'
     recs_html = ""
-    for category, item in recommendation_items:
+    findings_by_id = {finding.id: finding for finding in report_findings}
+    for index, (category, item) in enumerate(recommendation_items, 1):
+        priority = _finding_priority(findings_by_id.get(item.finding_id))
         recs_html += f"""
         <article class="recommendation">
-          <div class="eyebrow">{html.escape(item.finding_id)}</div>
-          <h3>{_html_text(item.action)}</h3>
+          <div class="recommendation-head"><span class="action-number">{index}</span><div><div class="eyebrow" title="Finding ID: {html.escape(item.finding_id, quote=True)}">Priority {priority} · {html.escape(_identifier_title(item.finding_id))}</div><span class="approval-class">{html.escape(CATEGORY_LABELS[category])}</span></div></div>
+          <h3>{_narrative_html(item.action)}</h3>
           <div class="rec-grid">
-            <p><strong>Why</strong><br>{_html_text(item.basis)}</p>
-            <p><strong>Owner</strong><br>{_html_text(item.decision_owner)}</p>
-            <p><strong>Approval</strong><br>{_html_text(item.approval_required or CATEGORY_LABELS[category])}</p>
-            <p><strong>Expected result</strong><br>{_html_text(item.expected_outcome)}</p>
+            <p><span class="rec-label">Why this matters</span>{html.escape(_recommendation_basis_plain(item.basis))}</p>
+            <p><span class="rec-label">Recommended accountable role</span>{_narrative_html(item.decision_owner)}</p>
+            <p><span class="rec-label">Human decision required</span>{_narrative_html(item.approval_required or CATEGORY_LABELS[category])}</p>
+            <p><span class="rec-label">Completion condition</span>{_narrative_html(item.expected_outcome)}</p>
           </div>
-          <p>{_html_link(item.evidence_file, "Evidence CSV")} · {_html_link('operator_appendix.md', "Implementation detail")}</p>
+          <p class="evidence-links">{_html_link(item.evidence_file, "Evidence CSV")} · {_html_link('operator_appendix.md', "Implementation detail")}</p>
         </article>"""
     if not recs_html:
         recs_html = '<p class="empty">No recommendation was recorded.</p>'
@@ -668,7 +890,7 @@ def _render_html(
         f'<li><strong>{html.escape(module.replace("_", " ").title())}</strong>: {_html_link("evidence/" + module + ".csv", "CSV")} · {_html_link("processed/measurements/" + module + ".json", "measurement")}</li>'
         for module in MODULES
     )
-    limitation_html = "".join(f"<li>{_html_text(item)}</li>" for item in limitations)
+    limitation_html = "".join(f"<li>{_narrative_html(item)}</li>" for item in limitations)
     card_html = "".join(f'<div class="kpi"><span>{html.escape(label)}</span><strong>{html.escape(str(value))}</strong></div>' for label, value in cards)
     mode = "Full history" if manifest.get("full_history") else "Selected time window"
     generated = _plain(manifest.get("snapshot_completed_at"))
@@ -681,20 +903,22 @@ def _render_html(
   <style>
     :root{{--ink:#1f1b18;--muted:#5d544d;--line:rgba(31,27,24,.12);--canvas:#fcf9f6;--paper:#f5efe9;--wash:#f6f0ea;--blush:#f3dfd2;--primary:#964900;--accent:#fe810e;--accent-ink:#5f2b00;--warm:#c98f60;--error:#c1121f;--dark:#1b1714;--dark-text:#fffaf5}}
     *{{box-sizing:border-box}} body{{margin:0;background:var(--canvas);color:var(--ink);font:15px/1.6 "Manrope",ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}}
-    a{{color:var(--primary);font-weight:700;text-decoration-color:rgba(150,73,0,.28);text-underline-offset:3px}} a:hover{{color:var(--accent);text-decoration-color:rgba(254,129,14,.42)}} a:focus-visible{{outline:3px solid var(--accent);outline-offset:3px}} .page{{max-width:1200px;margin:0 auto;background:var(--canvas);box-shadow:0 20px 60px rgba(31,27,24,.07)}}
+    a{{color:var(--primary);font-weight:600;text-decoration-color:rgba(150,73,0,.28);text-underline-offset:3px}} a:hover{{color:var(--accent);text-decoration-color:rgba(254,129,14,.42)}} a:focus-visible{{outline:3px solid var(--accent);outline-offset:3px}} .page{{max-width:1200px;margin:0 auto;background:var(--canvas);box-shadow:0 20px 60px rgba(31,27,24,.07)}}
     header{{padding:64px 72px 52px;background:radial-gradient(110% 150% at 82% 20%,rgba(150,73,0,.48),transparent 55%),var(--dark);color:var(--dark-text)}} .brand{{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:800}}
     h1,h2,h3{{font-family:"Newsreader",Georgia,"Times New Roman",serif}} h1{{font-size:44px;line-height:1.04;max-width:850px;margin:16px 0 20px;letter-spacing:-.025em}} .subtitle{{max-width:780px;color:#fffaf5;font-size:18px}} .meta{{display:flex;gap:24px;flex-wrap:wrap;margin-top:28px;color:#eadfd6;font-size:13px}}
     main{{padding:0 72px 72px}} section{{padding:50px 0;border-bottom:1px solid var(--line)}} section:last-child{{border:0}} h2{{font-size:32px;line-height:1.15;letter-spacing:-.02em;margin:0 0 12px}} h3{{font-size:20px;line-height:1.25}} .lede{{max-width:850px;color:var(--muted);font-size:17px}}
-    .kpis{{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:26px 0}} .kpi{{background:rgba(255,255,255,.78);padding:18px;border-radius:14px;border:1px solid rgba(31,27,24,.08);box-shadow:0 16px 34px rgba(31,27,24,.035)}} .kpi span{{display:block;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em}} .kpi strong{{display:block;font-family:"Newsreader",Georgia,serif;font-size:29px;margin-top:7px}}
+    .kpis{{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:26px 0}} .kpi{{background:rgba(255,255,255,.78);padding:18px;border-radius:14px;border:1px solid rgba(31,27,24,.08);box-shadow:0 16px 34px rgba(31,27,24,.035)}} .kpi span{{display:block;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em}} .kpi strong{{display:block;font-family:"Newsreader",Georgia,serif;font-size:29px;margin-top:7px}} .score-explainer{{display:grid;grid-template-columns:minmax(260px,.8fr) minmax(0,1.2fr);gap:28px;margin-top:24px;padding:22px 24px;background:var(--dark);color:var(--dark-text);border-radius:18px}} .score-copy h3{{margin:0 0 8px;color:var(--dark-text)}} .score-copy p{{margin:8px 0;color:rgba(255,250,245,.82)}} .score-copy a{{color:var(--accent)}} .score-rows{{display:grid;gap:8px}} .score-row{{display:grid;grid-template-columns:minmax(0,1fr) 70px 42px;gap:10px;align-items:center;padding:8px 10px;border:1px solid rgba(255,255,255,.12);border-radius:10px}} .score-row strong,.score-row small{{text-align:right;font-variant-numeric:tabular-nums}} .score-row small{{color:rgba(255,250,245,.68)}}
     .two-col{{display:grid;grid-template-columns:1fr 1fr;gap:40px}} .panel{{background:rgba(247,240,234,.8);border:1px solid rgba(31,27,24,.08);border-radius:20px;padding:24px}} .panel h3{{margin-top:0}}
-    .metric-row{{display:grid;grid-template-columns:minmax(140px,1.35fr) 2fr 58px;gap:12px;align-items:center;margin:10px 0}} .metric-label{{font-size:13px;overflow-wrap:anywhere}} .metric-value{{font-variant-numeric:tabular-nums;text-align:right;font-size:13px;font-weight:700}} .hubspot-asset{{font-weight:800;color:var(--ink)}} .hubspot-record{{font-weight:inherit;text-decoration-thickness:1px}}
+    .quality-grid{{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:24px;align-items:start}} .quality-card{{background:rgba(247,240,234,.8);border:1px solid rgba(31,27,24,.08);border-radius:18px;padding:20px;min-width:0}} .quality-card-head{{display:flex;justify-content:space-between;gap:16px;align-items:baseline;margin-bottom:12px}} .quality-card-head h3{{margin:0}} .quality-card-head span{{color:var(--muted);font-size:12px}} .identity-panel{{display:grid;grid-template-columns:minmax(210px,.7fr) minmax(0,2fr);gap:30px;align-items:start;margin-top:16px;padding:22px 24px;background:rgba(255,255,255,.58);border:1px solid var(--line);border-radius:18px}} .identity-panel h3{{margin:0 0 6px}} .identity-panel p{{color:var(--muted);margin:0}} .identity-metrics{{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 16px}}
+    .metric-row{{display:grid;grid-template-columns:minmax(120px,1.45fr) minmax(70px,1fr) 52px;gap:10px;align-items:center;margin:10px 0}} .metric-label{{font-size:12px;line-height:1.35;overflow-wrap:anywhere}} .metric-value{{font-variant-numeric:tabular-nums;text-align:right;font-size:12px;font-weight:700}} .hubspot-asset{{color:var(--ink)}} .hubspot-kind{{font-weight:600;color:var(--muted)}} .hubspot-name{{font-weight:750;color:var(--ink)}} .hubspot-record{{font-weight:inherit;text-decoration-thickness:1px}} .record-kind{{color:var(--muted);font-size:.92em}}
     .bar,.stack{{height:10px;background:#e8ded5;border-radius:999px;overflow:hidden;display:flex}} .bar span,.stack span{{display:block;height:100%}} .primary{{background:var(--primary)}} .accent{{background:var(--accent)}} .warm{{background:var(--warm)}} .error{{background:var(--error)}}
     .stack-row{{margin:18px 0}} .stack-row strong{{display:block;margin-bottom:7px}} .stack-row small{{display:block;color:var(--muted);margin-top:6px}}
     table{{width:100%;border-collapse:collapse;margin-top:20px}} th,td{{text-align:left;padding:12px 10px;border-bottom:1px solid var(--line);vertical-align:top}} th{{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.05em}}
-    .findings{{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:24px}} .finding{{background:rgba(255,255,255,.62);border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:14px;padding:22px;min-width:0}} .finding.severity-critical,.finding.severity-high{{border-left-color:var(--error)}} .finding h3{{margin:12px 0 6px}} .finding p{{margin:8px 0}} .finding-head{{display:flex;justify-content:space-between;color:var(--muted);font-size:12px}} .badge{{font-weight:800;color:var(--ink);text-transform:uppercase;letter-spacing:.05em}} .sample{{font-size:20px;font-weight:800;color:var(--primary)}} .field-context{{font-size:13px;color:var(--muted)}} .record-samples{{margin:15px 0;padding:14px 15px;background:var(--wash);border-radius:10px;border:1px solid var(--line)}} .record-samples>strong{{display:block;margin-bottom:7px}} .record-samples ul{{margin:0;padding-left:19px}} .record-samples li{{margin:7px 0;overflow-wrap:anywhere}} .record-more{{color:var(--muted);font-size:13px}}
-    .recommendation{{border-top:3px solid var(--primary);background:rgba(247,240,234,.8);padding:24px;border-radius:8px 8px 20px 20px;margin:18px 0}} .recommendation h3{{font-size:20px;margin:7px 0 18px}} .eyebrow{{font-size:12px;color:var(--primary);font-weight:800;text-transform:uppercase;letter-spacing:.06em}} .rec-grid{{display:grid;grid-template-columns:repeat(2,1fr);gap:2px 28px}} .rec-grid p{{margin:8px 0}}
+    .findings{{margin-top:26px}} .finding-group+.finding-group{{margin-top:42px;padding-top:38px;border-top:1px solid var(--line)}} .finding-group-head{{display:grid;grid-template-columns:54px 1fr;gap:14px;align-items:start;margin-bottom:18px}} .finding-group-head h3{{font-size:23px;margin:1px 0 4px}} .finding-group-head p{{margin:0;color:var(--muted);max-width:760px}} .group-number{{display:grid;place-items:center;width:48px;height:48px;border-radius:14px;background:var(--dark);color:var(--dark-text);font-weight:800;letter-spacing:.04em}} .priority-two .group-number{{background:var(--paper);color:var(--primary);border:1px solid rgba(150,73,0,.25)}} .priority-three .group-number{{background:transparent;color:var(--muted);border:1px solid var(--line)}} .finding-list{{display:grid;gap:18px}} .secondary-list{{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}} .finding{{background:rgba(255,255,255,.72);border:1px solid var(--line);border-radius:18px;padding:24px;min-width:0}} .finding-priority-1{{border-top:4px solid var(--error)}} .finding-priority-2{{border-top:3px solid var(--warm);padding:20px}} .finding-priority-3{{border-top:2px solid var(--line);padding:20px}} .finding h3{{margin:10px 0 6px;font-size:23px}} .finding-priority-2 h3,.finding-priority-3 h3{{font-size:20px}} .finding p{{margin:9px 0}} .finding-head{{display:flex;justify-content:space-between;gap:20px;color:var(--muted);font-size:12px}} .priority-badge{{font-weight:800;color:var(--ink);text-transform:uppercase;letter-spacing:.05em}} .finding-detail-grid{{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(280px,.85fr);gap:24px;align-items:start}} .finding-detail-grid.no-record-context,.finding-priority-2 .finding-detail-grid,.finding-priority-3 .finding-detail-grid{{grid-template-columns:1fr}} .no-record-context .finding-copy{{max-width:820px}} .field-context{{font-size:13px;color:var(--muted)}} .finding-facts{{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0}} .finding-facts div{{padding:11px 12px;background:var(--wash);border-radius:10px}} .finding-facts dt{{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em}} .finding-facts dd{{margin:3px 0 0;font-weight:650}} .finding-impact{{font-size:15px}} .evidence-links{{font-size:13px;color:var(--muted)}} .record-samples{{margin:8px 0 0;padding:15px 16px;background:var(--wash);border-radius:12px;border:1px solid var(--line)}} .record-samples h4{{font-family:inherit;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:0 0 8px}} .record-samples ul{{list-style:none;margin:0;padding:0}} .record-samples li{{margin:0;padding:8px 0;border-top:1px solid rgba(31,27,24,.08);overflow-wrap:anywhere}} .record-samples li:first-child{{border-top:0;padding-top:2px}} .record-more{{color:var(--muted);font-size:12px;margin-bottom:0}}
+    .recommendation{{border-top:3px solid var(--primary);background:rgba(247,240,234,.8);padding:24px;border-radius:8px 8px 20px 20px;margin:18px 0}} .recommendation h3{{font-size:21px;margin:14px 0 14px;max-width:900px}} .recommendation-head{{display:flex;gap:12px;align-items:center}} .action-number{{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:var(--primary);color:white;font-weight:800}} .eyebrow{{font-size:11px;color:var(--primary);font-weight:750;text-transform:uppercase;letter-spacing:.06em}} .approval-class{{display:block;color:var(--muted);font-size:12px}} .rec-grid{{display:grid;grid-template-columns:repeat(2,1fr);gap:2px 28px}} .rec-grid p{{margin:8px 0}} .rec-label{{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px}}
     .note{{background:var(--blush);border-left:4px solid var(--primary);padding:16px 18px;border-radius:10px}} .footer-note{{color:var(--muted);font-size:13px}} ul{{padding-left:20px}} .report-footer{{padding:34px 72px;background:var(--dark);color:var(--dark-text);display:flex;justify-content:space-between;gap:24px;align-items:center}} .report-footer p{{margin:0}} .report-footer a{{color:var(--accent);text-decoration-color:rgba(254,129,14,.45)}}
-    @media(max-width:820px){{header,main,.report-footer{{padding-left:28px;padding-right:28px}} h1{{font-size:34px}} .kpis{{grid-template-columns:repeat(2,1fr)}} .two-col,.findings,.rec-grid{{grid-template-columns:1fr}} .report-footer{{align-items:flex-start;flex-direction:column}}}}
+    @media(max-width:920px){{.quality-grid,.identity-metrics,.secondary-list{{grid-template-columns:1fr 1fr}} .finding-detail-grid,.score-explainer{{grid-template-columns:1fr}}}}
+    @media(max-width:820px){{header,main,.report-footer{{padding-left:28px;padding-right:28px}} h1{{font-size:34px}} .kpis{{grid-template-columns:repeat(2,1fr)}} .two-col,.quality-grid,.identity-panel,.identity-metrics,.secondary-list,.rec-grid{{grid-template-columns:1fr}} .finding-group-head{{grid-template-columns:42px 1fr}} .group-number{{width:38px;height:38px;border-radius:10px}} .report-footer{{align-items:flex-start;flex-direction:column}}}}
     @media print{{body{{background:white;font-size:11pt}} .page{{max-width:none;box-shadow:none}} header{{padding:35px 42px;background:var(--dark)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact}} main{{padding:0 42px 42px}} section{{padding:30px 0}} a{{color:var(--ink);text-decoration:underline}} .finding,.recommendation,.panel{{break-inside:avoid}} .report-footer{{padding:24px 42px;-webkit-print-color-adjust:exact;print-color-adjust:exact}}}}
   </style>
 </head>
@@ -706,21 +930,22 @@ def _render_html(
     <div class="meta"><span>Snapshot: {html.escape(generated)}</span><span>Coverage: {html.escape(mode)}</span><span>No CRM records were changed</span></div>
   </header>
   <main>
-    <section id="summary"><h2>Executive Summary</h2><p class="lede">{_html_text(narrative.executive_summary)}</p><p><strong>CRM trust score: {html.escape(str(score.get('total', '—')))}/{html.escape(str(score.get('max_total', 100)))}.</strong> The score summarizes reviewed data-quality findings; it does not measure revenue performance or return on investment.</p><p>{_html_link('crm_trust_report.md', 'Text version')} · {_html_link('operator_appendix.md', 'Operator appendix')}</p></section>
+    <section id="summary"><h2>Executive Summary</h2><p class="lede">{_narrative_html(narrative.executive_summary)}</p><p><strong>CRM trust score: {html.escape(str(score.get('total', '—')))}/{html.escape(str(score.get('max_total', 100)))}.</strong> The score summarizes reviewed data-quality findings; it does not measure revenue performance or return on investment.</p>{_score_explainer_html(score)}<p>{_html_link('crm_trust_report.md', 'Text version')} · {_html_link('operator_appendix.md', 'Operator appendix')}</p></section>
     <section id="snapshot"><h2>CRM Snapshot</h2><p class="lede">{html.escape(mode)} extract completed {html.escape(generated)}. Counts and extraction coverage are taken from the completed snapshot manifest.</p><div class="kpis">{card_html}</div></section>
-    <section id="quality"><h2>Data Quality and Usability</h2><p class="lede">{_html_text(narrative.data_quality_summary)}</p><div class="two-col"><div class="panel"><h3>Field completeness</h3>{completeness}</div><div class="panel"><h3>Contact identity validity</h3>{validity}</div></div></section>
+    <section id="quality"><h2>Data Quality and Usability</h2><p class="lede">{_narrative_html(narrative.data_quality_summary)}</p><div class="quality-grid">{quality_cards}</div><div class="identity-panel"><div><h3>Contact identity validity</h3><p>Format validity among populated values. Empty-field coverage is shown in the Contact property card above.</p></div><div class="identity-metrics">{validity}</div></div></section>
     <section id="activity"><h2>Activity and Data Age</h2><p class="lede">Updated within 30 days, active within 31–90 days, aging within 91–180 days, and stale after 180 days. These bands use record modification dates.</p>{activity_rows}</section>
     <section id="funnel"><h2>Funnel and Association Coverage</h2><div class="two-col"><div class="panel"><h3>Contact lifecycle distribution</h3>{funnel_rows or '<p>Lifecycle distribution was not available.</p>'}</div><div class="panel"><h3>Association coverage</h3>{association_rows}</div></div><h3>Deal pipelines</h3><table><thead><tr><th>Pipeline</th><th>Stages</th><th>Deals</th></tr></thead><tbody>{pipeline_rows}</tbody></table></section>
     <section id="findings"><h2>Key Findings</h2><p class="lede">Every finding below has passed review and links to its record-level evidence and measurement file.</p><div class="findings">{findings_html}</div></section>
     <section id="causes"><h2>Root Cause Hypotheses</h2><p class="lede">These are evidence-based hypotheses, not confirmed facts. Confidence and the question needed for confirmation are shown explicitly.</p><table><thead><tr><th>Hypothesis</th><th>Findings</th><th>Confidence</th><th>What to confirm</th></tr></thead><tbody>{roots_html}</tbody></table></section>
-    <section id="actions"><h2>Recommended Actions</h2><p class="lede">Each action states why it is needed, who should own it, what approval is required, and the expected result. Exact implementation detail is in the appendix.</p>{recs_html}</section>
+    <section id="actions"><h2>Recommended Actions</h2><p class="lede">The audit has already prepared each affected cohort and its evidence. “Recommended accountable role” names the business role that should review the records and make or authorize the decision; it is not presented as a verified HubSpot owner name. Exact implementation detail is in the appendix.</p>{recs_html}</section>
     <section id="limits"><h2>What This Audit Cannot Determine</h2><ul>{limitation_html}</ul></section>
     <section id="evidence"><h2>Evidence and Supporting Files</h2><p class="note">The main report shows decision-relevant evidence. The operator appendix contains every validated finding, detailed actions, and links to supporting artifacts.</p><ul>{evidence_html}<li>{_html_link('report_record_evidence.csv', 'Mapped Company and Deal evidence')}</li><li>{_html_link('findings.json', 'Validated findings')}</li><li>{_html_link('operator_appendix.md', 'Operator appendix')}</li><li>{_html_link('schema_discovery_report.md', 'Schema discovery report')}</li></ul></section>
-    <section id="next"><h2>Next Review</h2><p class="lede">{_html_text(narrative.suggested_next_review)}</p></section>
-    <section id="sharing"><h2>Sharing the Report</h2><p class="lede">This HTML file is generated locally. It is not a public URL, and its supporting-file links work only when the related output folder stays together.</p><p>For a fixed copy, open the HTML in a browser and choose <strong>Print → Save as PDF</strong>. Share the PDF through an approved channel. If you share HTML instead, share the complete sanitized output package through approved hosting or file sharing; do not share the raw data folder.</p><p class="footer-note">The HTML and Markdown versions are generated from the same validated artifacts.</p></section>
+    <section id="next"><h2>Next Review</h2><p class="lede">{_narrative_html(narrative.suggested_next_review)}</p></section>
+    <section id="sharing"><h2>Sharing the Report</h2><p class="lede">This HTML file is generated locally. It is not a public URL, and its supporting-file links work only when the related output folder stays together.</p><p><strong>Treat this as a confidential CRM report.</strong> It can contain identifiable HubSpot Company and Deal names plus direct record links. For a fixed copy, choose <strong>Print → Save as PDF</strong>, then share the PDF only with authorized recipients through an approved channel. If you share interactive HTML, keep the complete report package together, use approved access-controlled hosting or file sharing, and never include the raw data folder, environment files, or secrets.</p><p class="footer-note">The HTML and Markdown versions are generated from the same validated artifacts.</p></section>
   </main>
   <footer class="report-footer"><p><strong>Smartify Marketing</strong><br>Your Strategic B2B Marketing Partner</p><p>For more marketing systems insights and updates: <a href="https://smartifymarketing.com">smartifymarketing.com</a> · <a href="https://github.com/AliceEinstein">GitHub</a></p></footer>
 </div></body></html>"""
+    document = "\n".join(line.rstrip() for line in document.splitlines()) + "\n"
     path = run_dir / "crm_trust_report.html"
     path.write_text(document, encoding="utf-8")
     return path
@@ -741,7 +966,7 @@ def render_reports(run_dir: Path) -> Tuple[Path, Path, Path, Path]:
     recommendations = _recommendations(run_dir)
     findings = _findings(run_dir)
     accepted = _accepted_findings(findings)
-    major = _major_findings(findings)
+    report_findings = accepted
     record_rows, property_labels = build_report_record_evidence(run_dir, accepted)
     record_groups = _records_by_finding(record_rows)
     identity_info = report_identity(run_dir)
@@ -751,7 +976,7 @@ def render_reports(run_dir: Path) -> Tuple[Path, Path, Path, Path]:
         if business_name
         else "HubSpot Marketing-to-Pipeline Trust Audit"
     )
-    recommendation_items = _all_recommendations(recommendations)
+    recommendation_items = _all_recommendations(recommendations, report_findings)
     record_counts = {**counts, **summary.get("record_counts", {})}
     limitations = _automatic_limitations(manifest) + narrative.limitations
 
@@ -762,16 +987,26 @@ def render_reports(run_dir: Path) -> Tuple[Path, Path, Path, Path]:
         "",
         "## Executive Summary",
         "",
-        _plain(narrative.executive_summary),
+        _narrative_plain(narrative.executive_summary),
         "",
-        f"**CRM trust score: {score.get('total', '—')}/{score.get('max_total', 100)}.** ",
+        f"**CRM trust score: {score.get('total', '—')}/{score.get('max_total', 100)}.**",
         "The score summarizes the reviewed data-quality findings. It is not a measure of revenue performance or return on investment.",
+        "",
+        "### How the score is calculated",
+        "",
+        f"**{score.get('max_total', 100)} starting points − {max(0, int(score.get('max_total', 100) or 100) - int(score.get('total', 0) or 0))} deducted points = {score.get('total', '—')}.** Only approved or revised findings count. Critical findings deduct 10 points, high 6, medium 3, and low 1, capped at each category maximum.",
+        "",
+    ]
+    lines.extend(_score_table(score))
+    lines.extend([
+        "",
+        f"- {_link('score.json', 'Complete score calculation')}",
         "",
         "No CRM records were changed during this audit.",
         "",
         "## CRM Snapshot",
         "",
-    ]
+    ])
     lines.extend(_snapshot_table(manifest, record_counts))
     lines.extend(
         [
@@ -781,7 +1016,7 @@ def render_reports(run_dir: Path) -> Tuple[Path, Path, Path, Path]:
             "",
             "## Data Quality and Usability",
             "",
-            _plain(narrative.data_quality_summary),
+            _narrative_plain(narrative.data_quality_summary),
             "",
             "### Key field completeness",
             "",
@@ -806,9 +1041,9 @@ def render_reports(run_dir: Path) -> Tuple[Path, Path, Path, Path]:
     lines.extend(_association_table(associations))
     lines.extend(["", "### Deal pipelines", ""])
     lines.extend(_pipeline_table(pipelines))
-    lines.extend(["", "## Key Findings", "", "The following findings are material to management decisions and have passed the audit review gates.", ""])
-    lines.extend(_finding_table(major, property_labels))
-    representative_sections = _representative_record_sections(major, record_groups)
+    lines.extend(["", "## Key Findings", "", "Validated findings are ordered by decision priority: P1 first, then structural P2 gaps, followed by P3 maintenance debt.", ""])
+    lines.extend(_finding_sections(report_findings, property_labels))
+    representative_sections = _representative_record_sections(report_findings, record_groups)
     if representative_sections:
         lines.extend(
             [
@@ -822,9 +1057,15 @@ def render_reports(run_dir: Path) -> Tuple[Path, Path, Path, Path]:
         lines.extend(representative_sections)
     lines.extend(["", "## Root Cause Hypotheses", "", "These are evidence-based hypotheses. Confidence and the question needed for confirmation are shown explicitly.", ""])
     lines.extend(_root_cause_lines(narrative))
-    lines.extend(["", "## Recommended Actions", "", "Actions are linked to the finding and evidence that justify them. Detailed implementation steps are in the operator appendix.", ""])
-    lines.extend(_recommendation_summary(recommendation_items))
-    lines.extend(["", "## What This Audit Cannot Determine", "", _list(limitations), "", "## Evidence and Supporting Files", ""])
+    lines.extend([
+        "",
+        "## Recommended Actions",
+        "",
+        "The audit has already prepared each affected cohort and its evidence. The recommended accountable role reviews the records, makes or authorizes the decision, and records the disposition. It is a recommended business role, not a verified HubSpot owner name.",
+        "",
+    ])
+    lines.extend(_recommendation_summary(recommendation_items, report_findings))
+    lines.extend(["", "## What This Audit Cannot Determine", "", _list(_narrative_plain(item) for item in limitations), "", "## Evidence and Supporting Files", ""])
     lines.extend(_evidence_index())
     lines.extend(
         [
@@ -835,13 +1076,13 @@ def render_reports(run_dir: Path) -> Tuple[Path, Path, Path, Path]:
             "",
             "## Next Review",
             "",
-            _plain(narrative.suggested_next_review),
+            _narrative_plain(narrative.suggested_next_review),
             "",
             "## Sharing the Report",
             "",
             "This HTML file is generated locally. It is not a public URL, and its supporting-file links work only when the related output folder stays together.",
             "",
-            "For a fixed copy, open the HTML in a browser and choose **Print → Save as PDF**. Share the PDF through an approved channel. If you share HTML instead, share the complete sanitized output package through approved hosting or file sharing; do not share the raw data folder.",
+            "**Treat this as a confidential CRM report.** It can contain identifiable HubSpot Company and Deal names plus direct record links. For a fixed copy, choose **Print → Save as PDF**, then share the PDF only with authorized recipients through an approved channel. If you share interactive HTML, keep the complete report package together, use approved access-controlled hosting or file sharing, and never include the raw data folder, environment files, or secrets.",
             "",
             "---",
             "",
@@ -893,7 +1134,7 @@ def render_reports(run_dir: Path) -> Tuple[Path, Path, Path, Path]:
             "",
             "## Method and Audit Constraints",
             "",
-            _list(limitations),
+            _list(_narrative_plain(item) for item in limitations),
             "",
         ]
     )
@@ -928,7 +1169,7 @@ def render_reports(run_dir: Path) -> Tuple[Path, Path, Path, Path]:
             "## Suggested Implementation Sequence",
             "",
             "1. Confirm business rules and canonical fields.",
-            "2. Review the linked evidence queues with the CRM owner.",
+            "2. Review the audit-prepared evidence cohorts with the accountable business owner.",
             "3. Define an approved change plan outside this read-only audit.",
             "4. Re-run the audit after approved changes.",
             "",
@@ -955,7 +1196,7 @@ def render_reports(run_dir: Path) -> Tuple[Path, Path, Path, Path]:
         pipelines,
         score,
         narrative,
-        major,
+        report_findings,
         recommendation_items,
         limitations,
         business_name,

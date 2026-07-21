@@ -14,7 +14,7 @@ from core.rules import measure_all
 from core.schemas import CrmContext
 from harness.engine import advance
 from harness.providers.base import ProviderNotConfigured, unavailable_provider
-from harness.render import render_reports
+from harness.render import _narrative_plain, render_reports
 from harness.state import expand_input_patterns
 from harness.validation import validate_stage_output
 from scripts.generate_reports import consolidate_evidence
@@ -78,6 +78,11 @@ def test_harness_rejects_raw_inputs(tmp_path):
 
 def test_privacy_clearance_is_reopened_for_current_report_bytes(tmp_path):
     run = _copy_fixture(tmp_path)
+    clearance_path = run / "safety_clearance.json"
+    clearance = json.loads(clearance_path.read_text(encoding="utf-8"))
+    for entry in clearance:
+        entry["file_sha256"] = "0" * 64
+    clearance_path.write_text(json.dumps(clearance, indent=2) + "\n", encoding="utf-8")
     _write_narrative(run)
     result = advance(run)
     assert "privacy_clearance" in result["ready_tasks"]
@@ -110,6 +115,11 @@ def test_provider_stub_is_not_a_v1_dependency():
         unavailable_provider({"stage": "example"})
 
 
+def test_narrative_renderer_does_not_rewrite_number_words():
+    text = "No one approved the one-to-one matching rule."
+    assert _narrative_plain(text) == text
+
+
 def test_report_uses_business_name_typed_hubspot_assets_and_safe_record_links(tmp_path):
     run = _copy_fixture(tmp_path)
     profile_run(run)
@@ -140,9 +150,27 @@ def test_report_uses_business_name_typed_hubspot_assets_and_safe_record_links(tm
     assert 'class="hubspot-asset"' in report
     assert "HubSpot property:" in report
     assert "HubSpot pipeline:" in report
-    assert "HubSpot Company:" in report or "HubSpot Deal:" in report
+    assert 'class="hubspot-record"' in report
+    assert "Company:" in report or "Deal:" in report
     assert "https://app.hubspot.com/contacts/123456/record/0-" in report
     assert 'target="_blank" rel="noopener noreferrer"' in report
+    assert 'class="quality-grid"' in report
+    assert "Priority 1" in report
+    assert "Recommended accountable role" in report
+    assert "How this score is calculated" in report
+    assert "100 starting points − 52 deducted points = 48" in report
+    assert "8 key properties" in report
+    assert "Priority 3" in report
+    assert report.index("Priority 1 · Customers Without Closed Won Deal Trace") < report.index(
+        "Priority 3 · Companies Without Domain"
+    )
+    assert "### Priority 1 — Decisions at immediate risk" in markdown
+    assert "### Priority 2 — Structural trust gaps" in markdown
+    assert "### Priority 3 — Maintenance and hygiene debt" in markdown
+    assert "Treat this as a confidential CRM report" in report
+    assert "complete sanitized output package" not in report
+    assert "Eight companies" not in report
+    assert "8 companies" in report
     assert "app.hubspot.com" not in record_csv
     assert "123456" not in record_csv
     assert ",co001," not in record_csv

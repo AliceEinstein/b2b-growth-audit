@@ -1,74 +1,14 @@
 [
   {
     "phrase": "delete properties",
-    "file": "crm_trust_report.md",
-    "file_sha256": "2cb88497989535c2363711bddcefcf1df926d1036172c47fd6d5e29fae3d2e5b",
-    "reason": "This phrase appears only in the report's Do Not Auto-Fix section as a prohibited destructive action; the report does not recommend executing it."
-  },
-  {
-    "phrase": "overwrite original source",
     "file": "agent_handoff.md",
-    "file_sha256": "4840ba8f3929ce053cf688e0846279b5cd0473b65166d937beee525590f2258e",
-    "reason": "This phrase appears only in the Blocked Actions section as a prohibited source rewrite; the handoff explicitly requires separate human approval for any write plan."
-  },
-  {
-    "phrase": "merge companies automatically",
-    "file": "agent_handoff.md",
-    "file_sha256": "4840ba8f3929ce053cf688e0846279b5cd0473b65166d937beee525590f2258e",
-    "reason": "This phrase appears only in the Blocked Actions section as a prohibited automatic merge, while duplicate candidates are routed to human review."
-  },
-  {
-    "phrase": "delete properties",
-    "file": "agent_handoff.md",
-    "file_sha256": "4840ba8f3929ce053cf688e0846279b5cd0473b65166d937beee525590f2258e",
-    "reason": "This phrase appears only in the Blocked Actions section as a prohibited destructive property action; the recommended step is a mapping review."
-  },
-  {
-    "phrase": "move all stale deals",
-    "file": "agent_handoff.md",
-    "file_sha256": "4840ba8f3929ce053cf688e0846279b5cd0473b65166d937beee525590f2258e",
-    "reason": "This phrase appears only in the Blocked Actions section; the handoff routes past-date deals to human review and prohibits automatic stage changes."
+    "file_sha256": "51cab3390e7eaf779063f415dcd3d07fa713f96e7d729364365813994bc68778",
+    "reason": "The phrase appears only in the explicit prohibited-actions safety section."
   },
   {
     "phrase": "reset lifecycle stage",
     "file": "agent_handoff.md",
-    "file_sha256": "4840ba8f3929ce053cf688e0846279b5cd0473b65166d937beee525590f2258e",
-    "reason": "This phrase appears only in the Blocked Actions section; lifecycle interpretation is explicitly left to the confirmed business rule."
-  },
-  {
-    "phrase": "bulk update owner",
-    "file": "agent_handoff.md",
-    "file_sha256": "4840ba8f3929ce053cf688e0846279b5cd0473b65166d937beee525590f2258e",
-    "reason": "This phrase appears only in the Blocked Actions section; the output recommends an owner-gap review list and not an owner assignment."
-  },
-  {
-    "phrase": "overwrite original source",
-    "file": "crm_trust_report.md",
-    "file_sha256": "2cb88497989535c2363711bddcefcf1df926d1036172c47fd6d5e29fae3d2e5b",
-    "reason": "This phrase appears only in the Do Not Auto-Fix section as a prohibited destructive action; the report does not recommend executing it."
-  },
-  {
-    "phrase": "merge companies automatically",
-    "file": "crm_trust_report.md",
-    "file_sha256": "2cb88497989535c2363711bddcefcf1df926d1036172c47fd6d5e29fae3d2e5b",
-    "reason": "This phrase appears only in the Do Not Auto-Fix section; shared-domain candidates are routed to human review."
-  },
-  {
-    "phrase": "move all stale deals",
-    "file": "crm_trust_report.md",
-    "file_sha256": "2cb88497989535c2363711bddcefcf1df926d1036172c47fd6d5e29fae3d2e5b",
-    "reason": "This phrase appears only as a prohibited automatic action; past-date deals are routed to human pipeline review."
-  },
-  {
-    "phrase": "reset lifecycle stage",
-    "file": "crm_trust_report.md",
-    "file_sha256": "2cb88497989535c2363711bddcefcf1df926d1036172c47fd6d5e29fae3d2e5b",
-    "reason": "This phrase appears only as a prohibited automatic action; lifecycle interpretation is left to the confirmed business rule."
-  },
-  {
-    "phrase": "bulk update owner",
-    "file": "crm_trust_report.md",
-    "file_sha256": "2cb88497989535c2363711bddcefcf1df926d1036172c47fd6d5e29fae3d2e5b",
-    "reason": "This phrase appears only as a prohibited automatic action; the report recommends an owner-gap review list instead."
+    "file_sha256": "51cab3390e7eaf779063f415dcd3d07fa713f96e7d729364365813994bc68778",
+    "reason": "The phrase appears only in the explicit prohibited-actions safety section."
   }
 ]

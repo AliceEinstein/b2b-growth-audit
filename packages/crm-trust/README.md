@@ -34,9 +34,10 @@ of the same validated report content, never a separate model rewrite.
   There is no write code in this repository — enforced by tests.
 - **Local-only identity check**: contact emails, names, and phone numbers may
   be fetched into the owner-authorized local raw snapshot to measure
-  completeness. Sanitized Company/Deal names and owner labels may appear in
-  the confidential local report for action; contact names, emails, and phone
-  numbers do not.
+  completeness. Display-safe but still identifiable Company/Deal names and
+  owner labels may appear in the confidential local report for action; contact
+  names, emails, and phone numbers do not. Treat the report package as
+  confidential CRM data, not as anonymized output.
 - **Raw snapshots stay local**: snapshots live in `outputs/` (gitignored) and
   are never sent to a Smartify backend. The user-selected host agent may read
   bounded processed CRM values needed for analysis; contact identity fields,

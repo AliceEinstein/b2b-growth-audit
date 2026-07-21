@@ -49,11 +49,12 @@ def _report_text(total: int) -> str:
         "# Example Business CRM Trust Audit",
         "HubSpot Marketing-to-Pipeline Trust Audit",
         "## Executive Summary", f"Attribution capture is degrading. **{total}/100**",
+        "### How the score is calculated", "100 starting points minus validated deductions.",
         "## CRM Snapshot", "Full-history snapshot.",
         "## Data Quality and Usability", "Field-level completeness and validity.",
         "## Activity and Data Age", "Record modification age bands.",
         "## Funnel and Association Coverage", "Lifecycle and relationship coverage.",
-        "## Key Findings", "Attribution findings with evidence links.",
+        "## Key Findings", "### Priority 1\nAttribution risk.\n\n### Priority 2\nStructural gap.",
         "## Root Cause Hypotheses", "Import capture rule may be inconsistent.",
         "## Recommended Actions", "Confirm source capture rules.",
         "## What This Audit Cannot Determine", "Business performance is outside scope.",
@@ -70,11 +71,14 @@ def _html_report_text(total: int) -> str:
         "<p>HubSpot Marketing-to-Pipeline Trust Audit</p>",
         f"<p>{total}/100</p>",
         "<h2>Executive Summary</h2>",
+        "<h3>How this score is calculated</h3>",
         "<h2>CRM Snapshot</h2>",
         "<h2>Data Quality and Usability</h2>",
         "<h2>Activity and Data Age</h2>",
         "<h2>Funnel and Association Coverage</h2>",
         "<h2>Key Findings</h2>",
+        "<h3>Priority 1</h3>",
+        "<h3>Priority 2</h3>",
         "<h2>Root Cause Hypotheses</h2>",
         "<h2>Recommended Actions</h2>",
         "<h2>What This Audit Cannot Determine</h2>",
@@ -162,18 +166,18 @@ def finalized_run(tmp_path) -> Path:
         {
             "safe_operational_actions": [
                 {"finding_id": "recent_source_breakdown",
-                 "action": "Draft a review list of recent contacts missing source.",
-                 "classification_reason": "This is a reversible review-list draft and does not change CRM truth.",
+                 "action": "Review the 40 recent contacts missing source and approve a disposition for each record.",
+                 "classification_reason": "This is a reversible human review decision and does not change CRM truth.",
                  "evidence_file": "evidence/attribution_trust.csv",
                  "basis": "40 of 180 recent contacts lack original source.",
-                 "expected_outcome": "A human-review queue for source-capture remediation.",
+                 "expected_outcome": "All 40 records have an approved source-capture disposition or documented exception.",
                  "decision_owner": "Marketing operations owner",
-                 "target": "Review queue for contacts missing original source",
+                 "target": "40 contacts in evidence/attribution_trust.csv missing original source",
                  "current_state": "40 of 180 recent contacts lack original source.",
-                 "desired_state": "All 40 records have an approved review disposition.",
-                 "implementation_steps": ["Review the evidence rows.", "Record a disposition."],
+                 "desired_state": "All 40 records have an approved source-capture disposition or documented exception.",
+                 "implementation_steps": ["Open the audit-prepared evidence cohort.", "Review each record.", "Approve a disposition or document an exception."],
                  "success_measure": "40 of 40 rows have a disposition.",
-                 "approval_required": "Marketing operations approval before any source change"}
+                 "approval_required": "Marketing operations must approve or decline each proposed source-capture disposition before any source change"}
             ],
             "needs_business_rule_confirmation": [
                 {"finding_id": "won_deals_untraceable",
@@ -355,6 +359,93 @@ def test_recommendation_requires_execution_detail(finalized_run):
     doc = run_final_gate(finalized_run)
     assert doc["passed"] is False
     assert "recommendations" in doc["problems"]
+
+
+def test_recommendation_rejects_queue_as_human_action_or_outcome(finalized_run):
+    path = finalized_run / "recommendations.json"
+    data = json.loads(path.read_text(encoding="utf-8"))
+    item = data["safe_operational_actions"][0]
+    item["action"] = "Create a review queue for the 40 affected contacts."
+    item["expected_outcome"] = "A decision-ready review queue."
+    write_json(path, data)
+
+    doc = run_final_gate(finalized_run)
+
+    assert doc["passed"] is False
+    problems = doc["problems"]["recommendations"]
+    assert any("must begin with an explicit human review" in problem for problem in problems)
+    assert any("treats a queue as completion" in problem for problem in problems)
+
+
+@pytest.mark.parametrize(
+    "action",
+    [
+        "Send the prepared review list to the CRM owner.",
+        "Route the review queue to RevOps.",
+        "Share the generated review set with Sales Ops.",
+    ],
+)
+def test_recommendation_rejects_routed_queue_as_headline_action(finalized_run, action):
+    path = finalized_run / "recommendations.json"
+    data = json.loads(path.read_text(encoding="utf-8"))
+    data["safe_operational_actions"][0]["action"] = action
+    write_json(path, data)
+
+    doc = run_final_gate(finalized_run)
+
+    assert doc["passed"] is False
+    assert any(
+        "must begin with an explicit human review" in problem
+        for problem in doc["problems"]["recommendations"]
+    )
+
+
+def test_finding_rejects_spelled_out_measurable_quantity(finalized_run):
+    path = finalized_run / "findings" / "attribution_trust_findings.json"
+    data = json.loads(path.read_text(encoding="utf-8"))
+    data["findings"][0]["business_impact"] = "Eight records need review."
+    write_json(path, data)
+
+    doc = run_final_gate(finalized_run)
+
+    assert doc["passed"] is False
+    assert any(
+        "Use Arabic numerals" in problem
+        for problem in doc["problems"]["findings"]
+    )
+
+
+def test_recommendation_approval_must_name_the_decision(finalized_run):
+    path = finalized_run / "recommendations.json"
+    data = json.loads(path.read_text(encoding="utf-8"))
+    item = data["safe_operational_actions"][0]
+    item["approval_required"] = item["decision_owner"]
+    write_json(path, data)
+
+    doc = run_final_gate(finalized_run)
+
+    assert doc["passed"] is False
+    assert any(
+        "only repeats decision_owner" in problem
+        for problem in doc["problems"]["recommendations"]
+    )
+
+
+def test_recommendation_basis_rejects_internal_metric_prefix(finalized_run):
+    path = finalized_run / "recommendations.json"
+    data = json.loads(path.read_text(encoding="utf-8"))
+    data["safe_operational_actions"][0]["basis"] = (
+        "recent_source_breakdown: 40 of 180 Contacts are missing Original Source."
+    )
+    write_json(path, data)
+
+    doc = run_final_gate(finalized_run)
+
+    assert doc["passed"] is False
+    assert any(
+        "starts with an internal measurement ID" in problem
+        for problem in doc["problems"]["recommendations"]
+    )
 
 
 def test_client_report_rejects_internal_audience_language(finalized_run):

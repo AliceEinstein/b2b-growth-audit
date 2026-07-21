@@ -142,12 +142,21 @@ class ReviewEntry(BaseModel):
 
 class RecommendationItem(BaseModel):
     finding_id: str
-    action: str = Field(min_length=1)
+    action: str = Field(
+        min_length=1,
+        description="Human review, decision, approval, or remediation action; never merely preparation of a queue or list.",
+    )
     classification_reason: str = Field(min_length=1)
     evidence_file: str = Field(min_length=1)
     basis: str = Field(min_length=1)
-    expected_outcome: str = Field(min_length=1)
-    decision_owner: str = Field(min_length=1)
+    expected_outcome: str = Field(
+        min_length=1,
+        description="Completed decision or resolved business state, not a prepared queue, list, or export.",
+    )
+    decision_owner: str = Field(
+        min_length=1,
+        description="Recommended accountable business role. Do not invent a person's name.",
+    )
     # Concrete execution detail for human operators and downstream agents.
     # A recommendation is incomplete if it does not state the exact scope,
     # current and desired state, implementation sequence, and success check.
@@ -156,7 +165,10 @@ class RecommendationItem(BaseModel):
     desired_state: str = Field(min_length=1)
     implementation_steps: List[str] = Field(min_length=1)
     success_measure: str = Field(min_length=1)
-    approval_required: str = Field(min_length=1)
+    approval_required: str = Field(
+        min_length=1,
+        description="Specific decision or authorization required; do not repeat the accountable role without naming the decision.",
+    )
     # Optional in the legacy contract, but emitted by the BYO harness when
     # the recommendation agent has identified a root-cause chain.
     root_cause_ids: List[str] = Field(default_factory=list)

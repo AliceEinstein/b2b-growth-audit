@@ -87,10 +87,12 @@ funnel conversion, account coverage, pipeline reporting, or forecast
 confidence. The report renderer has module-level fallbacks for legacy
 artifacts, but new findings should be specific.
 
-`recommendation_type`: `safe_operational_actions` = review lists, exports,
-drafts. `needs_business_rule_confirmation` = anything depending on how the
-business defines truth. `do_not_auto_fix` = anything that would alter CRM
-truth.
+`recommendation_type`: `safe_operational_actions` = human review or approval
+of read-only evidence, proposed mappings, or drafts that the audit can prepare
+without CRM writes. `needs_business_rule_confirmation` = anything depending
+on how the business defines truth. `do_not_auto_fix` = anything that would
+alter CRM truth. Preparing a queue/list is an agent step, not the human action
+or the completed result.
 
 ## After writing
 

@@ -1,0 +1,429 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Northstar Systems CRM Trust Audit</title>
+  <style>
+    :root{--ink:#1f1b18;--muted:#5d544d;--line:rgba(31,27,24,.12);--canvas:#fcf9f6;--paper:#f5efe9;--wash:#f6f0ea;--blush:#f3dfd2;--primary:#964900;--accent:#fe810e;--accent-ink:#5f2b00;--warm:#c98f60;--error:#c1121f;--dark:#1b1714;--dark-text:#fffaf5}
+    *{box-sizing:border-box} body{margin:0;background:var(--canvas);color:var(--ink);font:15px/1.6 "Manrope",ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif}
+    a{color:var(--primary);font-weight:600;text-decoration-color:rgba(150,73,0,.28);text-underline-offset:3px} a:hover{color:var(--accent);text-decoration-color:rgba(254,129,14,.42)} a:focus-visible{outline:3px solid var(--accent);outline-offset:3px} .page{max-width:1200px;margin:0 auto;background:var(--canvas);box-shadow:0 20px 60px rgba(31,27,24,.07)}
+    header{padding:64px 72px 52px;background:radial-gradient(110% 150% at 82% 20%,rgba(150,73,0,.48),transparent 55%),var(--dark);color:var(--dark-text)} .brand{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--accent);font-weight:800}
+    h1,h2,h3{font-family:"Newsreader",Georgia,"Times New Roman",serif} h1{font-size:44px;line-height:1.04;max-width:850px;margin:16px 0 20px;letter-spacing:-.025em} .subtitle{max-width:780px;color:#fffaf5;font-size:18px} .meta{display:flex;gap:24px;flex-wrap:wrap;margin-top:28px;color:#eadfd6;font-size:13px}
+    main{padding:0 72px 72px} section{padding:50px 0;border-bottom:1px solid var(--line)} section:last-child{border:0} h2{font-size:32px;line-height:1.15;letter-spacing:-.02em;margin:0 0 12px} h3{font-size:20px;line-height:1.25} .lede{max-width:850px;color:var(--muted);font-size:17px}
+    .kpis{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin:26px 0} .kpi{background:rgba(255,255,255,.78);padding:18px;border-radius:14px;border:1px solid rgba(31,27,24,.08);box-shadow:0 16px 34px rgba(31,27,24,.035)} .kpi span{display:block;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.06em} .kpi strong{display:block;font-family:"Newsreader",Georgia,serif;font-size:29px;margin-top:7px} .score-explainer{display:grid;grid-template-columns:minmax(260px,.8fr) minmax(0,1.2fr);gap:28px;margin-top:24px;padding:22px 24px;background:var(--dark);color:var(--dark-text);border-radius:18px} .score-copy h3{margin:0 0 8px;color:var(--dark-text)} .score-copy p{margin:8px 0;color:rgba(255,250,245,.82)} .score-copy a{color:var(--accent)} .score-rows{display:grid;gap:8px} .score-row{display:grid;grid-template-columns:minmax(0,1fr) 70px 42px;gap:10px;align-items:center;padding:8px 10px;border:1px solid rgba(255,255,255,.12);border-radius:10px} .score-row strong,.score-row small{text-align:right;font-variant-numeric:tabular-nums} .score-row small{color:rgba(255,250,245,.68)}
+    .two-col{display:grid;grid-template-columns:1fr 1fr;gap:40px} .panel{background:rgba(247,240,234,.8);border:1px solid rgba(31,27,24,.08);border-radius:20px;padding:24px} .panel h3{margin-top:0}
+    .quality-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:24px;align-items:start} .quality-card{background:rgba(247,240,234,.8);border:1px solid rgba(31,27,24,.08);border-radius:18px;padding:20px;min-width:0} .quality-card-head{display:flex;justify-content:space-between;gap:16px;align-items:baseline;margin-bottom:12px} .quality-card-head h3{margin:0} .quality-card-head span{color:var(--muted);font-size:12px} .identity-panel{display:grid;grid-template-columns:minmax(210px,.7fr) minmax(0,2fr);gap:30px;align-items:start;margin-top:16px;padding:22px 24px;background:rgba(255,255,255,.58);border:1px solid var(--line);border-radius:18px} .identity-panel h3{margin:0 0 6px} .identity-panel p{color:var(--muted);margin:0} .identity-metrics{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 16px}
+    .metric-row{display:grid;grid-template-columns:minmax(120px,1.45fr) minmax(70px,1fr) 52px;gap:10px;align-items:center;margin:10px 0} .metric-label{font-size:12px;line-height:1.35;overflow-wrap:anywhere} .metric-value{font-variant-numeric:tabular-nums;text-align:right;font-size:12px;font-weight:700} .hubspot-asset{color:var(--ink)} .hubspot-kind{font-weight:600;color:var(--muted)} .hubspot-name{font-weight:750;color:var(--ink)} .hubspot-record{font-weight:inherit;text-decoration-thickness:1px} .record-kind{color:var(--muted);font-size:.92em}
+    .bar,.stack{height:10px;background:#e8ded5;border-radius:999px;overflow:hidden;display:flex} .bar span,.stack span{display:block;height:100%} .primary{background:var(--primary)} .accent{background:var(--accent)} .warm{background:var(--warm)} .error{background:var(--error)}
+    .stack-row{margin:18px 0} .stack-row strong{display:block;margin-bottom:7px} .stack-row small{display:block;color:var(--muted);margin-top:6px}
+    table{width:100%;border-collapse:collapse;margin-top:20px} th,td{text-align:left;padding:12px 10px;border-bottom:1px solid var(--line);vertical-align:top} th{color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.05em}
+    .findings{margin-top:26px} .finding-group+.finding-group{margin-top:42px;padding-top:38px;border-top:1px solid var(--line)} .finding-group-head{display:grid;grid-template-columns:54px 1fr;gap:14px;align-items:start;margin-bottom:18px} .finding-group-head h3{font-size:23px;margin:1px 0 4px} .finding-group-head p{margin:0;color:var(--muted);max-width:760px} .group-number{display:grid;place-items:center;width:48px;height:48px;border-radius:14px;background:var(--dark);color:var(--dark-text);font-weight:800;letter-spacing:.04em} .priority-two .group-number{background:var(--paper);color:var(--primary);border:1px solid rgba(150,73,0,.25)} .priority-three .group-number{background:transparent;color:var(--muted);border:1px solid var(--line)} .finding-list{display:grid;gap:18px} .secondary-list{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start} .finding{background:rgba(255,255,255,.72);border:1px solid var(--line);border-radius:18px;padding:24px;min-width:0} .finding-priority-1{border-top:4px solid var(--error)} .finding-priority-2{border-top:3px solid var(--warm);padding:20px} .finding-priority-3{border-top:2px solid var(--line);padding:20px} .finding h3{margin:10px 0 6px;font-size:23px} .finding-priority-2 h3,.finding-priority-3 h3{font-size:20px} .finding p{margin:9px 0} .finding-head{display:flex;justify-content:space-between;gap:20px;color:var(--muted);font-size:12px} .priority-badge{font-weight:800;color:var(--ink);text-transform:uppercase;letter-spacing:.05em} .finding-detail-grid{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(280px,.85fr);gap:24px;align-items:start} .finding-detail-grid.no-record-context,.finding-priority-2 .finding-detail-grid,.finding-priority-3 .finding-detail-grid{grid-template-columns:1fr} .no-record-context .finding-copy{max-width:820px} .field-context{font-size:13px;color:var(--muted)} .finding-facts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:16px 0} .finding-facts div{padding:11px 12px;background:var(--wash);border-radius:10px} .finding-facts dt{color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em} .finding-facts dd{margin:3px 0 0;font-weight:650} .finding-impact{font-size:15px} .evidence-links{font-size:13px;color:var(--muted)} .record-samples{margin:8px 0 0;padding:15px 16px;background:var(--wash);border-radius:12px;border:1px solid var(--line)} .record-samples h4{font-family:inherit;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted);margin:0 0 8px} .record-samples ul{list-style:none;margin:0;padding:0} .record-samples li{margin:0;padding:8px 0;border-top:1px solid rgba(31,27,24,.08);overflow-wrap:anywhere} .record-samples li:first-child{border-top:0;padding-top:2px} .record-more{color:var(--muted);font-size:12px;margin-bottom:0}
+    .recommendation{border-top:3px solid var(--primary);background:rgba(247,240,234,.8);padding:24px;border-radius:8px 8px 20px 20px;margin:18px 0} .recommendation h3{font-size:21px;margin:14px 0 14px;max-width:900px} .recommendation-head{display:flex;gap:12px;align-items:center} .action-number{display:grid;place-items:center;width:34px;height:34px;border-radius:10px;background:var(--primary);color:white;font-weight:800} .eyebrow{font-size:11px;color:var(--primary);font-weight:750;text-transform:uppercase;letter-spacing:.06em} .approval-class{display:block;color:var(--muted);font-size:12px} .rec-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:2px 28px} .rec-grid p{margin:8px 0} .rec-label{display:block;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px}
+    .note{background:var(--blush);border-left:4px solid var(--primary);padding:16px 18px;border-radius:10px} .footer-note{color:var(--muted);font-size:13px} ul{padding-left:20px} .report-footer{padding:34px 72px;background:var(--dark);color:var(--dark-text);display:flex;justify-content:space-between;gap:24px;align-items:center} .report-footer p{margin:0} .report-footer a{color:var(--accent);text-decoration-color:rgba(254,129,14,.45)}
+    @media(max-width:920px){.quality-grid,.identity-metrics,.secondary-list{grid-template-columns:1fr 1fr} .finding-detail-grid,.score-explainer{grid-template-columns:1fr}}
+    @media(max-width:820px){header,main,.report-footer{padding-left:28px;padding-right:28px} h1{font-size:34px} .kpis{grid-template-columns:repeat(2,1fr)} .two-col,.quality-grid,.identity-panel,.identity-metrics,.secondary-list,.rec-grid{grid-template-columns:1fr} .finding-group-head{grid-template-columns:42px 1fr} .group-number{width:38px;height:38px;border-radius:10px} .report-footer{align-items:flex-start;flex-direction:column}}
+    @media print{body{background:white;font-size:11pt} .page{max-width:none;box-shadow:none} header{padding:35px 42px;background:var(--dark)!important;-webkit-print-color-adjust:exact;print-color-adjust:exact} main{padding:0 42px 42px} section{padding:30px 0} a{color:var(--ink);text-decoration:underline} .finding,.recommendation,.panel{break-inside:avoid} .report-footer{padding:24px 42px;-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+  </style>
+</head>
+<body><div class="page">
+  <header>
+    <div class="brand">Smartify Marketing · CRM Trust Audit</div>
+    <h1>Northstar Systems CRM Trust Audit</h1>
+    <p class="subtitle">HubSpot Marketing-to-Pipeline Trust Audit · A factual view of Northstar Systems’s CRM scale, data usability, reporting risk, and the actions needed to improve decision confidence.</p>
+    <div class="meta"><span>Snapshot: 2026-07-14T00:00:00+00:00</span><span>Coverage: Full history</span><span>No CRM records were changed</span></div>
+  </header>
+  <main>
+    <section id="summary"><h2>Executive Summary</h2><p class="lede">Northstar Systems has enough structured HubSpot data to support regular management reporting, but material attribution, relationship, and pipeline gaps prevent the CRM from functioning as a dependable single source of truth.</p><p><strong>CRM trust score: 48/100.</strong> The score summarizes reviewed data-quality findings; it does not measure revenue performance or return on investment.</p><div class="score-explainer"><div class="score-copy"><h3>How this score is calculated</h3><p><strong>100 starting points − 52 deducted points = 48.</strong> Only approved or revised findings count. Critical findings deduct 10 points, high 6, medium 3, and low 1, capped at each category maximum.</p><p><a href="score.json">Open the complete score calculation</a></p></div><div class="score-rows"><div class="score-row"><span>Attribution Trust</span><strong>19/25</strong><small>−6</small></div><div class="score-row"><span>Lifecycle + Funnel Trust</span><strong>8/20</strong><small>−12</small></div><div class="score-row"><span>Association + Account Trust</span><strong>4/20</strong><small>−16</small></div><div class="score-row"><span>Pipeline Hygiene</span><strong>8/20</strong><small>−12</small></div><div class="score-row"><span>Property Governance</span><strong>9/15</strong><small>−6</small></div></div></div><p><a href="crm_trust_report.md">Text version</a> · <a href="operator_appendix.md">Operator appendix</a></p></section>
+    <section id="snapshot"><h2>CRM Snapshot</h2><p class="lede">Full history extract completed 2026-07-14T00:00:00+00:00. Counts and extraction coverage are taken from the completed snapshot manifest.</p><div class="kpis"><div class="kpi"><span>Contacts</span><strong>360</strong></div><div class="kpi"><span>Companies</span><strong>60</strong></div><div class="kpi"><span>Deals</span><strong>36</strong></div><div class="kpi"><span>Pipelines</span><strong>2</strong></div><div class="kpi"><span>Trust score</span><strong>48/100</strong></div></div></section>
+    <section id="quality"><h2>Data Quality and Usability</h2><p class="lede">Core contact identity is broadly usable. Trust falls where acquisition source capture, Contact-to-Company-to-Deal traceability, Deal amount coverage, and legacy property governance affect management reporting.</p><div class="quality-grid"><article class="quality-card"><div class="quality-card-head"><h3>Contacts</h3><span>8 key properties</span></div><div class="metric-row"><div class="metric-label"><span class="hubspot-asset" title="Internal name: phone"><span class="hubspot-kind">HubSpot property:</span> <strong class="hubspot-name">Phone</strong></span></div><div class="bar"><span class="warm" style="width:75.0%"></span></div><div class="metric-value">75.0%</div></div><div class="metric-row"><div class="metric-label"><span class="hubspot-asset" title="Internal name: hs_analytics_source"><span class="hubspot-kind">HubSpot property:</span> <strong class="hubspot-name">Original Source</strong></span></div><div class="bar"><span class="warm" style="width:88.9%"></span></div><div class="metric-value">88.9%</div></div><div class="metric-row"><div class="metric-label"><span class="hubspot-asset" title="Internal name: hubspot_owner_id"><span class="hubspot-kind">HubSpot property:</span> <strong class="hubspot-name">Contact owner</strong></span></div><div class="bar"><span class="accent" style="width:90.0%"></span></div><div class="metric-value">90.0%</div></div><div class="metric-row"><div class="metric-label"><span class="hubspot-asset" title="Internal name: hs_latest_source"><span class="hubspot-kind">HubSpot property:</span> <strong class="hubspot-name">Latest Source</strong></span></div><div class="bar"><span class="accent" style="width:91.7%"></span></div><div class="metric-value">91.7%</div></div><div class="metric-row"><div class="metric-label"><span class="hubspot-asset" title="Internal name: lastname"><span class="hubspot-kind">HubSpot property:</span> <strong class="hubspot-name">Last Name</strong></span></div><div class="bar"><span class="accent" style="width:94.2%"></span></div><div class="metric-value">94.2%</div></div><div class="metric-row"><div class="metric-label"><span class="hubspot-asset" title="Internal name: email"><span class="hubspot-kind">HubSpot property:</span> <strong class="hubspot-name">Email</strong></span></div><div class="bar"><span class="accent" style="width:100.0%"></span></div><div class="metric-value">100.0%</div></div><div class="metric-row"><div class="metric-label"><span class="hubspot-asset" title="Internal name: firstname"><span class="hubspot-kind">HubSpot property:</span> <strong class="hubspot-name">First Name</strong></span></div><div class="bar"><span class="accent" style="width:100.0%"></span></div><div class="metric-value">100.0%</div></div><div class="metric-row"><div class="metric-label"><span class="hubspot-asset" title="Internal name: lifecyclestage"><span class="hubspot-kind">HubSpot property:</span> <strong class="hubspot-name">Lifecycle Stage</strong></span></div><div class="bar"><span class="accent" style="width:100.0%"></span></div><div class="metric-value">100.0%</div></div></article><article class="quality-card"><div class="quality-card-head"><h3>Companies</h3><span>4 key properties</span></div><div class="metric-row"><div class="metric-label"><span class="hubspot-asset" title="Internal name: domain"><span class="hubspot-kind">HubSpot property:</span> <strong class="hubspot-name">Domain</strong></span></div><div class="bar"><span class="accent" style="width:91.7%"></span></div><div class="metric-value">91.7%</div></div><div class="metric-row"><div class="metric-label"><span class="hubspot-asset" title="Internal name: hubspot_owner_id"><span class="hubspot-kind">HubSpot property:</span> <strong class="hubspot-name">Company owner</strong></span></div><div class="bar"><span class="accent" style="width:91.7%"></span></div><div class="metric-value">91.7%</div></div><div class="metric-row"><div class="metric-label"><span class="hubspot-asset" title="Internal name: name"><span class="hubspot-kind">HubSpot property:</span> <strong class="hubspot-name">Name</strong></span></div><div class="bar"><span class="accent" style="width:98.3%"></span></div><div class="metric-value">98.3%</div></div><div class="metric-row"><div class="metric-label"><span class="hubspot-asset" title="Internal name: lifecyclestage"><span class="hubspot-kind">HubSpot property:</span> <strong class="hubspot-name">Lifecycle Stage</strong></span></div><div class="bar"><span class="accent" style="width:100.0%"></span></div><div class="metric-value">100.0%</div></div></article><article class="quality-card"><div class="quality-card-head"><h3>Deals</h3><span>6 key properties</span></div><div class="metric-row"><div class="metric-label"><span class="hubspot-asset" title="Internal name: amount"><span class="hubspot-kind">HubSpot property:</span> <strong class="hubspot-name">Amount</strong></span></div><div class="bar"><span class="warm" style="width:83.3%"></span></div><div class="metric-value">83.3%</div></div><div class="metric-row"><div class="metric-label"><span class="hubspot-asset" title="Internal name: hubspot_owner_id"><span class="hubspot-kind">HubSpot property:</span> <strong class="hubspot-name">Deal owner</strong></span></div><div class="bar"><span class="warm" style="width:88.9%"></span></div><div class="metric-value">88.9%</div></div><div class="metric-row"><div class="metric-label"><span class="hubspot-asset" title="Internal name: closedate"><span class="hubspot-kind">HubSpot property:</span> <strong class="hubspot-name">Close Date</strong></span></div><div class="bar"><span class="accent" style="width:100.0%"></span></div><div class="metric-value">100.0%</div></div><div class="metric-row"><div class="metric-label"><span class="hubspot-asset" title="Internal name: dealname"><span class="hubspot-kind">HubSpot property:</span> <strong class="hubspot-name">Deal name</strong></span></div><div class="bar"><span class="accent" style="width:100.0%"></span></div><div class="metric-value">100.0%</div></div><div class="metric-row"><div class="metric-label"><span class="hubspot-asset" title="Internal name: dealstage"><span class="hubspot-kind">HubSpot property:</span> <strong class="hubspot-name">Deal Stage</strong></span></div><div class="bar"><span class="accent" style="width:100.0%"></span></div><div class="metric-value">100.0%</div></div><div class="metric-row"><div class="metric-label"><span class="hubspot-asset" title="Internal name: pipeline"><span class="hubspot-kind">HubSpot property:</span> <strong class="hubspot-name">Pipeline</strong></span></div><div class="bar"><span class="accent" style="width:100.0%"></span></div><div class="metric-value">100.0%</div></div></article></div><div class="identity-panel"><div><h3>Contact identity validity</h3><p>Format validity among populated values. Empty-field coverage is shown in the Contact property card above.</p></div><div class="identity-metrics"><div class="metric-row"><div class="metric-label"><span class="hubspot-asset" title="Internal name: email"><span class="hubspot-kind">HubSpot property:</span> <strong class="hubspot-name">Email</strong></span></div><div class="bar"><span class="primary" style="width:100.0%"></span></div><div class="metric-value">100.0%</div></div><div class="metric-row"><div class="metric-label"><span class="hubspot-asset" title="Internal name: firstname"><span class="hubspot-kind">HubSpot property:</span> <strong class="hubspot-name">First Name</strong></span></div><div class="bar"><span class="primary" style="width:100.0%"></span></div><div class="metric-value">100.0%</div></div><div class="metric-row"><div class="metric-label"><span class="hubspot-asset" title="Internal name: lastname"><span class="hubspot-kind">HubSpot property:</span> <strong class="hubspot-name">Last Name</strong></span></div><div class="bar"><span class="primary" style="width:100.0%"></span></div><div class="metric-value">100.0%</div></div><div class="metric-row"><div class="metric-label"><span class="hubspot-asset" title="Internal name: phone"><span class="hubspot-kind">HubSpot property:</span> <strong class="hubspot-name">Phone</strong></span></div><div class="bar"><span class="primary" style="width:100.0%"></span></div><div class="metric-value">100.0%</div></div></div></div></section>
+    <section id="activity"><h2>Activity and Data Age</h2><p class="lede">Updated within 30 days, active within 31–90 days, aging within 91–180 days, and stale after 180 days. These bands use record modification dates.</p><div class="stack-row"><strong>Contacts</strong><div class="stack"><span class="accent" style="width:25.00%" title="Recent: 90"></span><span class="primary" style="width:25.00%" title="Active: 90"></span><span class="warm" style="width:25.00%" title="Aging: 90"></span><span class="error" style="width:25.00%" title="Stale: 90"></span></div><small>Recent: 90 · Active: 90 · Aging: 90 · Stale: 90</small></div><div class="stack-row"><strong>Companies</strong><div class="stack"><span class="accent" style="width:25.00%" title="Recent: 15"></span><span class="primary" style="width:50.00%" title="Active: 30"></span><span class="warm" style="width:0.00%" title="Aging: 0"></span><span class="error" style="width:25.00%" title="Stale: 15"></span></div><small>Recent: 15 · Active: 30 · Aging: 0 · Stale: 15</small></div><div class="stack-row"><strong>Deals</strong><div class="stack"><span class="accent" style="width:25.00%" title="Recent: 9"></span><span class="primary" style="width:25.00%" title="Active: 9"></span><span class="warm" style="width:25.00%" title="Aging: 9"></span><span class="error" style="width:25.00%" title="Stale: 9"></span></div><small>Recent: 9 · Active: 9 · Aging: 9 · Stale: 9</small></div></section>
+    <section id="funnel"><h2>Funnel and Association Coverage</h2><div class="two-col"><div class="panel"><h3>Contact lifecycle distribution</h3><div class="metric-row"><div class="metric-label"><span class="hubspot-asset"><span class="hubspot-kind">HubSpot lifecycle stage:</span> <strong class="hubspot-name">Lead</strong></span></div><div class="bar"><span class="primary" style="width:100.0%"></span></div><div class="metric-value">180</div></div><div class="metric-row"><div class="metric-label"><span class="hubspot-asset"><span class="hubspot-kind">HubSpot lifecycle stage:</span> <strong class="hubspot-name">Marketing Qualified Lead (MQL)</strong></span></div><div class="bar"><span class="primary" style="width:44.4%"></span></div><div class="metric-value">80</div></div><div class="metric-row"><div class="metric-label"><span class="hubspot-asset"><span class="hubspot-kind">HubSpot lifecycle stage:</span> <strong class="hubspot-name">Sales Qualified Lead (SQL)</strong></span></div><div class="bar"><span class="primary" style="width:27.8%"></span></div><div class="metric-value">50</div></div><div class="metric-row"><div class="metric-label"><span class="hubspot-asset"><span class="hubspot-kind">HubSpot lifecycle stage:</span> <strong class="hubspot-name">Opportunity</strong></span></div><div class="bar"><span class="primary" style="width:16.7%"></span></div><div class="metric-value">30</div></div><div class="metric-row"><div class="metric-label"><span class="hubspot-asset"><span class="hubspot-kind">HubSpot lifecycle stage:</span> <strong class="hubspot-name">Customer</strong></span></div><div class="bar"><span class="primary" style="width:8.3%"></span></div><div class="metric-value">15</div></div><div class="metric-row"><div class="metric-label"><span class="hubspot-asset"><span class="hubspot-kind">HubSpot lifecycle stage:</span> <strong class="hubspot-name">Closed Lost</strong></span></div><div class="bar"><span class="primary" style="width:2.8%"></span></div><div class="metric-value">5</div></div></div><div class="panel"><h3>Association coverage</h3><div class="metric-row"><div class="metric-label">Contacts To Companies</div><div class="bar"><span class="accent" style="width:77.8%"></span></div><div class="metric-value">77.8%</div></div><div class="metric-row"><div class="metric-label">Deals To Companies</div><div class="bar"><span class="accent" style="width:88.9%"></span></div><div class="metric-value">88.9%</div></div><div class="metric-row"><div class="metric-label">Deals To Contacts</div><div class="bar"><span class="accent" style="width:83.3%"></span></div><div class="metric-value">83.3%</div></div></div></div><h3>Deal pipelines</h3><table><thead><tr><th>Pipeline</th><th>Stages</th><th>Deals</th></tr></thead><tbody><tr><td><span class="hubspot-asset"><span class="hubspot-kind">HubSpot pipeline:</span> <strong class="hubspot-name">New Business</strong></span></td><td>6</td><td>26</td></tr><tr><td><span class="hubspot-asset"><span class="hubspot-kind">HubSpot pipeline:</span> <strong class="hubspot-name">Expansion</strong></span></td><td>4</td><td>8</td></tr></tbody></table></section>
+    <section id="findings"><h2>Key Findings</h2><p class="lede">Every finding below has passed review and links to its record-level evidence and measurement file.</p><div class="findings"><div class="finding-group priority-one"><div class="finding-group-head"><div><span class="group-number">P1</span></div><div><h3>Decisions at immediate risk</h3><p>4 validated findings can materially distort management reporting and should be resolved first.</p></div></div><div class="finding-list">
+        <article class="finding finding-priority-1 severity-high">
+          <div class="finding-head"><span class="priority-badge">Priority 1</span><span>High severity · High confidence</span></div>
+          <div class="finding-detail-grid no-record-context">
+            <div class="finding-copy">
+              <h3>Customers Without Closed Won Deal Trace</h3>
+              <p class="field-context"><span class="hubspot-asset"><span class="hubspot-kind">HubSpot property:</span> <strong class="hubspot-name">Lifecycle Stage (lifecyclestage)</strong></span></p>
+              <dl class="finding-facts">
+                <div><dt>Records affected</dt><dd>15 of 15 records (100.0%)</dd></div>
+                <div><dt>Management decisions exposed</dt><dd>Marketing Qualified Lead (MQL) quality, Sales handoff, Funnel conversion</dd></div>
+              </dl>
+              <p class="finding-impact">The customer-stage population cannot be reconciled to closed-won revenue through the captured deal relationships, weakening lifecycle-to-pipeline reporting for a sales-led motion.</p>
+              <p class="evidence-links"><a href="evidence/lifecycle_funnel.csv">Evidence CSV</a> · <a href="processed/measurements/lifecycle_funnel.json">Measurement</a></p>
+            </div>
+
+          </div>
+        </article>
+        <article class="finding finding-priority-1 severity-high">
+          <div class="finding-head"><span class="priority-badge">Priority 1</span><span>High severity · High confidence</span></div>
+          <div class="finding-detail-grid">
+            <div class="finding-copy">
+              <h3>MQL Plus Contacts Without Deal Trace</h3>
+              <p class="field-context"><span class="hubspot-asset"><span class="hubspot-kind">HubSpot property:</span> <strong class="hubspot-name">Lifecycle Stage (lifecyclestage)</strong></span></p>
+              <dl class="finding-facts">
+                <div><dt>Records affected</dt><dd>155 of 160 records (96.9%)</dd></div>
+                <div><dt>Management decisions exposed</dt><dd>Marketing Qualified Lead (MQL) quality, Sales handoff, Funnel conversion</dd></div>
+              </dl>
+              <p class="finding-impact">Most contacts at MQL, SQL, or opportunity stages have no associated deal in this snapshot, so funnel conversion and marketing-sourced pipeline coverage cannot be read confidently without confirming the intended handoff model.</p>
+              <p class="evidence-links"><a href="evidence/lifecycle_funnel.csv">Evidence CSV</a> · <a href="processed/measurements/lifecycle_funnel.json">Measurement</a></p>
+            </div>
+            <div class="record-samples"><h4>HubSpot records in this finding</h4><ul><li><span class="record-kind">Company:</span> <a class="hubspot-record" href="https://app.hubspot.com/contacts/123456/record/0-2/co001" target="_blank" rel="noopener noreferrer"><strong class="hubspot-name">Synthetic Account 001</strong></a></li><li><span class="record-kind">Company:</span> <a class="hubspot-record" href="https://app.hubspot.com/contacts/123456/record/0-2/co002" target="_blank" rel="noopener noreferrer"><strong class="hubspot-name">Synthetic Account 002</strong></a></li><li><span class="record-kind">Company:</span> <a class="hubspot-record" href="https://app.hubspot.com/contacts/123456/record/0-2/co003" target="_blank" rel="noopener noreferrer"><strong class="hubspot-name">Synthetic Account 003</strong></a></li></ul><p class="record-more">Showing 3 of 50 mapped records. <a href="report_record_evidence.csv">Open the local record evidence CSV</a> for the full set.</p></div>
+          </div>
+        </article>
+        <article class="finding finding-priority-1 severity-high">
+          <div class="finding-head"><span class="priority-badge">Priority 1</span><span>High severity · High confidence</span></div>
+          <div class="finding-detail-grid no-record-context">
+            <div class="finding-copy">
+              <h3>Contacts Without Company Association</h3>
+
+              <dl class="finding-facts">
+                <div><dt>Records affected</dt><dd>80 of 360 records (22.2%)</dd></div>
+                <div><dt>Management decisions exposed</dt><dd>Account coverage, Sales handoff, Account attribution</dd></div>
+              </dl>
+              <p class="finding-impact">In an ABM-heavy CRM, contacts without a company association cannot participate reliably in account rollups, account-level attribution, or account ownership reporting.</p>
+              <p class="evidence-links"><a href="evidence/association_architecture.csv">Evidence CSV</a> · <a href="processed/measurements/association_architecture.json">Measurement</a></p>
+            </div>
+
+          </div>
+        </article>
+        <article class="finding finding-priority-1 severity-high">
+          <div class="finding-head"><span class="priority-badge">Priority 1</span><span>High severity · High confidence</span></div>
+          <div class="finding-detail-grid no-record-context">
+            <div class="finding-copy">
+              <h3>Recent Original Source Capture Gap</h3>
+              <p class="field-context"><span class="hubspot-asset"><span class="hubspot-kind">HubSpot property:</span> <strong class="hubspot-name">Original Source (hs_analytics_source)</strong></span></p>
+              <dl class="finding-facts">
+                <div><dt>Records affected</dt><dd>40 of 180 records (22.2%)</dd></div>
+                <div><dt>Management decisions exposed</dt><dd>Attribution reporting, Budget allocation</dd></div>
+              </dl>
+              <p class="finding-impact">Recent contact cohorts have materially weaker original-source coverage, so marketing cannot reliably compare newer acquisition cohorts or explain source mix into pipeline.</p>
+              <p class="evidence-links"><a href="evidence/attribution_trust.csv">Evidence CSV</a> · <a href="processed/measurements/attribution_trust.json">Measurement</a></p>
+            </div>
+
+          </div>
+        </article></div></div><div class="finding-group priority-two"><div class="finding-group-head"><div><span class="group-number">P2</span></div><div><h3>Structural trust gaps</h3><p>9 validated findings weaken reporting confidence or CRM operating consistency.</p></div></div><div class="finding-list secondary-list">
+        <article class="finding finding-priority-2 severity-medium">
+          <div class="finding-head"><span class="priority-badge">Priority 2</span><span>Medium severity · Medium confidence</span></div>
+          <div class="finding-detail-grid no-record-context">
+            <div class="finding-copy">
+              <h3>Similar Source Field Name Candidates</h3>
+
+              <dl class="finding-facts">
+                <div><dt>Records affected</dt><dd>11 of 17 records (64.7%)</dd></div>
+                <div><dt>Management decisions exposed</dt><dd>Reporting consistency, Data governance</dd></div>
+              </dl>
+              <p class="finding-impact">Eleven source-like property name groups are collision candidates; without a confirmed canonical mapping, workflows and reports may read different fields for the same business concept.</p>
+              <p class="evidence-links"><a href="evidence/property_governance.csv">Evidence CSV</a> · <a href="processed/measurements/property_governance.json">Measurement</a></p>
+            </div>
+
+          </div>
+        </article>
+        <article class="finding finding-priority-2 severity-medium">
+          <div class="finding-head"><span class="priority-badge">Priority 2</span><span>Medium severity · Medium confidence</span></div>
+          <div class="finding-detail-grid no-record-context">
+            <div class="finding-copy">
+              <h3>Decayed Source Field Candidates</h3>
+
+              <dl class="finding-facts">
+                <div><dt>Records affected</dt><dd>3 of 17 records (17.6%)</dd></div>
+                <div><dt>Management decisions exposed</dt><dd>Reporting consistency, Data governance</dd></div>
+              </dl>
+              <p class="finding-impact">Three source-like properties are populated historically but not in the recent half, which creates a legacy-field risk and can fragment attribution logic over time.</p>
+              <p class="evidence-links"><a href="evidence/property_governance.csv">Evidence CSV</a> · <a href="processed/measurements/property_governance.json">Measurement</a></p>
+            </div>
+
+          </div>
+        </article>
+        <article class="finding finding-priority-2 severity-medium">
+          <div class="finding-head"><span class="priority-badge">Priority 2</span><span>Medium severity · High confidence</span></div>
+          <div class="finding-detail-grid">
+            <div class="finding-copy">
+              <h3>Deals Without Amount</h3>
+              <p class="field-context"><span class="hubspot-asset"><span class="hubspot-kind">HubSpot property:</span> <strong class="hubspot-name">Amount (amount)</strong></span></p>
+              <dl class="finding-facts">
+                <div><dt>Records affected</dt><dd>6 of 36 records (16.7%)</dd></div>
+                <div><dt>Management decisions exposed</dt><dd>Forecast confidence, Pipeline reporting</dd></div>
+              </dl>
+              <p class="finding-impact">Deals without amount cannot contribute a complete value-weighted view of marketing-sourced pipeline.</p>
+              <p class="evidence-links"><a href="evidence/pipeline_hygiene.csv">Evidence CSV</a> · <a href="processed/measurements/pipeline_hygiene.json">Measurement</a></p>
+            </div>
+            <div class="record-samples"><h4>HubSpot records in this finding</h4><ul><li><span class="record-kind">Deal:</span> <a class="hubspot-record" href="https://app.hubspot.com/contacts/123456/record/0-3/d033" target="_blank" rel="noopener noreferrer"><strong class="hubspot-name">Synthetic Opportunity 033</strong></a> <span aria-hidden="true">·</span> <span class="record-kind">Pipeline:</span> <strong class="hubspot-name">Expansion</strong> <span aria-hidden="true">·</span> <span class="record-kind">Deal stage:</span> <strong class="hubspot-name">Closed Lost</strong></li><li><span class="record-kind">Deal:</span> <a class="hubspot-record" href="https://app.hubspot.com/contacts/123456/record/0-3/d036" target="_blank" rel="noopener noreferrer"><strong class="hubspot-name">Synthetic Opportunity 036</strong></a> <span aria-hidden="true">·</span> <span class="record-kind">Pipeline:</span> <strong class="hubspot-name">legacy_pipeline</strong> <span aria-hidden="true">·</span> <span class="record-kind">Deal stage:</span> <strong class="hubspot-name">closedlost</strong></li></ul><p class="record-more">Showing 2 of 6 mapped records. <a href="report_record_evidence.csv">Open the local record evidence CSV</a> for the full set.</p></div>
+          </div>
+        </article>
+        <article class="finding finding-priority-2 severity-medium">
+          <div class="finding-head"><span class="priority-badge">Priority 2</span><span>Medium severity · High confidence</span></div>
+          <div class="finding-detail-grid">
+            <div class="finding-copy">
+              <h3>Deals Without Contact Association</h3>
+
+              <dl class="finding-facts">
+                <div><dt>Records affected</dt><dd>6 of 36 records (16.7%)</dd></div>
+                <div><dt>Management decisions exposed</dt><dd>Account coverage, Sales handoff, Account attribution</dd></div>
+              </dl>
+              <p class="finding-impact">Deals without an associated contact break the contact-to-revenue path used to connect marketing engagement with pipeline outcomes.</p>
+              <p class="evidence-links"><a href="evidence/association_architecture.csv">Evidence CSV</a> · <a href="processed/measurements/association_architecture.json">Measurement</a></p>
+            </div>
+            <div class="record-samples"><h4>HubSpot records in this finding</h4><ul><li><span class="record-kind">Deal:</span> <a class="hubspot-record" href="https://app.hubspot.com/contacts/123456/record/0-3/d033" target="_blank" rel="noopener noreferrer"><strong class="hubspot-name">Synthetic Opportunity 033</strong></a> <span aria-hidden="true">·</span> <span class="record-kind">Pipeline:</span> <strong class="hubspot-name">Expansion</strong> <span aria-hidden="true">·</span> <span class="record-kind">Deal stage:</span> <strong class="hubspot-name">Closed Lost</strong></li><li><span class="record-kind">Deal:</span> <a class="hubspot-record" href="https://app.hubspot.com/contacts/123456/record/0-3/d034" target="_blank" rel="noopener noreferrer"><strong class="hubspot-name">Synthetic Opportunity 034</strong></a> <span aria-hidden="true">·</span> <span class="record-kind">Pipeline:</span> <strong class="hubspot-name">Expansion</strong> <span aria-hidden="true">·</span> <span class="record-kind">Deal stage:</span> <strong class="hubspot-name">Closed Lost</strong></li></ul><p class="record-more">Showing 2 of 6 mapped records. <a href="report_record_evidence.csv">Open the local record evidence CSV</a> for the full set.</p></div>
+          </div>
+        </article>
+        <article class="finding finding-priority-2 severity-medium">
+          <div class="finding-head"><span class="priority-badge">Priority 2</span><span>Medium severity · High confidence</span></div>
+          <div class="finding-detail-grid">
+            <div class="finding-copy">
+              <h3>Open Deals Past Close Date</h3>
+              <p class="field-context"><span class="hubspot-asset"><span class="hubspot-kind">HubSpot property:</span> <strong class="hubspot-name">Close Date (closedate)</strong></span></p>
+              <dl class="finding-facts">
+                <div><dt>Records affected</dt><dd>3 of 20 records (15.0%)</dd></div>
+                <div><dt>Management decisions exposed</dt><dd>Forecast confidence, Pipeline reporting</dd></div>
+              </dl>
+              <p class="finding-impact">Open deals whose close date is already past can make the pipeline used for marketing-to-revenue reporting appear more current or more attainable than the CRM supports.</p>
+              <p class="evidence-links"><a href="evidence/pipeline_hygiene.csv">Evidence CSV</a> · <a href="processed/measurements/pipeline_hygiene.json">Measurement</a></p>
+            </div>
+            <div class="record-samples"><h4>HubSpot records in this finding</h4><ul><li><span class="record-kind">Company:</span> <a class="hubspot-record" href="https://app.hubspot.com/contacts/123456/record/0-2/co003" target="_blank" rel="noopener noreferrer"><strong class="hubspot-name">Synthetic Account 003</strong></a> <span aria-hidden="true">·</span> <span class="record-kind">Deal:</span> <a class="hubspot-record" href="https://app.hubspot.com/contacts/123456/record/0-3/d003" target="_blank" rel="noopener noreferrer"><strong class="hubspot-name">Synthetic Opportunity 003</strong></a> <span aria-hidden="true">·</span> <span class="record-kind">Pipeline:</span> <strong class="hubspot-name">New Business</strong> <span aria-hidden="true">·</span> <span class="record-kind">Deal stage:</span> <strong class="hubspot-name">Negotiation</strong></li><li><span class="record-kind">Company:</span> <a class="hubspot-record" href="https://app.hubspot.com/contacts/123456/record/0-2/co009" target="_blank" rel="noopener noreferrer"><strong class="hubspot-name">Synthetic Account 009</strong></a> <span aria-hidden="true">·</span> <span class="record-kind">Deal:</span> <a class="hubspot-record" href="https://app.hubspot.com/contacts/123456/record/0-3/d009" target="_blank" rel="noopener noreferrer"><strong class="hubspot-name">Synthetic Opportunity 009</strong></a> <span aria-hidden="true">·</span> <span class="record-kind">Pipeline:</span> <strong class="hubspot-name">New Business</strong> <span aria-hidden="true">·</span> <span class="record-kind">Deal stage:</span> <strong class="hubspot-name">Discovery</strong></li></ul><p class="record-more">Showing 2 of 3 mapped records. <a href="report_record_evidence.csv">Open the local record evidence CSV</a> for the full set.</p></div>
+          </div>
+        </article>
+        <article class="finding finding-priority-2 severity-medium">
+          <div class="finding-head"><span class="priority-badge">Priority 2</span><span>Medium severity · Medium confidence</span></div>
+          <div class="finding-detail-grid">
+            <div class="finding-copy">
+              <h3>Duplicate Company Domain Candidates</h3>
+              <p class="field-context"><span class="hubspot-asset"><span class="hubspot-kind">HubSpot property:</span> <strong class="hubspot-name">Domain (domain)</strong></span></p>
+              <dl class="finding-facts">
+                <div><dt>Records affected</dt><dd>8 of 55 records (14.5%)</dd></div>
+                <div><dt>Management decisions exposed</dt><dd>Account coverage, Sales handoff, Account attribution</dd></div>
+              </dl>
+              <p class="finding-impact">8 companies share a domain with another company and are duplicate candidates; if they are not intentional subsidiaries or regional entities, account rollups and attribution may be split.</p>
+              <p class="evidence-links"><a href="evidence/association_architecture.csv">Evidence CSV</a> · <a href="processed/measurements/association_architecture.json">Measurement</a></p>
+            </div>
+            <div class="record-samples"><h4>HubSpot records in this finding</h4><ul><li><span class="record-kind">Company:</span> <a class="hubspot-record" href="https://app.hubspot.com/contacts/123456/record/0-2/co001" target="_blank" rel="noopener noreferrer"><strong class="hubspot-name">Synthetic Account 001</strong></a> <span aria-hidden="true">·</span> <span class="record-kind">Deal:</span> <a class="hubspot-record" href="https://app.hubspot.com/contacts/123456/record/0-3/d001" target="_blank" rel="noopener noreferrer"><strong class="hubspot-name">Synthetic Opportunity 001</strong></a> <span aria-hidden="true">·</span> <span class="record-kind">Pipeline:</span> <strong class="hubspot-name">New Business</strong> <span aria-hidden="true">·</span> <span class="record-kind">Deal stage:</span> <strong class="hubspot-name">Discovery</strong></li><li><span class="record-kind">Company:</span> <a class="hubspot-record" href="https://app.hubspot.com/contacts/123456/record/0-2/co002" target="_blank" rel="noopener noreferrer"><strong class="hubspot-name">Synthetic Account 002</strong></a> <span aria-hidden="true">·</span> <span class="record-kind">Deal:</span> <a class="hubspot-record" href="https://app.hubspot.com/contacts/123456/record/0-3/d002" target="_blank" rel="noopener noreferrer"><strong class="hubspot-name">Synthetic Opportunity 002</strong></a> <span aria-hidden="true">·</span> <span class="record-kind">Pipeline:</span> <strong class="hubspot-name">New Business</strong> <span aria-hidden="true">·</span> <span class="record-kind">Deal stage:</span> <strong class="hubspot-name">Proposal</strong></li></ul><p class="record-more">Showing 2 of 8 mapped records. <a href="report_record_evidence.csv">Open the local record evidence CSV</a> for the full set.</p></div>
+          </div>
+        </article>
+        <article class="finding finding-priority-2 severity-medium">
+          <div class="finding-head"><span class="priority-badge">Priority 2</span><span>Medium severity · High confidence</span></div>
+          <div class="finding-detail-grid">
+            <div class="finding-copy">
+              <h3>Deals Without Company Association</h3>
+
+              <dl class="finding-facts">
+                <div><dt>Records affected</dt><dd>4 of 36 records (11.1%)</dd></div>
+                <div><dt>Management decisions exposed</dt><dd>Account coverage, Sales handoff, Account attribution</dd></div>
+              </dl>
+              <p class="finding-impact">Deals without a company association can be omitted from account-level pipeline reporting and make ABM influence harder to reconcile.</p>
+              <p class="evidence-links"><a href="evidence/association_architecture.csv">Evidence CSV</a> · <a href="processed/measurements/association_architecture.json">Measurement</a></p>
+            </div>
+            <div class="record-samples"><h4>HubSpot records in this finding</h4><ul><li><span class="record-kind">Deal:</span> <a class="hubspot-record" href="https://app.hubspot.com/contacts/123456/record/0-3/d033" target="_blank" rel="noopener noreferrer"><strong class="hubspot-name">Synthetic Opportunity 033</strong></a> <span aria-hidden="true">·</span> <span class="record-kind">Pipeline:</span> <strong class="hubspot-name">Expansion</strong> <span aria-hidden="true">·</span> <span class="record-kind">Deal stage:</span> <strong class="hubspot-name">Closed Lost</strong></li><li><span class="record-kind">Deal:</span> <a class="hubspot-record" href="https://app.hubspot.com/contacts/123456/record/0-3/d034" target="_blank" rel="noopener noreferrer"><strong class="hubspot-name">Synthetic Opportunity 034</strong></a> <span aria-hidden="true">·</span> <span class="record-kind">Pipeline:</span> <strong class="hubspot-name">Expansion</strong> <span aria-hidden="true">·</span> <span class="record-kind">Deal stage:</span> <strong class="hubspot-name">Closed Lost</strong></li></ul><p class="record-more">Showing 2 of 4 mapped records. <a href="report_record_evidence.csv">Open the local record evidence CSV</a> for the full set.</p></div>
+          </div>
+        </article>
+        <article class="finding finding-priority-2 severity-medium">
+          <div class="finding-head"><span class="priority-badge">Priority 2</span><span>Medium severity · High confidence</span></div>
+          <div class="finding-detail-grid">
+            <div class="finding-copy">
+              <h3>Deals Without Owner</h3>
+              <p class="field-context"><span class="hubspot-asset"><span class="hubspot-kind">HubSpot property:</span> <strong class="hubspot-name">Deal owner (hubspot_owner_id)</strong></span></p>
+              <dl class="finding-facts">
+                <div><dt>Records affected</dt><dd>4 of 36 records (11.1%)</dd></div>
+                <div><dt>Management decisions exposed</dt><dd>Forecast confidence, Pipeline reporting</dd></div>
+              </dl>
+              <p class="finding-impact">Unowned deals weaken accountability and make pipeline segmentation by sales owner incomplete.</p>
+              <p class="evidence-links"><a href="evidence/pipeline_hygiene.csv">Evidence CSV</a> · <a href="processed/measurements/pipeline_hygiene.json">Measurement</a></p>
+            </div>
+            <div class="record-samples"><h4>HubSpot records in this finding</h4><ul><li><span class="record-kind">Deal:</span> <a class="hubspot-record" href="https://app.hubspot.com/contacts/123456/record/0-3/d034" target="_blank" rel="noopener noreferrer"><strong class="hubspot-name">Synthetic Opportunity 034</strong></a> <span aria-hidden="true">·</span> <span class="record-kind">Pipeline:</span> <strong class="hubspot-name">Expansion</strong> <span aria-hidden="true">·</span> <span class="record-kind">Deal stage:</span> <strong class="hubspot-name">Closed Lost</strong></li><li><span class="record-kind">Company:</span> <a class="hubspot-record" href="https://app.hubspot.com/contacts/123456/record/0-2/co011" target="_blank" rel="noopener noreferrer"><strong class="hubspot-name">Synthetic Account 011</strong></a> <span aria-hidden="true">·</span> <span class="record-kind">Deal:</span> <a class="hubspot-record" href="https://app.hubspot.com/contacts/123456/record/0-3/d011" target="_blank" rel="noopener noreferrer"><strong class="hubspot-name">Synthetic Opportunity 011</strong></a> <span aria-hidden="true">·</span> <span class="record-kind">Pipeline:</span> <strong class="hubspot-name">New Business</strong> <span aria-hidden="true">·</span> <span class="record-kind">Deal stage:</span> <strong class="hubspot-name">Negotiation</strong></li></ul><p class="record-more">Showing 2 of 4 mapped records. <a href="report_record_evidence.csv">Open the local record evidence CSV</a> for the full set.</p></div>
+          </div>
+        </article>
+        <article class="finding finding-priority-2 severity-medium">
+          <div class="finding-head"><span class="priority-badge">Priority 2</span><span>Medium severity · High confidence</span></div>
+          <div class="finding-detail-grid">
+            <div class="finding-copy">
+              <h3>Deals In Unknown Pipeline</h3>
+              <p class="field-context"><span class="hubspot-asset"><span class="hubspot-kind">HubSpot property:</span> <strong class="hubspot-name">Pipeline (pipeline)</strong></span></p>
+              <dl class="finding-facts">
+                <div><dt>Records affected</dt><dd>2 of 36 records (5.6%)</dd></div>
+                <div><dt>Management decisions exposed</dt><dd>Forecast confidence, Pipeline reporting</dd></div>
+              </dl>
+              <p class="finding-impact">Deals referencing an undefined pipeline can fall outside standard pipeline rollups and distort marketing-to-revenue reporting.</p>
+              <p class="evidence-links"><a href="evidence/pipeline_hygiene.csv">Evidence CSV</a> · <a href="processed/measurements/pipeline_hygiene.json">Measurement</a></p>
+            </div>
+            <div class="record-samples"><h4>HubSpot records in this finding</h4><ul><li><span class="record-kind">Deal:</span> <a class="hubspot-record" href="https://app.hubspot.com/contacts/123456/record/0-3/d035" target="_blank" rel="noopener noreferrer"><strong class="hubspot-name">Synthetic Opportunity 035</strong></a> <span aria-hidden="true">·</span> <span class="record-kind">Pipeline:</span> <strong class="hubspot-name">legacy_pipeline</strong> <span aria-hidden="true">·</span> <span class="record-kind">Deal stage:</span> <strong class="hubspot-name">closedlost</strong></li><li><span class="record-kind">Deal:</span> <a class="hubspot-record" href="https://app.hubspot.com/contacts/123456/record/0-3/d036" target="_blank" rel="noopener noreferrer"><strong class="hubspot-name">Synthetic Opportunity 036</strong></a> <span aria-hidden="true">·</span> <span class="record-kind">Pipeline:</span> <strong class="hubspot-name">legacy_pipeline</strong> <span aria-hidden="true">·</span> <span class="record-kind">Deal stage:</span> <strong class="hubspot-name">closedlost</strong></li></ul></div>
+          </div>
+        </article></div></div><div class="finding-group priority-three"><div class="finding-group-head"><div><span class="group-number">P3</span></div><div><h3>Maintenance and hygiene debt</h3><p>1 validated finding should be resolved after decision-critical gaps.</p></div></div><div class="finding-list secondary-list">
+        <article class="finding finding-priority-3 severity-low">
+          <div class="finding-head"><span class="priority-badge">Priority 3</span><span>Low severity · High confidence</span></div>
+          <div class="finding-detail-grid">
+            <div class="finding-copy">
+              <h3>Companies Without Domain</h3>
+              <p class="field-context"><span class="hubspot-asset"><span class="hubspot-kind">HubSpot property:</span> <strong class="hubspot-name">Domain (domain)</strong></span></p>
+              <dl class="finding-facts">
+                <div><dt>Records affected</dt><dd>5 of 60 records (8.3%)</dd></div>
+                <div><dt>Management decisions exposed</dt><dd>Account coverage, Sales handoff, Account attribution</dd></div>
+              </dl>
+              <p class="finding-impact">Companies without a domain are harder to deduplicate, enrich, and reconcile with account-level reporting keys.</p>
+              <p class="evidence-links"><a href="evidence/association_architecture.csv">Evidence CSV</a> · <a href="processed/measurements/association_architecture.json">Measurement</a></p>
+            </div>
+            <div class="record-samples"><h4>HubSpot records in this finding</h4><ul><li><span class="record-kind">Company:</span> <a class="hubspot-record" href="https://app.hubspot.com/contacts/123456/record/0-2/co056" target="_blank" rel="noopener noreferrer"><strong class="hubspot-name">Synthetic Account 056</strong></a></li><li><span class="record-kind">Company:</span> <a class="hubspot-record" href="https://app.hubspot.com/contacts/123456/record/0-2/co057" target="_blank" rel="noopener noreferrer"><strong class="hubspot-name">Synthetic Account 057</strong></a></li></ul><p class="record-more">Showing 2 of 5 mapped records. <a href="report_record_evidence.csv">Open the local record evidence CSV</a> for the full set.</p></div>
+          </div>
+        </article></div></div></div></section>
+    <section id="causes"><h2>Root Cause Hypotheses</h2><p class="lede">These are evidence-based hypotheses, not confirmed facts. Confidence and the question needed for confirmation are shown explicitly.</p><table><thead><tr><th>Hypothesis</th><th>Findings</th><th>Confidence</th><th>What to confirm</th></tr></thead><tbody><tr><td colspan="4">No root cause can be stated confidently from the available evidence.</td></tr></tbody></table></section>
+    <section id="actions"><h2>Recommended Actions</h2><p class="lede">The audit has already prepared each affected cohort and its evidence. “Recommended accountable role” names the business role that should review the records and make or authorize the decision; it is not presented as a verified HubSpot owner name. Exact implementation detail is in the appendix.</p>
+        <article class="recommendation">
+          <div class="recommendation-head"><span class="action-number">1</span><div><div class="eyebrow" title="Finding ID: customers_without_closedwon_deal_trace">Priority 1 · Customers Without Closed Won Deal Trace</div><span class="approval-class">Business rule confirmation</span></div></div>
+          <h3>Approve the Customer-to-Closed Won traceability rule, then review all 15 Customer-stage Contacts and classify each as traceable, valid exception, or lifecycle error.</h3>
+          <div class="rec-grid">
+            <p><span class="rec-label">Why this matters</span>15 of 15 Customer-stage Contacts (100.0%) have no visible Closed Won Deal trace.</p>
+            <p><span class="rec-label">Recommended accountable role</span>Marketing and revenue operations owner</p>
+            <p><span class="rec-label">Human decision required</span>Marketing and revenue operations must jointly approve the traceability rule and any correction path</p>
+            <p><span class="rec-label">Completion condition</span>An approved lifecycle-to-revenue rule and a recorded classification for all 15 Customer-stage Contacts.</p>
+          </div>
+          <p class="evidence-links"><a href="evidence/lifecycle_funnel.csv">Evidence CSV</a> · <a href="operator_appendix.md">Implementation detail</a></p>
+        </article>
+        <article class="recommendation">
+          <div class="recommendation-head"><span class="action-number">2</span><div><div class="eyebrow" title="Finding ID: mql_plus_contacts_without_deal_trace">Priority 1 · MQL Plus Contacts Without Deal Trace</div><span class="approval-class">Business rule confirmation</span></div></div>
+          <h3>Confirm the sales handoff rule for MQL, SQL, and opportunity contacts, then review the 155 contacts without an associated deal.</h3>
+          <div class="rec-grid">
+            <p><span class="rec-label">Why this matters</span>155 of 160 MQL, SQL, or Opportunity Contacts (96.9%) have no visible Deal trace.</p>
+            <p><span class="rec-label">Recommended accountable role</span>Marketing and sales operations owner</p>
+            <p><span class="rec-label">Human decision required</span>Marketing and sales operations must jointly approve the handoff rule and exception criteria</p>
+            <p><span class="rec-label">Completion condition</span>An approved handoff rule and a recorded intentional-pre-deal, create-Deal, or valid-exception decision for all 155 Contacts.</p>
+          </div>
+          <p class="evidence-links"><a href="evidence/lifecycle_funnel.csv">Evidence CSV</a> · <a href="operator_appendix.md">Implementation detail</a></p>
+        </article>
+        <article class="recommendation">
+          <div class="recommendation-head"><span class="action-number">3</span><div><div class="eyebrow" title="Finding ID: contacts_without_company_association">Priority 1 · Contacts Without Company Association</div><span class="approval-class">Human review and disposition</span></div></div>
+          <h3>Review the 80 contacts without a Company association and approve an account match or valid no-account exception for each record.</h3>
+          <div class="rec-grid">
+            <p><span class="rec-label">Why this matters</span>80 of 360 Contacts (22.2%) have no Company association.</p>
+            <p><span class="rec-label">Recommended accountable role</span>CRM owner</p>
+            <p><span class="rec-label">Human decision required</span>The CRM owner must approve or decline each proposed account match before any association is written</p>
+            <p><span class="rec-label">Completion condition</span>All 80 contacts have an approved account-match decision or documented no-account exception.</p>
+          </div>
+          <p class="evidence-links"><a href="evidence/association_architecture.csv">Evidence CSV</a> · <a href="operator_appendix.md">Implementation detail</a></p>
+        </article>
+        <article class="recommendation">
+          <div class="recommendation-head"><span class="action-number">4</span><div><div class="eyebrow" title="Finding ID: recent_original_source_capture_gap">Priority 1 · Recent Original Source Capture Gap</div><span class="approval-class">Business rule confirmation</span></div></div>
+          <h3>Approve the canonical Original Source capture rule, then review the 40 recent Contacts missing that property and record a remediation decision or exception.</h3>
+          <div class="rec-grid">
+            <p><span class="rec-label">Why this matters</span>40 of 180 recent Contacts (22.2%) are missing Original Source.</p>
+            <p><span class="rec-label">Recommended accountable role</span>Marketing operations owner</p>
+            <p><span class="rec-label">Human decision required</span>Marketing operations must approve the canonical rule and each historical remediation decision</p>
+            <p><span class="rec-label">Completion condition</span>An approved source-capture rule and a recorded remediation decision or exception for all 40 Contacts.</p>
+          </div>
+          <p class="evidence-links"><a href="evidence/attribution_trust.csv">Evidence CSV</a> · <a href="operator_appendix.md">Implementation detail</a></p>
+        </article>
+        <article class="recommendation">
+          <div class="recommendation-head"><span class="action-number">5</span><div><div class="eyebrow" title="Finding ID: similar_source_field_name_candidates">Priority 2 · Similar Source Field Name Candidates</div><span class="approval-class">Business rule confirmation</span></div></div>
+          <h3>Review the 11 source-like property name collision candidates and approve a canonical field map before changing workflows.</h3>
+          <div class="rec-grid">
+            <p><span class="rec-label">Why this matters</span>11 of 17 source-like properties (64.7%) are name-collision candidates.</p>
+            <p><span class="rec-label">Recommended accountable role</span>CRM governance owner</p>
+            <p><span class="rec-label">Human decision required</span>CRM governance must approve or decline each proposed canonical-field classification before workflows change</p>
+            <p><span class="rec-label">Completion condition</span>An approved canonical property map with a recorded canonical, alias, or distinct-purpose decision for all 11 candidates.</p>
+          </div>
+          <p class="evidence-links"><a href="evidence/property_governance.csv">Evidence CSV</a> · <a href="operator_appendix.md">Implementation detail</a></p>
+        </article>
+        <article class="recommendation">
+          <div class="recommendation-head"><span class="action-number">6</span><div><div class="eyebrow" title="Finding ID: decayed_source_field_candidates">Priority 2 · Decayed Source Field Candidates</div><span class="approval-class">Business rule confirmation</span></div></div>
+          <h3>Confirm a canonical-versus-legacy source field map for the 3 decayed source-like property candidates.</h3>
+          <div class="rec-grid">
+            <p><span class="rec-label">Why this matters</span>3 of 17 source-like properties (17.6%) show historical usage but no recent usage.</p>
+            <p><span class="rec-label">Recommended accountable role</span>Marketing operations owner</p>
+            <p><span class="rec-label">Human decision required</span>Marketing operations must approve each property&#x27;s canonical, legacy, migrate, or retain classification</p>
+            <p><span class="rec-label">Completion condition</span>A business-approved canonical/legacy map that can guide future workflow governance.</p>
+          </div>
+          <p class="evidence-links"><a href="evidence/property_governance.csv">Evidence CSV</a> · <a href="operator_appendix.md">Implementation detail</a></p>
+        </article>
+        <article class="recommendation">
+          <div class="recommendation-head"><span class="action-number">7</span><div><div class="eyebrow" title="Finding ID: deals_without_amount">Priority 2 · Deals Without Amount</div><span class="approval-class">Business rule confirmation</span></div></div>
+          <h3>Confirm which deal stages require an amount and review the 6 missing-amount deals against that policy.</h3>
+          <div class="rec-grid">
+            <p><span class="rec-label">Why this matters</span>6 of 36 Deals (16.7%) have no Amount.</p>
+            <p><span class="rec-label">Recommended accountable role</span>Sales operations owner</p>
+            <p><span class="rec-label">Human decision required</span>Sales operations must approve the stage-aware amount rule and each exception before any CRM write</p>
+            <p><span class="rec-label">Completion condition</span>An approved stage-aware amount rule and a recorded amount-required or valid-exception decision for all 6 Deals.</p>
+          </div>
+          <p class="evidence-links"><a href="evidence/pipeline_hygiene.csv">Evidence CSV</a> · <a href="operator_appendix.md">Implementation detail</a></p>
+        </article>
+        <article class="recommendation">
+          <div class="recommendation-head"><span class="action-number">8</span><div><div class="eyebrow" title="Finding ID: deals_without_contact_association">Priority 2 · Deals Without Contact Association</div><span class="approval-class">Human review and disposition</span></div></div>
+          <h3>Review the 6 Deals without a Contact association and approve the correct buying contact or a valid no-contact exception for each Deal.</h3>
+          <div class="rec-grid">
+            <p><span class="rec-label">Why this matters</span>6 of 36 Deals (16.7%) have no Contact association.</p>
+            <p><span class="rec-label">Recommended accountable role</span>Revenue operations owner</p>
+            <p><span class="rec-label">Human decision required</span>Revenue operations must approve or decline each proposed Contact association before any CRM write</p>
+            <p><span class="rec-label">Completion condition</span>All 6 Deals have an approved Contact-association decision or documented exception.</p>
+          </div>
+          <p class="evidence-links"><a href="evidence/association_architecture.csv">Evidence CSV</a> · <a href="operator_appendix.md">Implementation detail</a></p>
+        </article>
+        <article class="recommendation">
+          <div class="recommendation-head"><span class="action-number">9</span><div><div class="eyebrow" title="Finding ID: open_deals_past_close_date">Priority 2 · Open Deals Past Close Date</div><span class="approval-class">Explicit approval before a CRM change</span></div></div>
+          <h3>Review the 3 open Deals with past close dates and approve a revised close date, stage decision, or documented exception for each Deal.</h3>
+          <div class="rec-grid">
+            <p><span class="rec-label">Why this matters</span>3 of 20 open Deals (15.0%) have a past Close Date.</p>
+            <p><span class="rec-label">Recommended accountable role</span>Sales operations owner</p>
+            <p><span class="rec-label">Human decision required</span>Sales operations must approve each close-date or stage decision before any CRM write</p>
+            <p><span class="rec-label">Completion condition</span>A human disposition for each past-date deal and a clearer pipeline reporting baseline.</p>
+          </div>
+          <p class="evidence-links"><a href="evidence/pipeline_hygiene.csv">Evidence CSV</a> · <a href="operator_appendix.md">Implementation detail</a></p>
+        </article>
+        <article class="recommendation">
+          <div class="recommendation-head"><span class="action-number">10</span><div><div class="eyebrow" title="Finding ID: duplicate_company_domain_candidates">Priority 2 · Duplicate Company Domain Candidates</div><span class="approval-class">Business rule confirmation</span></div></div>
+          <h3>Have the account owner review the 8 shared-domain company candidates and record whether each is intentional or duplicate-like.</h3>
+          <div class="rec-grid">
+            <p><span class="rec-label">Why this matters</span>8 of 55 domain-populated Companies (14.5%) share a domain with another Company.</p>
+            <p><span class="rec-label">Recommended accountable role</span>Account operations owner</p>
+            <p><span class="rec-label">Human decision required</span>Account operations must approve the duplicate, related-account, or valid shared-domain classification for each candidate</p>
+            <p><span class="rec-label">Completion condition</span>A documented decision for each shared-domain candidate and a reliable account-rollup rule.</p>
+          </div>
+          <p class="evidence-links"><a href="evidence/association_architecture.csv">Evidence CSV</a> · <a href="operator_appendix.md">Implementation detail</a></p>
+        </article>
+        <article class="recommendation">
+          <div class="recommendation-head"><span class="action-number">11</span><div><div class="eyebrow" title="Finding ID: deals_without_company_association">Priority 2 · Deals Without Company Association</div><span class="approval-class">Human review and disposition</span></div></div>
+          <h3>Review the 4 Deals without a Company association and approve the correct account or a valid no-account exception for each Deal.</h3>
+          <div class="rec-grid">
+            <p><span class="rec-label">Why this matters</span>4 of 36 Deals (11.1%) have no Company association.</p>
+            <p><span class="rec-label">Recommended accountable role</span>Revenue operations owner</p>
+            <p><span class="rec-label">Human decision required</span>Revenue operations must approve or decline each proposed Company association before any CRM write</p>
+            <p><span class="rec-label">Completion condition</span>All 4 Deals have an approved Company-association decision or documented exception.</p>
+          </div>
+          <p class="evidence-links"><a href="evidence/association_architecture.csv">Evidence CSV</a> · <a href="operator_appendix.md">Implementation detail</a></p>
+        </article>
+        <article class="recommendation">
+          <div class="recommendation-head"><span class="action-number">12</span><div><div class="eyebrow" title="Finding ID: deals_without_owner">Priority 2 · Deals Without Owner</div><span class="approval-class">Human review and disposition</span></div></div>
+          <h3>Review the 4 unowned Deals and approve the accountable owner or a valid unassigned exception for each Deal.</h3>
+          <div class="rec-grid">
+            <p><span class="rec-label">Why this matters</span>4 of 36 Deals (11.1%) have no Deal owner.</p>
+            <p><span class="rec-label">Recommended accountable role</span>Sales operations owner</p>
+            <p><span class="rec-label">Human decision required</span>Sales operations must approve or decline each proposed Deal owner before any CRM write</p>
+            <p><span class="rec-label">Completion condition</span>All 4 Deals have an approved owner decision or documented unassigned exception.</p>
+          </div>
+          <p class="evidence-links"><a href="evidence/pipeline_hygiene.csv">Evidence CSV</a> · <a href="operator_appendix.md">Implementation detail</a></p>
+        </article>
+        <article class="recommendation">
+          <div class="recommendation-head"><span class="action-number">13</span><div><div class="eyebrow" title="Finding ID: deals_in_unknown_pipeline">Priority 2 · Deals In Unknown Pipeline</div><span class="approval-class">Explicit approval before a CRM change</span></div></div>
+          <h3>Ask a CRM administrator to determine the intended pipeline for the 2 affected deals before any manual correction.</h3>
+          <div class="rec-grid">
+            <p><span class="rec-label">Why this matters</span>2 of 36 Deals (5.6%) reference a Pipeline not present in the captured definitions.</p>
+            <p><span class="rec-label">Recommended accountable role</span>CRM administrator</p>
+            <p><span class="rec-label">Human decision required</span>The CRM administrator must approve the intended Pipeline for each Deal before any CRM write</p>
+            <p><span class="rec-label">Completion condition</span>A documented pipeline decision for the affected deals and a consistent pipeline rollup.</p>
+          </div>
+          <p class="evidence-links"><a href="evidence/pipeline_hygiene.csv">Evidence CSV</a> · <a href="operator_appendix.md">Implementation detail</a></p>
+        </article>
+        <article class="recommendation">
+          <div class="recommendation-head"><span class="action-number">14</span><div><div class="eyebrow" title="Finding ID: companies_without_domain">Priority 3 · Companies Without Domain</div><span class="approval-class">Human review and disposition</span></div></div>
+          <h3>Review the 5 Companies without a domain and approve a verified domain or a valid no-domain exception for each Company.</h3>
+          <div class="rec-grid">
+            <p><span class="rec-label">Why this matters</span>5 of 60 Companies (8.3%) have no domain.</p>
+            <p><span class="rec-label">Recommended accountable role</span>CRM owner</p>
+            <p><span class="rec-label">Human decision required</span>The CRM owner must approve or decline each proposed domain before any CRM write</p>
+            <p><span class="rec-label">Completion condition</span>All 5 Companies have an approved verified domain or documented no-domain exception.</p>
+          </div>
+          <p class="evidence-links"><a href="evidence/association_architecture.csv">Evidence CSV</a> · <a href="operator_appendix.md">Implementation detail</a></p>
+        </article></section>
+    <section id="limits"><h2>What This Audit Cannot Determine</h2><ul><li>Record age is based on the last-modified timestamp. It does not prove that a person, marketing program, or sales representative actively engaged with the record.</li><li>A long or resumed full-history extract is a close operational snapshot, not a database transaction taken at one instant.</li><li>This synthetic demonstration measures CRM reporting trust, not business performance.</li></ul></section>
+    <section id="evidence"><h2>Evidence and Supporting Files</h2><p class="note">The main report shows decision-relevant evidence. The operator appendix contains every validated finding, detailed actions, and links to supporting artifacts.</p><ul><li><strong>Attribution Trust</strong>: <a href="evidence/attribution_trust.csv">CSV</a> · <a href="processed/measurements/attribution_trust.json">measurement</a></li><li><strong>Lifecycle Funnel</strong>: <a href="evidence/lifecycle_funnel.csv">CSV</a> · <a href="processed/measurements/lifecycle_funnel.json">measurement</a></li><li><strong>Association Architecture</strong>: <a href="evidence/association_architecture.csv">CSV</a> · <a href="processed/measurements/association_architecture.json">measurement</a></li><li><strong>Pipeline Hygiene</strong>: <a href="evidence/pipeline_hygiene.csv">CSV</a> · <a href="processed/measurements/pipeline_hygiene.json">measurement</a></li><li><strong>Property Governance</strong>: <a href="evidence/property_governance.csv">CSV</a> · <a href="processed/measurements/property_governance.json">measurement</a></li><li><a href="report_record_evidence.csv">Mapped Company and Deal evidence</a></li><li><a href="findings.json">Validated findings</a></li><li><a href="operator_appendix.md">Operator appendix</a></li><li><a href="schema_discovery_report.md">Schema discovery report</a></li></ul></section>
+    <section id="next"><h2>Next Review</h2><p class="lede">Re-run after the approved source-capture, association, and Deal governance changes have operated for one complete reporting cycle.</p></section>
+    <section id="sharing"><h2>Sharing the Report</h2><p class="lede">This HTML file is generated locally. It is not a public URL, and its supporting-file links work only when the related output folder stays together.</p><p><strong>Treat this as a confidential CRM report.</strong> It can contain identifiable HubSpot Company and Deal names plus direct record links. For a fixed copy, choose <strong>Print → Save as PDF</strong>, then share the PDF only with authorized recipients through an approved channel. If you share interactive HTML, keep the complete report package together, use approved access-controlled hosting or file sharing, and never include the raw data folder, environment files, or secrets.</p><p class="footer-note">The HTML and Markdown versions are generated from the same validated artifacts.</p></section>
+  </main>
+  <footer class="report-footer"><p><strong>Smartify Marketing</strong><br>Your Strategic B2B Marketing Partner</p><p>For more marketing systems insights and updates: <a href="https://smartifymarketing.com">smartifymarketing.com</a> · <a href="https://github.com/AliceEinstein">GitHub</a></p></footer>
+</div></body></html>

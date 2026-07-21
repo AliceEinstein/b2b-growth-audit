@@ -49,10 +49,12 @@ legitimate business cases.
 
 ## Allowed recommendation types
 
-- create a human review list
-- export evidence CSV
-- draft a governance policy
-- create a proposed field mapping
-- draft HubSpot list criteria
-- draft a task creation plan
-- recommend admin review
+- review the audit-prepared cohort and record an approve / decline / exception disposition
+- confirm or reject a proposed governance policy
+- approve or reject a proposed field mapping
+- approve or reject HubSpot list criteria
+- decide whether an administrator should make a separately authorized CRM change
+
+The agent may prepare evidence CSVs, cohorts, mappings, list criteria, and task
+plans as read-only implementation inputs. Do not present preparation of those
+artifacts as the human action or as the completed result.

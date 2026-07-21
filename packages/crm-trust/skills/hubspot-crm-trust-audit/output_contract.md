@@ -82,7 +82,11 @@ Each item in `recommendations.json` also includes a non-empty
 ordered `implementation_steps`, `success_measure`, and `approval_required`.
 The recommendation category is contextual and may vary between CRM operating
 models. A recommendation without a traceable basis and executable detail is
-not complete.
+not complete. `decision_owner` is a recommended accountable role unless an
+allowed artifact explicitly identifies a person for the exact decision.
+Creating a queue/list is agent-prepared input, not a human action or completed
+outcome; completion requires a recorded decision, approved rule, valid
+exception, or resolved state.
 
 ## Evidence CSV columns
 
@@ -102,15 +106,20 @@ Coverage · Key Findings · Root Cause Hypotheses · Recommended Actions · What
 This Audit Cannot Determine · Evidence and Supporting Files · Next Review.
 Sharing the Report.
 
-The HTML report adds Smartify-styled KPI cards, completeness bars, record-age
-distribution, funnel and association graphics, print styles, and the Smartify
+The HTML report adds Smartify-styled KPI cards, object-grouped completeness
+bars, compact identity-validity checks, record-age distribution, funnel and
+association graphics, score arithmetic, priority-grouped findings and actions,
+print styles, and the Smartify
 website/GitHub footer and a sharing note explaining local HTML and PDF
 distribution. The Markdown version preserves the same facts and evidence
 links. When available, the title uses the user-supplied business name, known
-HubSpot assets are explicitly type-labelled and bold, and representative
-Company/Deal names link directly to their HubSpot records. The local
+HubSpot asset names are explicitly type-labelled and bold without making the
+surrounding record links or prose bold, and representative Company/Deal names
+link directly to their HubSpot records. The local
 `report_record_evidence.csv` contains the full hash-to-label mapping but no
-portal ID, raw record ID, or URL. `operator_appendix.md` contains every validated finding and detailed
+portal ID, raw record ID, or URL. Its Company/Deal labels remain identifiable,
+so the report package is confidential rather than anonymized.
+`operator_appendix.md` contains every validated finding and detailed
 implementation instructions. See `reporting_standard.md` for the full format,
 visual, language, and evidence-boundary rules.
 

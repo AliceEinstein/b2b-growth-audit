@@ -64,7 +64,7 @@
       "affected_records": 8,
       "affected_percentage": 14.5,
       "evidence_file": "evidence/association_architecture.csv",
-      "business_impact": "Eight companies share a domain with another company and are duplicate candidates; if they are not intentional subsidiaries or regional entities, account rollups and attribution may be split.",
+      "business_impact": "8 companies share a domain with another company and are duplicate candidates; if they are not intentional subsidiaries or regional entities, account rollups and attribution may be split.",
       "recommendation_type": "needs_business_rule_confirmation",
       "auto_fix_allowed": false,
       "review_status": "approved"

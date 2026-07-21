@@ -3,19 +3,22 @@
   "problems": {},
   "hard_leaks": [],
   "uncleared_phrases": [],
-  "cleared_phrases": 12,
+  "cleared_phrases": 2,
   "deliverable_hashes": {
-    "crm_trust_report.md": "2cb88497989535c2363711bddcefcf1df926d1036172c47fd6d5e29fae3d2e5b",
-    "agent_handoff.md": "4840ba8f3929ce053cf688e0846279b5cd0473b65166d937beee525590f2258e",
-    "findings.json": "0c5f22831a9a30b53be24205a89981142916e9cb3ea46110bfca61dd681536f9",
-    "evidence.csv": "3e834c4c54c350342f1400d21112c6dd8747e353910c62e78a68ecc9cff754d2",
+    "crm_trust_report.md": "16bcc8cc19627a92e2438579ad1c1d55e39704c7618540ad96af8434bedd2414",
+    "crm_trust_report.html": "43e983912af06dc972a7700a1485a0efc7f9083ca9d68878f25dfed9440b3fdd",
+    "operator_appendix.md": "e7eb3cf93b264c8fbaf3173bbeec407f11543a55daec2a4380a82ef9114fb1f4",
+    "agent_handoff.md": "51cab3390e7eaf779063f415dcd3d07fa713f96e7d729364365813994bc68778",
+    "findings.json": "9dda1f12ae9f5184dc55bbad28574ccbc89965f6249b2897168fa5773f5822e8",
+    "evidence.csv": "029bee5669a755c357c44cf3dba1f3e4b7eb4c6490eaeb99b3acd915b418f112",
+    "report_record_evidence.csv": "91eced0dee4b235ab432ae041abb40a69df8d946f4ebd57b0b130a6903ddc43b",
     "crm_context.yaml": "b83e29f5c800000cb34b2787420329b2aa959e163b788092441428a3d77fda63",
     "schema_discovery_report.md": "137419d0e50ed768d1d895d0fcdb586566b6e15363116eaa412f9a97402a8023",
     "audit_log.json": "99f87239856c20549ac27fb979562fef19264ffa4fd48f9107c3ee30d2be4b02",
     "score.json": "04bede2a98862119b214aaac603a16196bbeb9c02f60aa67822d4e938ba8551c",
-    "recommendations.json": "4d3222998a3a8fccdef100a0fb701e04c5a20c9293f4b631e80dc47e78476a01",
+    "recommendations.json": "5afece017e0d051d19d168da43d7a15209898101214f77aedd7c6c0b72f98e64",
     "manifest.json": "270abdbdbcdd4560612b96a8a62e5f84308446d75057894d89f21b3ba2b4f6ea"
   },
-  "safety_clearance_sha256": "704fc4dafb7a43e8fdd08c14c4e10369799c31759316f7c0218c9e298cc1c101",
-  "generated_at": "2026-07-14T10:29:08.843058+00:00"
+  "safety_clearance_sha256": "eee351b48e91a45e93a8d72712f06a061a244e2a244e268066c5bc50ecd31e90",
+  "generated_at": "2026-07-21T11:42:05.318472+00:00"
 }

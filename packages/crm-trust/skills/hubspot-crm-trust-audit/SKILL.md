@@ -70,8 +70,10 @@ This audit does not:
    `status: completed` can enter later phases. Use `--days 90` only for an
    additional recent-only view. The local raw snapshot includes contact
    identity fields only to measure completeness; contact names/emails/phones
-   never enter LLM-facing artifacts or final reports. Sanitized Company/Deal
-   names and owner labels may appear in the confidential local report.
+   never enter LLM-facing artifacts or final reports. Display-safe but still
+   identifiable Company/Deal names and owner labels may appear in the
+   confidential local report. Do not describe that report package as
+   anonymized or safe for unrestricted sharing.
    Raw trees from completed/failed runs older than 365 days are removed by
    default; change this with `--raw-retention-days N`. In-progress runs are
    retained so they remain resumable. Use `--dry-run` to preview retention
@@ -159,6 +161,7 @@ finding and implementation detail. PDF or Word exports must derive from the
 same validated report content rather than a separate rewrite.
 
 The supplied business name becomes the report title. Deterministic local
-rendering may show sanitized HubSpot Company and Deal names for representative
-evidence and link them to their HubSpot record pages when the portal ID is
-available. Contact names, emails, phones, raw IDs, and tokens remain excluded.
+rendering may show display-safe but identifiable HubSpot Company and Deal names
+for representative evidence and link them to their HubSpot record pages when
+the portal ID is available. Contact names, emails, phones, raw IDs, and tokens
+remain excluded. Share final reports only with authorized recipients.

@@ -51,6 +51,11 @@ Use the exact user-supplied business name in the report title. If no name was
 supplied, use the generic HubSpot audit title; never infer the audited business
 from a Company record.
 
+Explain the trust score next to the headline number. Show starting points,
+total deductions, the remaining score for each trust category, and the fixed
+severity deduction mapping. Link to `score.json` for the complete counted
+finding list. Never show an unexplained score.
+
 ## Finding presentation
 
 Each material finding states:
@@ -63,6 +68,14 @@ Each material finding states:
   forecast confidence;
 - the business impact in plain language; and
 - direct links to the evidence CSV and measurement file.
+
+Group findings into visible Priority 1, Priority 2, and Priority 3 sections. Priority 1 is
+for critical/high findings that can materially distort current management
+decisions; Priority 2 is for medium findings that weaken confidence or
+operating consistency; Priority 3 is for low-severity maintenance and hygiene
+debt. The distinction must use headings, labels, layout, and explanation —
+never color alone. Recommendations follow the same global priority order;
+their safety/approval category is metadata and must not override severity.
 
 Where record-level evidence maps to a HubSpot Company or Deal, show up to
 three representative named records per finding and link each name directly to
@@ -77,8 +90,17 @@ that would confirm or reject the hypothesis.
 ## Recommendation presentation
 
 Every recommendation states the exact target, current state, desired state,
-ordered implementation steps, evidence basis, decision owner, approval
-required, expected result, and a measurable success condition.
+ordered implementation steps, evidence basis, recommended accountable role,
+human decision required, completion condition, and a measurable success
+condition. The accountable role is a recommendation, not a verified person,
+unless the allowed evidence explicitly identifies a real person as accountable
+for that exact decision.
+
+The audit prepares the affected cohort, measurements, record links, and local
+evidence files. Do not present creation of a review queue/list as human work or
+as a successful outcome. The human action begins with reviewing the records,
+approving or declining proposed resolutions, documenting valid exceptions,
+confirming the governing rule, or authorizing a controlled CRM change.
 
 Do not write `change the property in CRM`. Name the object and property, say
 what rule or value changes from what to what, explain how, and state why the
@@ -100,12 +122,17 @@ confirmation, or explicit approval before a CRM change.
   decision-maker report.
 - Avoid decorative prose, rhetorical openings, vague claims, and unexplained
   technical terms.
+- Use Arabic numerals for quantities (`8`, not `eight`). Enforce this in the
+  finding/recommendation artifacts; never run a global number-word replacement
+  over final prose or a user-configured HubSpot asset name.
 - Never claim that CRM data quality proves revenue performance, return on
   investment, or business effectiveness.
-- Prefix and bold values that originate from the portal so report language is
-  not confused with configured CRM language: `HubSpot property:`, `HubSpot
-  lifecycle stage:`, `HubSpot pipeline:`, `HubSpot deal stage:`, `HubSpot
-  Company:`, and `HubSpot Deal:`.
+- Visually distinguish values that originate from the portal so report
+  language is not confused with configured CRM language. Bold the configured
+  property, lifecycle stage, pipeline, deal stage, Company, Deal, Workflow, or
+  other HubSpot asset name. Keep surrounding prose, evidence links, and generic
+  record-link text at normal weight; repeated bold must not flatten the visual
+  hierarchy.
 
 ## Data graphic principles
 
@@ -114,8 +141,11 @@ text or an accessible label. Use charts for comparisons and distributions,
 not decoration.
 
 - KPI cards: CRM scale and trust score.
-- Horizontal bars: field completeness, identity validity, lifecycle stage
-  distribution, and association coverage.
+- Horizontal bars: field completeness grouped by Contact, Company, and Deal;
+  compact identity validity; lifecycle stage distribution; and association
+  coverage. Do not force unrelated panels into equal-height columns that leave
+  large empty areas. Show every configured key field, or explicitly state the
+  displayed and total field counts; never silently truncate completeness data.
 - Stacked bars: recent, active, aging, and stale record mix.
 - Tables: exact values, evidence links, and findings where multiple fields
   must be compared.
@@ -145,18 +175,20 @@ public URL. When served from `localhost`, it is normally reachable only from
 the same machine (or from a deliberately configured network), and its relative
 links require the supporting output files to stay with it.
 
-For ordinary external sharing, open the validated HTML in a browser and use
-**Print → Save as PDF**. Share the PDF through the customer's approved
-channel. If an interactive HTML package is required, share the complete
-sanitized output package through approved hosting or file sharing; do not
-expose `raw/`, `.env`, secrets, or the unfiltered run directory. Sharing only
-the HTML file will break links to the evidence CSV and supporting artifacts.
+Treat every generated report as confidential CRM data: it can contain
+identifiable Company/Deal names and direct record links. For authorized
+sharing, open the validated HTML in a browser and use **Print → Save as PDF**,
+then use the customer's approved channel. If interactive HTML is required,
+share the complete report package only with authorized recipients through
+access-controlled hosting or file sharing. Never expose `raw/`, `.env`,
+secrets, or the unfiltered run directory. Sharing only the HTML file will break
+links to the evidence CSV and supporting artifacts.
 
 ## Evidence boundary
 
 The main report shows enough representative evidence to evaluate each claim
 and links to the supporting artifact. It does not reproduce the full row-level
 dataset or schema detail. The appendix carries full audit detail for an
-operator or a later authorized agent. Sanitized Company and Deal names may
-appear as evidence; Contact identity values, raw IDs, portal IDs outside link
-targets, and tokens never enter either report.
+operator or a later authorized agent. Display-safe Company and Deal names may
+appear as identifiable evidence; Contact identity values, raw IDs, portal IDs
+outside link targets, and tokens never enter either report.

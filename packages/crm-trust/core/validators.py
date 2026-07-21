@@ -10,6 +10,7 @@ from __future__ import annotations
 import csv
 import html
 import json
+import re
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Set
 
@@ -27,6 +28,11 @@ from .schemas import (
 )
 
 SINGULAR_TO_PLURAL = {"contact": "contacts", "company": "companies", "deal": "deals"}
+NUMBER_WORD_QUANTITY_RE = re.compile(
+    r"\b(?:zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty)\s+"
+    r"(?:records?|contacts?|companies|company|deals?|findings?|properties|property|pipelines?|points?|rows?|candidates?|days?|owners?)\b",
+    flags=re.IGNORECASE,
+)
 
 
 def _property_names(run_dir: Path, plural: str) -> Optional[Set[str]]:
@@ -298,6 +304,11 @@ def validate_findings(run_dir: Path, modules: Optional[List[str]] = None) -> Dic
                 problems.append(
                     f"finding '{finding.id}': auto_fix_allowed must be false in v1."
                 )
+            if NUMBER_WORD_QUANTITY_RE.search(finding.business_impact):
+                problems.append(
+                    f"finding '{finding.id}': business_impact spells out a measurable "
+                    "quantity. Use Arabic numerals in audit prose."
+                )
             previous_module = seen_finding_ids.get(finding.id)
             if previous_module is not None:
                 problems.append(
@@ -459,6 +470,25 @@ def validate_reviews(run_dir: Path) -> List[str]:
 # -- recommendations + reports (Phase 6) --------------------------------------------
 
 
+QUEUE_ARTIFACT_RE = re.compile(
+    r"\b(?:queue|review\s+(?:list|set)|evidence\s+export)\b",
+    flags=re.IGNORECASE,
+)
+HUMAN_ACTION_RE = re.compile(
+    r"^\s*(?:(?:review|decide|approve|decline|reject|confirm|assign|correct|resolve|"
+    r"classify|determine|document|adjudicate|define|select|choose|authorize|validate|"
+    r"verify)\b|(?:have|ask)\b.+\b(?:review|decide|approve|decline|reject|confirm|"
+    r"assign|correct|resolve|classify|determine|document|adjudicate|define|select|"
+    r"choose|authorize|validate|verify)\b)",
+    flags=re.IGNORECASE,
+)
+HUMAN_DECISION_RE = re.compile(
+    r"\b(?:review|decide|decision|approve|decline|reject|confirm|assign|correct|resolve|classify|determine|document|adjudicate|define|select|choose|authorize|validate|verify|disposition|exception)\b",
+    flags=re.IGNORECASE,
+)
+INTERNAL_METRIC_PREFIX_RE = re.compile(r"^[a-z][a-z0-9_]{2,}:\s*", flags=re.IGNORECASE)
+
+
 def validate_recommendations(run_dir: Path) -> List[str]:
     run_dir = Path(run_dir)
     path = run_dir / "recommendations.json"
@@ -514,12 +544,71 @@ def validate_recommendations(run_dir: Path) -> List[str]:
                     "do_not_auto_fix and cannot appear under "
                     "safe_operational_actions."
                 )
+            if not HUMAN_ACTION_RE.search(item.action):
+                problems.append(
+                    f"recommendations.json/{group_name}: action for '{item.finding_id}' "
+                    "must begin with an explicit human review, decision, approval, "
+                    "confirmation, classification, or resolution step. Routing or "
+                    "preparing a queue/list is not a human decision."
+                )
+            if INTERNAL_METRIC_PREFIX_RE.search(item.basis):
+                problems.append(
+                    f"recommendations.json/{group_name}: basis for "
+                    f"'{item.finding_id}' starts with an internal measurement ID. "
+                    "Write the measured count and scope in plain business language."
+                )
+            for field_name, value in (
+                ("expected_outcome", item.expected_outcome),
+                ("desired_state", item.desired_state),
+                ("success_measure", item.success_measure),
+            ):
+                if QUEUE_ARTIFACT_RE.search(value):
+                    problems.append(
+                        f"recommendations.json/{group_name}: {field_name} for "
+                        f"'{item.finding_id}' treats a queue as completion. Completion "
+                        "must be a reviewed disposition, approved rule, or resolved state."
+                    )
+            for field_name, value in (
+                ("action", item.action),
+                ("basis", item.basis),
+                ("current_state", item.current_state),
+                ("desired_state", item.desired_state),
+                ("expected_outcome", item.expected_outcome),
+                ("success_measure", item.success_measure),
+            ):
+                if NUMBER_WORD_QUANTITY_RE.search(value):
+                    problems.append(
+                        f"recommendations.json/{group_name}: {field_name} for "
+                        f"'{item.finding_id}' spells out a measurable quantity. "
+                        "Use Arabic numerals in audit prose."
+                    )
+            if item.approval_required.strip().casefold() == item.decision_owner.strip().casefold():
+                problems.append(
+                    f"recommendations.json/{group_name}: approval_required for "
+                    f"'{item.finding_id}' only repeats decision_owner. Name the decision "
+                    "or authorization that role must make."
+                )
+            decision_text = " ".join(
+                [
+                    item.action,
+                    *item.implementation_steps,
+                    item.approval_required,
+                    item.expected_outcome,
+                ]
+            )
+            if not HUMAN_DECISION_RE.search(decision_text):
+                problems.append(
+                    f"recommendations.json/{group_name}: recommendation for "
+                    f"'{item.finding_id}' has no explicit human review, decision, "
+                    "approval, or resolution step."
+                )
     return problems
 
 
 REQUIRED_REPORT_SECTIONS = [
     "HubSpot Marketing-to-Pipeline Trust Audit",
     "## Executive Summary",
+    "### How the score is calculated",
     "## CRM Snapshot",
     "## Data Quality and Usability",
     "## Activity and Data Age",
@@ -536,6 +625,7 @@ REQUIRED_REPORT_SECTIONS = [
 REQUIRED_HTML_SECTIONS = [
     "HubSpot Marketing-to-Pipeline Trust Audit",
     "Executive Summary",
+    "How this score is calculated",
     "CRM Snapshot",
     "Data Quality and Usability",
     "Activity and Data Age",
@@ -605,6 +695,21 @@ def validate_report_structure(run_dir: Path) -> List[str]:
         if business_name
         else "HubSpot Marketing-to-Pipeline Trust Audit"
     )
+    findings, finding_problems = load_all_findings(run_dir)
+    accepted_findings = (
+        [
+            finding
+            for finding in findings
+            if finding.review_status in {"approved", "revised"}
+        ]
+        if not finding_problems
+        else []
+    )
+    expected_priorities = {
+        1: any(finding.severity in {"critical", "high"} for finding in accepted_findings),
+        2: any(finding.severity == "medium" for finding in accepted_findings),
+        3: any(finding.severity == "low" for finding in accepted_findings),
+    }
     for filename, sections in [
         ("crm_trust_report.md", REQUIRED_REPORT_SECTIONS),
         ("crm_trust_report.html", REQUIRED_HTML_SECTIONS),
@@ -641,5 +746,11 @@ def validate_report_structure(run_dir: Path) -> List[str]:
                     problems.append(
                         f"{filename}: internal or audience-specific term "
                         f"'{term}' must not appear in the client report."
+                    )
+            for priority, required in expected_priorities.items():
+                if required and f"Priority {priority}" not in text:
+                    problems.append(
+                        f"{filename}: accepted Priority {priority} findings exist but "
+                        "the report has no visible priority section or label."
                     )
     return problems

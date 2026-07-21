@@ -29,6 +29,9 @@ jobs:
         run: python -m pip install -e ".[dev]"
       - name: Run tests
         run: pytest -q
+      - name: Verify tracked CRM Trust public sample
+        if: matrix.package == 'packages/crm-trust'
+        run: python -m scripts.verify_final_gate --run examples/mock_midmarket_abm_sales
 
   packaging:
     name: Build ${{ matrix.package }} wheel

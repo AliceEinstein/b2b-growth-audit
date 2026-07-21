@@ -1,209 +1,275 @@
-# HubSpot Marketing-to-Pipeline Trust Audit
+# Northstar Systems CRM Trust Audit
 
-## Snapshot Overview
-
-This report evaluates a **completed, full-history, non-truncated local snapshot** of the CRM fixture. It is a synthetic test run designed to exercise the audit workflow; it is not a conclusion about the live portal.
-
-| Snapshot fact | Result | Source |
-|---|---:|---|
-| Snapshot status | `completed` | [manifest.json](manifest.json) |
-| Coverage | Full history; no object truncated | [manifest.json](manifest.json) |
-| Capture window | 2026-07-13 23:00–2026-07-14 00:00 UTC | [manifest.json](manifest.json) |
-| Contacts | 360 | [snapshot_summary.json](processed/snapshot_summary.json) |
-| Companies | 60 | [snapshot_summary.json](processed/snapshot_summary.json) |
-| Deals | 36 | [snapshot_summary.json](processed/snapshot_summary.json) |
-| Owners | 8 | [snapshot_summary.json](processed/snapshot_summary.json) |
-| Defined deal pipelines | 2 | [snapshot_summary.json](processed/snapshot_summary.json) |
-
-Association coverage is complete for this fixture: **280/360 contacts (77.8%)** have a company, **32/36 deals (88.9%)** have a company, and **30/36 deals (83.3%)** have a contact. The underlying distribution is available in [association_summary.json](processed/association_summary.json).
-
-## Data Quality Dashboard
-
-There is deliberately no single “data completeness score” here. Email, phone, source, ownership, amount, and association fields have different business meanings and requiredness rules. The dashboard shows each field so the CRM owner can judge it against the operating model.
-
-### Key-field completeness
-
-| Object | Field | Present | Missing | Fill rate |
-|---|---|---:|---:|---:|
-| Contact | Email | 360/360 | 0 | 100.0% |
-| Contact | First name | 360/360 | 0 | 100.0% |
-| Contact | Last name | 339/360 | 21 | 94.2% |
-| Contact | Phone | 270/360 | 90 | 75.0% |
-| Contact | Lifecycle stage | 360/360 | 0 | 100.0% |
-| Contact | Original source | 320/360 | 40 | 88.9% |
-| Contact | Latest source | 330/360 | 30 | 91.7% |
-| Contact | Owner | 324/360 | 36 | 90.0% |
-| Company | Name | 59/60 | 1 | 98.3% |
-| Company | Domain | 55/60 | 5 | 91.7% |
-| Company | Lifecycle stage | 60/60 | 0 | 100.0% |
-| Company | Owner | 55/60 | 5 | 91.7% |
-| Deal | Deal name | 36/36 | 0 | 100.0% |
-| Deal | Pipeline | 36/36 | 0 | 100.0% |
-| Deal | Deal stage | 36/36 | 0 | 100.0% |
-| Deal | Amount | 30/36 | 6 | 83.3% |
-| Deal | Close date | 36/36 | 0 | 100.0% |
-| Deal | Owner | 32/36 | 4 | 88.9% |
-
-Source: [snapshot_summary.json](processed/snapshot_summary.json) and [identity_completeness.json](processed/identity_completeness.json). Identity values themselves remain local-only and are not included in this report.
-
-### Lifecycle and pipeline shape
-
-| Contact lifecycle stage | Records |
-|---|---:|
-| Lead | 180 |
-| Marketing qualified lead | 80 |
-| Sales qualified lead | 50 |
-| Opportunity | 30 |
-| Customer | 15 |
-| Closed lost | 5 |
-
-The CRM contains **20 open deals, 12 closed-won deals, and 4 closed-lost deals**. Of the defined pipelines, 26 deals are in `new_business` and 8 are in `expansion`; 2 deals reference a pipeline not present in the pipeline definitions. See [lifecycle_distribution.json](processed/lifecycle_distribution.json) and [pipeline_summary.json](processed/pipeline_summary.json).
-
-### Operational recency
-
-The following is a **last-modified recency proxy**, not proof of human, marketing, or sales activity. It is included because a CMO needs to know whether the CRM is being maintained operationally.
-
-| Object | ≤30 days | 31–90 days | 91–180 days | >180 days | Timestamp coverage |
-|---|---:|---:|---:|---:|---:|
-| Contacts | 90/360 (25.0%) | 90/360 (25.0%) | 90/360 (25.0%) | 90/360 (25.0%) | 100.0% |
-| Companies | 15/60 (25.0%) | 30/60 (50.0%) | 0/60 (0.0%) | 15/60 (25.0%) | 100.0% |
-| Deals | 9/36 (25.0%) | 9/36 (25.0%) | 9/36 (25.0%) | 9/36 (25.0%) | 100.0% |
-
-Details and the exact reference timestamp are in [activity_summary.json](processed/activity_summary.json). This is a synthetic fixture, so the even distribution is intentional test data rather than a claim about a real team’s activity pattern.
-
-### Attribution and property shape
-
-- Original source is present for 320/360 contacts overall (88.9%), but only 140/180 in the recent half (77.8%).
-- Latest source is present for 330/360 contacts (91.7%).
-- The property-governance measurement examined 17 source-like fields across the snapshot: 3 show older-half usage with no recent-half usage, and 11 are name-collision candidates.
-- The source field candidate detail, including older/recent fill rates, is in [source_field_candidates.json](processed/source_field_candidates.json). No raw CRM values are required to inspect the finding.
-
-## Findings by Module
-
-The following table includes every approved finding, not only the executive-summary items. Each number is copied from a deterministic measurement and each row links to the module evidence CSV.
-
-| Module | Finding | Severity | Measured result | Evidence |
-|---|---|---|---|---|
-| Attribution | Recent original-source capture gap | High | 40/180 recent contacts; 22.2% | [attribution_trust.csv](evidence/attribution_trust.csv) |
-| Lifecycle | Customer stage without closed-won trace | High | 15/15; 100.0% | [lifecycle_funnel.csv](evidence/lifecycle_funnel.csv) |
-| Lifecycle | MQL+ contacts without deal trace | High | 155/160; 96.9% | [lifecycle_funnel.csv](evidence/lifecycle_funnel.csv) |
-| Associations | Contacts without company | High | 80/360; 22.2% | [association_architecture.csv](evidence/association_architecture.csv) |
-| Associations | Deals without company | Medium | 4/36; 11.1% | [association_architecture.csv](evidence/association_architecture.csv) |
-| Associations | Deals without contact | Medium | 6/36; 16.7% | [association_architecture.csv](evidence/association_architecture.csv) |
-| Associations | Shared-domain company candidates | Medium | 8/55; 14.5% | [association_architecture.csv](evidence/association_architecture.csv) |
-| Associations | Companies without domain | Low | 5/60; 8.3% | [association_architecture.csv](evidence/association_architecture.csv) |
-| Pipeline | Open deals past close date | Medium | 3/20 open deals; 15.0% | [pipeline_hygiene.csv](evidence/pipeline_hygiene.csv) |
-| Pipeline | Deals without amount | Medium | 6/36; 16.7% | [pipeline_hygiene.csv](evidence/pipeline_hygiene.csv) |
-| Pipeline | Deals without owner | Medium | 4/36; 11.1% | [pipeline_hygiene.csv](evidence/pipeline_hygiene.csv) |
-| Pipeline | Deals in unknown pipeline | Medium | 2/36; 5.6% | [pipeline_hygiene.csv](evidence/pipeline_hygiene.csv) |
-| Property governance | Decayed source-field candidates | Medium | 3/17; 17.6% | [property_governance.csv](evidence/property_governance.csv) |
-| Property governance | Similar source-field name candidates | Medium | 11/17; 64.7% | [property_governance.csv](evidence/property_governance.csv) |
-
-Machine-readable details are in [findings.json](findings.json), and the exact measurement documents are in [processed/measurements](processed/measurements/).
-
-## CRM Trust Score
-
-**48/100**
-
-| Category | Score | Why points were deducted |
-|---|---:|---|
-| Attribution Trust | 19/25 | Recent original-source capture gap |
-| Lifecycle + Funnel Trust | 8/20 | Customer/deal reconciliation and MQL+ deal-trace gaps |
-| Association + Account Trust | 4/20 | Orphan contacts/deals, duplicate candidates, and missing domains |
-| Pipeline Hygiene | 8/20 | Past close dates, missing amounts/owners, and unknown pipeline |
-| Property Governance | 9/15 | Decayed and colliding source-like fields |
-
-The score is code-owned arithmetic over the 14 approved findings. It is a measure of reporting trust for this audit profile, not revenue performance, forecast accuracy, or company performance. See [score.json](score.json).
+*HubSpot Marketing-to-Pipeline Trust Audit*
 
 ## Executive Summary
 
-The CRM has a healthy basic identity layer—email and first name are 100% populated, lifecycle stage is present for every contact, and all deals have names, stages, pipelines, and close dates. The weaknesses are structural rather than cosmetic: account relationships are incomplete, lifecycle stages do not reconcile to deals, source governance is fragmenting, and pipeline value/ownership is not consistently captured.
+Northstar Systems has enough structured HubSpot data to support regular management reporting, but material attribution, relationship, and pipeline gaps prevent the CRM from functioning as a dependable single source of truth.
 
-For an ABM-heavy sales-led motion, the account architecture is the largest trust constraint. Only 77.8% of contacts are linked to a company, and 83.3% of deals are linked to a contact. That makes it difficult to answer which accounts were influenced, which contacts progressed, and which marketing activity can be connected to revenue.
+**CRM trust score: 48/100.**
+The score summarizes the reviewed data-quality findings. It is not a measure of revenue performance or return on investment.
 
-The biggest near-term reporting risk is the lifecycle-to-deal gap: 96.9% of MQL+ contacts have no associated deal, and all 15 customer-stage contacts lack a closed-won relationship in this snapshot. This may be a real data-quality problem, or it may reflect a business rule that the CRM is not encoding consistently; the report therefore recommends confirmation and review, not automatic stage changes.
+### How the score is calculated
 
-## Business Context Detected
+**100 starting points − 52 deducted points = 48.** Only approved or revised findings count. Critical findings deduct 10 points, high 6, medium 3, and low 1, capped at each category maximum.
 
-The detected model is a mid-market, sales-led ABM CRM with multiple pipelines, company-level ownership, and partial attribution maturity. The selected profile is `abm_heavy_crm`, which weights account rollups, association integrity, and cross-pipeline attribution more heavily than a lean lead-based CRM would. The context artifacts are [business_context.json](business_context.json), [crm_context.yaml](crm_context.yaml), and [audit_profile.json](audit_profile.json).
+| Trust category | Starting points | Deducted | Remaining |
+|---|---:|---:|---:|
+| Attribution Trust | 25 | −6 | 19 |
+| Lifecycle + Funnel Trust | 20 | −12 | 8 |
+| Association + Account Trust | 20 | −16 | 4 |
+| Pipeline Hygiene | 20 | −12 | 8 |
+| Property Governance | 15 | −6 | 9 |
 
-## Audit Scope
+- [Complete score calculation](score.json)
 
-This audit covers attribution trust, lifecycle and funnel trust, contact-company-deal associations, pipeline hygiene relevant to marketing reporting, and property governance. It does not evaluate sales performance, forecasting, win rates, quota attainment, or business strategy, and it performs no CRM writes.
+No CRM records were changed during this audit.
 
-## Critical Findings
+## CRM Snapshot
 
-There are no findings classified as critical. The high-severity findings are the recent source-capture gap, the customer-stage/closed-won reconciliation gap, the MQL+/deal-trace gap, and the contact/company association gap. They are high because they materially impair the reporting questions this ABM profile is meant to answer; they are not proof that the underlying business process is failing.
+| CRM object | Records | Coverage | Complete extract |
+|---|---:|---|---|
+| Contacts | 360 | Full history | Yes |
+| Companies | 60 | Full history | Yes |
+| Deals | 36 | Full history | Yes |
+| Pipelines | 2 | Full history | Yes |
 
-## Evidence Summary
+- Snapshot completed: 2026-07-14T00:00:00+00:00
+- Coverage: Full history
 
-The deterministic measurement layer produced **241 evidence rows** across five modules. The CSVs contain hashed record identifiers and redacted values only:
+## Data Quality and Usability
 
-- [Attribution evidence](evidence/attribution_trust.csv) · [measurement](processed/measurements/attribution_trust.json)
-- [Lifecycle evidence](evidence/lifecycle_funnel.csv) · [measurement](processed/measurements/lifecycle_funnel.json)
-- [Association evidence](evidence/association_architecture.csv) · [measurement](processed/measurements/association_architecture.json)
-- [Pipeline evidence](evidence/pipeline_hygiene.csv) · [measurement](processed/measurements/pipeline_hygiene.json)
-- [Property governance evidence](evidence/property_governance.csv) · [measurement](processed/measurements/property_governance.json)
+Core contact identity is broadly usable. Trust falls where acquisition source capture, Contact-to-Company-to-Deal traceability, Deal amount coverage, and legacy property governance affect management reporting.
 
-To validate a finding, open the row whose `finding_id` equals the finding’s `measurement_id`, then compare the result to [findings.json](findings.json). The report never exposes raw contact identity values.
+### Key field completeness
 
-## Priority Recommendations
+| Object | Field | Present | Total | Complete |
+|---|---|---:|---:|---:|
+| Companies | **HubSpot property: Domain (domain)** | 55 | 60 | 91.7% |
+| Companies | **HubSpot property: Company owner (hubspot_owner_id)** | 55 | 60 | 91.7% |
+| Companies | **HubSpot property: Name (name)** | 59 | 60 | 98.3% |
+| Companies | **HubSpot property: Lifecycle Stage (lifecyclestage)** | 60 | 60 | 100.0% |
+| Contacts | **HubSpot property: Phone (phone)** | 270 | 360 | 75.0% |
+| Contacts | **HubSpot property: Original Source (hs_analytics_source)** | 320 | 360 | 88.9% |
+| Contacts | **HubSpot property: Contact owner (hubspot_owner_id)** | 324 | 360 | 90.0% |
+| Contacts | **HubSpot property: Latest Source (hs_latest_source)** | 330 | 360 | 91.7% |
+| Contacts | **HubSpot property: Last Name (lastname)** | 339 | 360 | 94.2% |
+| Contacts | **HubSpot property: Email (email)** | 360 | 360 | 100.0% |
+| Contacts | **HubSpot property: First Name (firstname)** | 360 | 360 | 100.0% |
+| Contacts | **HubSpot property: Lifecycle Stage (lifecyclestage)** | 360 | 360 | 100.0% |
+| Deals | **HubSpot property: Amount (amount)** | 30 | 36 | 83.3% |
+| Deals | **HubSpot property: Deal owner (hubspot_owner_id)** | 32 | 36 | 88.9% |
+| Deals | **HubSpot property: Close Date (closedate)** | 36 | 36 | 100.0% |
+| Deals | **HubSpot property: Deal name (dealname)** | 36 | 36 | 100.0% |
+| Deals | **HubSpot property: Deal Stage (dealstage)** | 36 | 36 | 100.0% |
+| Deals | **HubSpot property: Pipeline (pipeline)** | 36 | 36 | 100.0% |
 
-1. Confirm the lifecycle-to-closed-won and MQL+/deal handoff rules, then review the 15 customer-stage and 155 MQL+ exceptions.
-2. Confirm the canonical source field and produce a review-list specification for the 40 recent contacts missing original source.
-3. Produce account-association review queues for 80 orphan contacts, 4 orphan deals, and 6 deals without a contact.
-4. Review the 8 shared-domain candidates and 5 companies without domains before relying on account rollups.
-5. Establish stage-aware rules for amount, ownership, and pipeline membership before using value-weighted pipeline reporting.
-6. Produce a canonical-versus-legacy source-property map for the 3 decayed and 11 name-collision candidates.
+### Contact identity completeness and validity
 
-## Recommendation Basis
+| Contact field | Complete | Valid format when present |
+|---|---:|---:|
+| **HubSpot property: Email (email)** | 100.0% | 100.0% |
+| **HubSpot property: First Name (firstname)** | 100.0% | 100.0% |
+| **HubSpot property: Last Name (lastname)** | 94.2% | 100.0% |
+| **HubSpot property: Phone (phone)** | 75.0% | 100.0% |
 
-The recommendation agent’s output is not a free-standing checklist. Every item below points back to a finding, its measurement, and an evidence file. “Draft a list” and “draft a field map” are themselves concrete deliverables: they produce a reviewable artifact without changing CRM truth.
+## Activity and Data Age
 
-| Finding | Recommended deliverable | Why this follows | Expected outcome | Owner / risk |
-|---|---|---|---|---|
-| `recent_original_source_capture_gap` | Confirm source rule and draft criteria for the 40-record review list | 40/180 recent contacts lack original source | Confirmed capture rule and remediation queue | Marketing ops · business confirmation |
-| `customers_without_closedwon_deal_trace` | Confirm lifecycle-to-revenue rule and prepare a 15-record exception queue | 15/15 customer-stage contacts lack closed-won trace | Documented rule and reviewed exceptions | Marketing + RevOps · business confirmation |
-| `mql_plus_contacts_without_deal_trace` | Confirm handoff rule and review the 155-record exception queue | 155/160 MQL+ contacts lack deal trace | Separate intentional pre-deal stages from broken traceability | Marketing + Sales Ops · business confirmation |
-| `contacts_without_company_association` | Export an 80-record account-association review list | 80/360 contacts lack company association | Human decisions on account membership | CRM owner · safe operational |
-| `deals_without_company_association` | Export a 4-record deal/account review list | 4/36 deals lack company association | Restore account-rollup coverage through reviewed decisions | RevOps · safe operational |
-| `deals_without_contact_association` | Export a 6-record deal/contact review list | 6/36 deals lack contact association | Restore contact-to-revenue traceability | RevOps · safe operational |
-| `duplicate_company_domain_candidates` | Review 8 shared-domain candidates and record intent | 8/55 domain-populated companies are candidate collisions | Distinguish subsidiaries from duplicate-like records | Account Ops · business confirmation |
-| `companies_without_domain` | Export a 5-record missing-domain review list | 5/60 companies lack domain | Better matching and deduplication inputs | CRM owner · safe operational |
-| `open_deals_past_close_date` | Route 3 records to human pipeline review | 3/20 open deals have past close dates | Human disposition without rewriting sales truth | Sales Ops · do not auto-fix |
-| `deals_without_amount` | Confirm stage-aware amount rule and review 6 records | 6/36 deals lack amount | A clear value-reporting policy and exception list | Sales Ops · business confirmation |
-| `deals_without_owner` | Export a 4-record owner-gap review list | 4/36 deals lack owner | Reviewed ownership gaps without guessing assignees | Sales Ops · safe operational |
-| `deals_in_unknown_pipeline` | Ask an administrator to determine the intended pipeline for 2 records | 2/36 deals reference undefined pipeline | A documented pipeline decision and consistent rollup | CRM Admin · do not auto-fix |
-| `decayed_source_field_candidates` | Draft a canonical/legacy map for 3 candidates | 3/17 source-like fields have no recent usage | Governance artifact for workflow owners | Marketing Ops · business confirmation |
-| `similar_source_field_name_candidates` | Draft a canonical map for 11 name-collision candidates | 11/17 source-like fields collide by name | Explicit mapping and confirmation backlog | CRM Governance · business confirmation |
+The table uses each record's last-modified date. It shows recency, not confirmed human engagement.
 
-## Safe Actions
+| Object | Updated ≤30 days | 31–90 days | 91–180 days | Over 180 days |
+|---|---:|---:|---:|---:|
+| Contacts | 90 | 90 | 90 | 90 |
+| Companies | 15 | 30 | 0 | 15 |
+| Deals | 9 | 9 | 9 | 9 |
 
-These are safe because they create reviewable artifacts only: export hashed evidence queues, draft list criteria, draft a field map, and draft governance documentation. They do not select CRM values, create associations, assign owners, rewrite stages, or delete fields. The exact evidence rows are linked above and in [recommendations.json](recommendations.json).
+## Funnel and Association Coverage
 
-## Needs Business Rule Confirmation
+### Lifecycle distribution
 
-The audit cannot decide whether customer stage requires closed-won, which lifecycle stages require a deal, which source property is canonical, whether shared domains are subsidiaries, or which deal stages require amount and ownership. Those decisions must be made by the business owner before any CRM write plan is approved.
+| Object | Lifecycle stage | Records |
+|---|---|---:|
+| Contacts | **HubSpot lifecycle stage: Lead** | 180 |
+| Contacts | **HubSpot lifecycle stage: Marketing Qualified Lead (MQL)** | 80 |
+| Contacts | **HubSpot lifecycle stage: Sales Qualified Lead (SQL)** | 50 |
+| Contacts | **HubSpot lifecycle stage: Opportunity** | 30 |
+| Contacts | **HubSpot lifecycle stage: Customer** | 15 |
+| Contacts | **HubSpot lifecycle stage: Closed Lost** | 5 |
+| Companies | **HubSpot lifecycle stage: Lead** | 48 |
+| Companies | **HubSpot lifecycle stage: Customer** | 12 |
 
-## Do Not Auto-Fix
+### Association coverage
 
-- Do not overwrite original source.
-- Do not merge companies automatically.
-- Do not delete properties.
-- Do not move all stale deals.
-- Do not reset lifecycle stage.
-- Do not bulk update owner.
-- Do not change pipeline, close date, or deal stage based only on this report.
+| Relationship | Associated records | Total | Coverage |
+|---|---:|---:|---:|
+| Contacts To Companies | 280 | 360 | 77.8% |
+| Deals To Companies | 32 | 36 | 88.9% |
+| Deals To Contacts | 30 | 36 | 83.3% |
 
-These phrases appear here as explicit prohibitions, not as execution instructions. The Privacy + Safety Reviewer clearance is recorded in [safety_clearance.json](safety_clearance.json).
+### Deal pipelines
 
-## Limitations
+| Pipeline | Stages | Deals |
+|---|---:|---:|
+| **HubSpot pipeline: New Business** | 6 | 26 |
+| **HubSpot pipeline: Expansion** | 4 | 8 |
+| Unknown pipeline | — | 2 |
 
-- `deals_stuck_in_stage` is unavailable because stage-entry timestamps are not fetched in v1; no stuckness conclusion is made. See [pipeline_hygiene.json](processed/measurements/pipeline_hygiene.json).
-- This is synthetic data designed to exercise the workflow. The measurements validate the audit mechanics, not the live portal’s truth.
-- Shared domains and lifecycle/deal mismatches are candidates for review, not proof of incorrect CRM data.
-- Full-history cursor traversal in the live connector is best-effort rather than a point-in-time transaction, although this fixture itself is complete and non-truncated.
+## Key Findings
 
-## Suggested Next Review
+Validated findings are ordered by decision priority: P1 first, then structural P2 gaps, followed by P3 maintenance debt.
 
-Use this fixture as a regression case after changes to profiling, sanitization, findings validation, review aggregation, recommendations, or final-gate logic. Once the live portal has sufficient deal and association coverage, run the same full-history workflow and compare the snapshot dashboard, evidence rows, and recommendation decisions against this structure.
+### Priority 1 — Decisions at immediate risk
+
+| Finding | Severity | Evidence sample | Decisions affected | What it can distort | Evidence |
+|---|---|---:|---|---|---|
+| **Customers Without Closed Won Deal Trace**<br>**HubSpot property: Lifecycle Stage (lifecyclestage)**<br><small>customers_without_closedwon_deal_trace</small> | High | 15 of 15 records (100.0%) | Marketing Qualified Lead (MQL) quality; Sales handoff; Funnel conversion | The customer-stage population cannot be reconciled to closed-won revenue through the captured deal relationships, weakening lifecycle-to-pipeline reporting for a sales-led motion. | [CSV](evidence/lifecycle_funnel.csv) · [measurement](processed/measurements/lifecycle_funnel.json) |
+| **MQL Plus Contacts Without Deal Trace**<br>**HubSpot property: Lifecycle Stage (lifecyclestage)**<br><small>mql_plus_contacts_without_deal_trace</small> | High | 155 of 160 records (96.9%) | Marketing Qualified Lead (MQL) quality; Sales handoff; Funnel conversion | Most contacts at MQL, SQL, or opportunity stages have no associated deal in this snapshot, so funnel conversion and marketing-sourced pipeline coverage cannot be read confidently without confirming the intended handoff model. | [CSV](evidence/lifecycle_funnel.csv) · [measurement](processed/measurements/lifecycle_funnel.json) |
+| **Contacts Without Company Association**<br><small>contacts_without_company_association</small> | High | 80 of 360 records (22.2%) | Account coverage; Sales handoff; Account attribution | In an ABM-heavy CRM, contacts without a company association cannot participate reliably in account rollups, account-level attribution, or account ownership reporting. | [CSV](evidence/association_architecture.csv) · [measurement](processed/measurements/association_architecture.json) |
+| **Recent Original Source Capture Gap**<br>**HubSpot property: Original Source (hs_analytics_source)**<br><small>recent_original_source_capture_gap</small> | High | 40 of 180 records (22.2%) | Attribution reporting; Budget allocation | Recent contact cohorts have materially weaker original-source coverage, so marketing cannot reliably compare newer acquisition cohorts or explain source mix into pipeline. | [CSV](evidence/attribution_trust.csv) · [measurement](processed/measurements/attribution_trust.json) |
+
+### Priority 2 — Structural trust gaps
+
+| Finding | Severity | Evidence sample | Decisions affected | What it can distort | Evidence |
+|---|---|---:|---|---|---|
+| **Similar Source Field Name Candidates**<br><small>similar_source_field_name_candidates</small> | Medium | 11 of 17 records (64.7%) | Reporting consistency; Data governance | Eleven source-like property name groups are collision candidates; without a confirmed canonical mapping, workflows and reports may read different fields for the same business concept. | [CSV](evidence/property_governance.csv) · [measurement](processed/measurements/property_governance.json) |
+| **Decayed Source Field Candidates**<br><small>decayed_source_field_candidates</small> | Medium | 3 of 17 records (17.6%) | Reporting consistency; Data governance | Three source-like properties are populated historically but not in the recent half, which creates a legacy-field risk and can fragment attribution logic over time. | [CSV](evidence/property_governance.csv) · [measurement](processed/measurements/property_governance.json) |
+| **Deals Without Amount**<br>**HubSpot property: Amount (amount)**<br><small>deals_without_amount</small> | Medium | 6 of 36 records (16.7%) | Forecast confidence; Pipeline reporting | Deals without amount cannot contribute a complete value-weighted view of marketing-sourced pipeline. | [CSV](evidence/pipeline_hygiene.csv) · [measurement](processed/measurements/pipeline_hygiene.json) |
+| **Deals Without Contact Association**<br><small>deals_without_contact_association</small> | Medium | 6 of 36 records (16.7%) | Account coverage; Sales handoff; Account attribution | Deals without an associated contact break the contact-to-revenue path used to connect marketing engagement with pipeline outcomes. | [CSV](evidence/association_architecture.csv) · [measurement](processed/measurements/association_architecture.json) |
+| **Open Deals Past Close Date**<br>**HubSpot property: Close Date (closedate)**<br><small>open_deals_past_close_date</small> | Medium | 3 of 20 records (15.0%) | Forecast confidence; Pipeline reporting | Open deals whose close date is already past can make the pipeline used for marketing-to-revenue reporting appear more current or more attainable than the CRM supports. | [CSV](evidence/pipeline_hygiene.csv) · [measurement](processed/measurements/pipeline_hygiene.json) |
+| **Duplicate Company Domain Candidates**<br>**HubSpot property: Domain (domain)**<br><small>duplicate_company_domain_candidates</small> | Medium | 8 of 55 records (14.5%) | Account coverage; Sales handoff; Account attribution | 8 companies share a domain with another company and are duplicate candidates; if they are not intentional subsidiaries or regional entities, account rollups and attribution may be split. | [CSV](evidence/association_architecture.csv) · [measurement](processed/measurements/association_architecture.json) |
+| **Deals Without Company Association**<br><small>deals_without_company_association</small> | Medium | 4 of 36 records (11.1%) | Account coverage; Sales handoff; Account attribution | Deals without a company association can be omitted from account-level pipeline reporting and make ABM influence harder to reconcile. | [CSV](evidence/association_architecture.csv) · [measurement](processed/measurements/association_architecture.json) |
+| **Deals Without Owner**<br>**HubSpot property: Deal owner (hubspot_owner_id)**<br><small>deals_without_owner</small> | Medium | 4 of 36 records (11.1%) | Forecast confidence; Pipeline reporting | Unowned deals weaken accountability and make pipeline segmentation by sales owner incomplete. | [CSV](evidence/pipeline_hygiene.csv) · [measurement](processed/measurements/pipeline_hygiene.json) |
+| **Deals In Unknown Pipeline**<br>**HubSpot property: Pipeline (pipeline)**<br><small>deals_in_unknown_pipeline</small> | Medium | 2 of 36 records (5.6%) | Forecast confidence; Pipeline reporting | Deals referencing an undefined pipeline can fall outside standard pipeline rollups and distort marketing-to-revenue reporting. | [CSV](evidence/pipeline_hygiene.csv) · [measurement](processed/measurements/pipeline_hygiene.json) |
+
+### Priority 3 — Maintenance and hygiene debt
+
+| Finding | Severity | Evidence sample | Decisions affected | What it can distort | Evidence |
+|---|---|---:|---|---|---|
+| **Companies Without Domain**<br>**HubSpot property: Domain (domain)**<br><small>companies_without_domain</small> | Low | 5 of 60 records (8.3%) | Account coverage; Sales handoff; Account attribution | Companies without a domain are harder to deduplicate, enrich, and reconcile with account-level reporting keys. | [CSV](evidence/association_architecture.csv) · [measurement](processed/measurements/association_architecture.json) |
+
+
+### Representative HubSpot Companies and Deals
+
+These named records connect material findings to the CRM. Up to three records are shown per finding; the local CSV contains the full mapped set.
+
+#### MQL Plus Contacts Without Deal Trace
+
+- Company: [**Synthetic Account 001**](https://app.hubspot.com/contacts/123456/record/0-2/co001)
+- Company: [**Synthetic Account 002**](https://app.hubspot.com/contacts/123456/record/0-2/co002)
+- Company: [**Synthetic Account 003**](https://app.hubspot.com/contacts/123456/record/0-2/co003)
+- Showing 3 of 50 mapped records; open [the local record evidence CSV](report_record_evidence.csv) for the full set.
+
+#### Deals Without Amount
+
+- Deal: [**Synthetic Opportunity 033**](https://app.hubspot.com/contacts/123456/record/0-3/d033) · Pipeline: **Expansion** · Deal stage: **Closed Lost**
+- Deal: [**Synthetic Opportunity 036**](https://app.hubspot.com/contacts/123456/record/0-3/d036) · Pipeline: **legacy_pipeline** · Deal stage: **closedlost**
+- Company: [**Synthetic Account 007**](https://app.hubspot.com/contacts/123456/record/0-2/co007) · Deal: [**Synthetic Opportunity 007**](https://app.hubspot.com/contacts/123456/record/0-3/d007) · Pipeline: **New Business** · Deal stage: **Negotiation**
+- Showing 3 of 6 mapped records; open [the local record evidence CSV](report_record_evidence.csv) for the full set.
+
+#### Deals Without Contact Association
+
+- Deal: [**Synthetic Opportunity 033**](https://app.hubspot.com/contacts/123456/record/0-3/d033) · Pipeline: **Expansion** · Deal stage: **Closed Lost**
+- Deal: [**Synthetic Opportunity 034**](https://app.hubspot.com/contacts/123456/record/0-3/d034) · Pipeline: **Expansion** · Deal stage: **Closed Lost**
+- Deal: [**Synthetic Opportunity 035**](https://app.hubspot.com/contacts/123456/record/0-3/d035) · Pipeline: **legacy_pipeline** · Deal stage: **closedlost**
+- Showing 3 of 6 mapped records; open [the local record evidence CSV](report_record_evidence.csv) for the full set.
+
+#### Open Deals Past Close Date
+
+- Company: [**Synthetic Account 003**](https://app.hubspot.com/contacts/123456/record/0-2/co003) · Deal: [**Synthetic Opportunity 003**](https://app.hubspot.com/contacts/123456/record/0-3/d003) · Pipeline: **New Business** · Deal stage: **Negotiation**
+- Company: [**Synthetic Account 009**](https://app.hubspot.com/contacts/123456/record/0-2/co009) · Deal: [**Synthetic Opportunity 009**](https://app.hubspot.com/contacts/123456/record/0-3/d009) · Pipeline: **New Business** · Deal stage: **Discovery**
+- Company: [**Synthetic Account 017**](https://app.hubspot.com/contacts/123456/record/0-2/co017) · Deal: [**Synthetic Opportunity 017**](https://app.hubspot.com/contacts/123456/record/0-3/d017) · Pipeline: **New Business** · Deal stage: **Discovery**
+
+#### Duplicate Company Domain Candidates
+
+- Company: [**Synthetic Account 001**](https://app.hubspot.com/contacts/123456/record/0-2/co001) · Deal: [**Synthetic Opportunity 001**](https://app.hubspot.com/contacts/123456/record/0-3/d001) · Pipeline: **New Business** · Deal stage: **Discovery**
+- Company: [**Synthetic Account 002**](https://app.hubspot.com/contacts/123456/record/0-2/co002) · Deal: [**Synthetic Opportunity 002**](https://app.hubspot.com/contacts/123456/record/0-3/d002) · Pipeline: **New Business** · Deal stage: **Proposal**
+- Company: [**Synthetic Account 003**](https://app.hubspot.com/contacts/123456/record/0-2/co003) · Deal: [**Synthetic Opportunity 003**](https://app.hubspot.com/contacts/123456/record/0-3/d003) · Pipeline: **New Business** · Deal stage: **Negotiation**
+- Showing 3 of 8 mapped records; open [the local record evidence CSV](report_record_evidence.csv) for the full set.
+
+#### Deals Without Company Association
+
+- Deal: [**Synthetic Opportunity 033**](https://app.hubspot.com/contacts/123456/record/0-3/d033) · Pipeline: **Expansion** · Deal stage: **Closed Lost**
+- Deal: [**Synthetic Opportunity 034**](https://app.hubspot.com/contacts/123456/record/0-3/d034) · Pipeline: **Expansion** · Deal stage: **Closed Lost**
+- Deal: [**Synthetic Opportunity 035**](https://app.hubspot.com/contacts/123456/record/0-3/d035) · Pipeline: **legacy_pipeline** · Deal stage: **closedlost**
+- Showing 3 of 4 mapped records; open [the local record evidence CSV](report_record_evidence.csv) for the full set.
+
+#### Deals Without Owner
+
+- Deal: [**Synthetic Opportunity 034**](https://app.hubspot.com/contacts/123456/record/0-3/d034) · Pipeline: **Expansion** · Deal stage: **Closed Lost**
+- Company: [**Synthetic Account 011**](https://app.hubspot.com/contacts/123456/record/0-2/co011) · Deal: [**Synthetic Opportunity 011**](https://app.hubspot.com/contacts/123456/record/0-3/d011) · Pipeline: **New Business** · Deal stage: **Negotiation**
+- Company: [**Synthetic Account 019**](https://app.hubspot.com/contacts/123456/record/0-2/co019) · Deal: [**Synthetic Opportunity 019**](https://app.hubspot.com/contacts/123456/record/0-3/d019) · Pipeline: **New Business** · Deal stage: **Closed Won**
+- Showing 3 of 4 mapped records; open [the local record evidence CSV](report_record_evidence.csv) for the full set.
+
+#### Deals In Unknown Pipeline
+
+- Deal: [**Synthetic Opportunity 035**](https://app.hubspot.com/contacts/123456/record/0-3/d035) · Pipeline: **legacy_pipeline** · Deal stage: **closedlost**
+- Deal: [**Synthetic Opportunity 036**](https://app.hubspot.com/contacts/123456/record/0-3/d036) · Pipeline: **legacy_pipeline** · Deal stage: **closedlost**
+
+#### Companies Without Domain
+
+- Company: [**Synthetic Account 056**](https://app.hubspot.com/contacts/123456/record/0-2/co056)
+- Company: [**Synthetic Account 057**](https://app.hubspot.com/contacts/123456/record/0-2/co057)
+- Company: [**Synthetic Account 059**](https://app.hubspot.com/contacts/123456/record/0-2/co059)
+- Showing 3 of 5 mapped records; open [the local record evidence CSV](report_record_evidence.csv) for the full set.
+
+
+## Root Cause Hypotheses
+
+These are evidence-based hypotheses. Confidence and the question needed for confirmation are shown explicitly.
+
+| Hypothesis | Linked findings | Confidence | Evidence and confirmation |
+|---|---|---|---|
+| No root cause can be stated confidently from the available evidence | — | — | Confirm operating rules with the CRM owner. |
+
+## Recommended Actions
+
+The audit has already prepared each affected cohort and its evidence. The recommended accountable role reviews the records, makes or authorizes the decision, and records the disposition. It is a recommended business role, not a verified HubSpot owner name.
+
+| Priority | Finding | Human action | Recommended accountable role | Human decision required | Completion condition | Evidence |
+|---:|---|---|---|---|---|---|
+| P1 | customers_without_closedwon_deal_trace | Approve the Customer-to-Closed Won traceability rule, then review all 15 Customer-stage Contacts and classify each as traceable, valid exception, or lifecycle error. | Marketing and revenue operations owner | Marketing and revenue operations must jointly approve the traceability rule and any correction path | An approved lifecycle-to-revenue rule and a recorded classification for all 15 Customer-stage Contacts. | [CSV](evidence/lifecycle_funnel.csv) |
+| P1 | mql_plus_contacts_without_deal_trace | Confirm the sales handoff rule for MQL, SQL, and opportunity contacts, then review the 155 contacts without an associated deal. | Marketing and sales operations owner | Marketing and sales operations must jointly approve the handoff rule and exception criteria | An approved handoff rule and a recorded intentional-pre-deal, create-Deal, or valid-exception decision for all 155 Contacts. | [CSV](evidence/lifecycle_funnel.csv) |
+| P1 | contacts_without_company_association | Review the 80 contacts without a Company association and approve an account match or valid no-account exception for each record. | CRM owner | The CRM owner must approve or decline each proposed account match before any association is written | All 80 contacts have an approved account-match decision or documented no-account exception. | [CSV](evidence/association_architecture.csv) |
+| P1 | recent_original_source_capture_gap | Approve the canonical Original Source capture rule, then review the 40 recent Contacts missing that property and record a remediation decision or exception. | Marketing operations owner | Marketing operations must approve the canonical rule and each historical remediation decision | An approved source-capture rule and a recorded remediation decision or exception for all 40 Contacts. | [CSV](evidence/attribution_trust.csv) |
+| P2 | similar_source_field_name_candidates | Review the 11 source-like property name collision candidates and approve a canonical field map before changing workflows. | CRM governance owner | CRM governance must approve or decline each proposed canonical-field classification before workflows change | An approved canonical property map with a recorded canonical, alias, or distinct-purpose decision for all 11 candidates. | [CSV](evidence/property_governance.csv) |
+| P2 | decayed_source_field_candidates | Confirm a canonical-versus-legacy source field map for the 3 decayed source-like property candidates. | Marketing operations owner | Marketing operations must approve each property's canonical, legacy, migrate, or retain classification | A business-approved canonical/legacy map that can guide future workflow governance. | [CSV](evidence/property_governance.csv) |
+| P2 | deals_without_amount | Confirm which deal stages require an amount and review the 6 missing-amount deals against that policy. | Sales operations owner | Sales operations must approve the stage-aware amount rule and each exception before any CRM write | An approved stage-aware amount rule and a recorded amount-required or valid-exception decision for all 6 Deals. | [CSV](evidence/pipeline_hygiene.csv) |
+| P2 | deals_without_contact_association | Review the 6 Deals without a Contact association and approve the correct buying contact or a valid no-contact exception for each Deal. | Revenue operations owner | Revenue operations must approve or decline each proposed Contact association before any CRM write | All 6 Deals have an approved Contact-association decision or documented exception. | [CSV](evidence/association_architecture.csv) |
+| P2 | open_deals_past_close_date | Review the 3 open Deals with past close dates and approve a revised close date, stage decision, or documented exception for each Deal. | Sales operations owner | Sales operations must approve each close-date or stage decision before any CRM write | A human disposition for each past-date deal and a clearer pipeline reporting baseline. | [CSV](evidence/pipeline_hygiene.csv) |
+| P2 | duplicate_company_domain_candidates | Have the account owner review the 8 shared-domain company candidates and record whether each is intentional or duplicate-like. | Account operations owner | Account operations must approve the duplicate, related-account, or valid shared-domain classification for each candidate | A documented decision for each shared-domain candidate and a reliable account-rollup rule. | [CSV](evidence/association_architecture.csv) |
+| P2 | deals_without_company_association | Review the 4 Deals without a Company association and approve the correct account or a valid no-account exception for each Deal. | Revenue operations owner | Revenue operations must approve or decline each proposed Company association before any CRM write | All 4 Deals have an approved Company-association decision or documented exception. | [CSV](evidence/association_architecture.csv) |
+| P2 | deals_without_owner | Review the 4 unowned Deals and approve the accountable owner or a valid unassigned exception for each Deal. | Sales operations owner | Sales operations must approve or decline each proposed Deal owner before any CRM write | All 4 Deals have an approved owner decision or documented unassigned exception. | [CSV](evidence/pipeline_hygiene.csv) |
+| P2 | deals_in_unknown_pipeline | Ask a CRM administrator to determine the intended pipeline for the 2 affected deals before any manual correction. | CRM administrator | The CRM administrator must approve the intended Pipeline for each Deal before any CRM write | A documented pipeline decision for the affected deals and a consistent pipeline rollup. | [CSV](evidence/pipeline_hygiene.csv) |
+| P3 | companies_without_domain | Review the 5 Companies without a domain and approve a verified domain or a valid no-domain exception for each Company. | CRM owner | The CRM owner must approve or decline each proposed domain before any CRM write | All 5 Companies have an approved verified domain or documented no-domain exception. | [CSV](evidence/association_architecture.csv) |
+
+## What This Audit Cannot Determine
+
+- Record age is based on the last-modified timestamp. It does not prove that a person, marketing program, or sales representative actively engaged with the record.
+- A long or resumed full-history extract is a close operational snapshot, not a database transaction taken at one instant.
+- This synthetic demonstration measures CRM reporting trust, not business performance.
+
+## Evidence and Supporting Files
+
+- Attribution Trust: [evidence CSV](evidence/attribution_trust.csv) · [measurement file](processed/measurements/attribution_trust.json)
+- Lifecycle Funnel: [evidence CSV](evidence/lifecycle_funnel.csv) · [measurement file](processed/measurements/lifecycle_funnel.json)
+- Association Architecture: [evidence CSV](evidence/association_architecture.csv) · [measurement file](processed/measurements/association_architecture.json)
+- Pipeline Hygiene: [evidence CSV](evidence/pipeline_hygiene.csv) · [measurement file](processed/measurements/pipeline_hygiene.json)
+- Property Governance: [evidence CSV](evidence/property_governance.csv) · [measurement file](processed/measurements/property_governance.json)
+- [Validated findings](findings.json)
+- [Mapped Company and Deal evidence](report_record_evidence.csv)
+- [Operator appendix](operator_appendix.md)
+- [Schema discovery report](schema_discovery_report.md)
+
+## Next Review
+
+Re-run after the approved source-capture, association, and Deal governance changes have operated for one complete reporting cycle.
+
+## Sharing the Report
+
+This HTML file is generated locally. It is not a public URL, and its supporting-file links work only when the related output folder stays together.
+
+**Treat this as a confidential CRM report.** It can contain identifiable HubSpot Company and Deal names plus direct record links. For a fixed copy, choose **Print → Save as PDF**, then share the PDF only with authorized recipients through an approved channel. If you share interactive HTML, keep the complete report package together, use approved access-controlled hosting or file sharing, and never include the raw data folder, environment files, or secrets.
+
+---
+
+Smartify Marketing · For more marketing systems insights and updates: [smartifymarketing.com](https://smartifymarketing.com) · [GitHub](https://github.com/AliceEinstein)
