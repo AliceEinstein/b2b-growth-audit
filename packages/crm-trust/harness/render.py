@@ -754,7 +754,12 @@ def _render_html(
             for _object_type, field, fill, _total, _present in rows
         )
         surfaced = [row for row in all_completeness_by_object.get(object_type, []) if row[2] < 100.0]
-        quality_label = f"{len(surfaced)} surfaced gap(s)" if surfaced else "No surfaced gaps"
+        total_properties = len(all_completeness_by_object.get(object_type, []))
+        quality_label = (
+            f"{total_properties} key properties · {len(surfaced)} surfaced gap(s)"
+            if surfaced
+            else f"{total_properties} key properties · No surfaced gaps"
+        )
         quality_note = (
             '<p class="quality-complete-note">Other checked properties: no missing values surfaced.</p>'
             if surfaced and len(surfaced) < len(all_completeness_by_object.get(object_type, []))
