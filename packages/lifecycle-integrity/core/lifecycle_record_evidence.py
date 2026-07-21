@@ -20,6 +20,7 @@ from typing import Any, Iterable
 from urllib.parse import quote
 
 from .metrics import load_association_map, parse_ms, read_json, read_jsonl
+from .lifecycle_score_contract import cited_measurement_ids
 from .safety import csv_safe
 from .sanitizer import hash_record_id, load_or_create_salt, sanitize_untrusted_value
 
@@ -169,7 +170,7 @@ def _contact_name(contact: dict[str, Any] | None, reference: str) -> str:
         for value in (props.get("firstname"), props.get("lastname"))
         if value not in (None, "")
     )
-    return _safe_business_label(name, f"Contact {reference[-8:]}")
+    return _safe_business_label(name, f"Unnamed contact (reference {reference})")
 
 
 def _lifecycle_label(value: Any) -> str:
@@ -478,10 +479,16 @@ def build_report_record_evidence(run_dir: Path, view: dict[str, Any]) -> list[di
         for pipeline in pipeline_summary.get("pipelines", [])
         for stage in pipeline.get("stages", [])
     }
-    finding_statuses = {
-        str(row.get("finding_id")): str(row.get("review_status"))
-        for row in view.get("findings", [])
-    }
+    known_measurement_ids = set(view.get("measurement_by_id", {}))
+    finding_statuses: dict[str, str] = {}
+    for row in view.get("findings", []):
+        for measurement_id in cited_measurement_ids(
+            row.get("evidence_refs") or [], known_measurement_ids
+        ):
+            status = str(row.get("review_status"))
+            current = finding_statuses.get(measurement_id)
+            if status in {"approved", "revised"} or current is None:
+                finding_statuses[measurement_id] = status
     workflows = read_json(run_dir / "processed" / "workflow_inventory.json", [])
     if not isinstance(workflows, list):
         workflows = []

@@ -32,6 +32,9 @@ jobs:
       - name: Verify tracked CRM Trust public sample
         if: matrix.package == 'packages/crm-trust'
         run: python -m scripts.verify_final_gate --run examples/mock_midmarket_abm_sales
+      - name: Verify Lifecycle release sample end to end
+        if: matrix.package == 'packages/lifecycle-integrity' && matrix.python-version == '3.12'
+        run: pytest -q tests/test_lifecycle_golden.py -k scaled_mixed_motion_demo
 
   packaging:
     name: Build ${{ matrix.package }} wheel

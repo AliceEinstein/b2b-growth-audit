@@ -49,6 +49,9 @@ def test_report_has_journey_first_sections(tmp_path):
     assert "## Validated Findings" in appendix
     assert "## Implementation Detail" in appendix
     assert "## Journey and Measurement Detail" in appendix
+    assert "| Measurement | Journey | Dimension | Score link | Score control | Score role | Population key |" in appendix
+    assert "`primary`" not in appendix  # roles render as reader-friendly labels
+    assert "Primary" in appendix and "Breakdown" in appendix
     assert "## Technical CRM Profile" in appendix
     assert "## 2. CRM Snapshot" not in md
     assert "## 3. Data Quality and Usability" not in md
@@ -67,13 +70,19 @@ def test_report_language_rules(tmp_path):
 
 
 def test_html_report_is_selfcontained_with_charts_and_footer(tmp_path):
-    _, _, html, _ = _reports(tmp_path)
+    _, _, html = _complex_reports(tmp_path)
     assert "score-hero" in html and "Lifecycle Integrity Score" in html
     assert "How the score is calculated" in html
     assert "100 baseline" in html
-    assert "total deductions" in html
+    assert "total normalized deductions" in html
     assert "CRM hygiene" in html
     assert "actual deal amount under review" in html
+    assert "scored control coverage" in html
+    assert "scored handoff coverage" not in html
+    assert "diagnostic data coverage" in html
+    assert "Why this score can coexist with missing diagnostic data" in html
+    assert "Unassessed scored controls" in html
+    assert "Contact lifecycle-state continuity" in html
     assert "Smartify Marketing" in html and "Your Strategic B2B Marketing Partner" in html
     assert "smartifymarketing.com" in html and "github.com/AliceEinstein" in html
     for label in (
@@ -88,8 +97,9 @@ def test_html_report_is_selfcontained_with_charts_and_footer(tmp_path):
         assert label in html, label
     assert "Data Quality and Usability" not in html
     assert "http" not in html.split("<style>")[1].split("</style>")[0]  # no external CSS
-    assert "<!-- blocked-actions:start -->" in html
-    assert "<!-- blocked-actions:end -->" in html
+    assert "Actions That Should Not Be Automated" not in html
+    assert "<!-- blocked-actions:start -->" not in html
+    assert "<!-- blocked-actions:end -->" not in html
 
 
 def test_html_leaks_fail_the_gate(tmp_path):
@@ -103,6 +113,94 @@ def test_html_leaks_fail_the_gate(tmp_path):
     assert any(
         row["kind"] == "email" and "html" in row["file"] for row in gate["hard_leaks"]
     )
+
+
+def test_report_withholds_score_when_handoff_evidence_coverage_is_too_low(tmp_path):
+    run_dir, _ = build_lifecycle_run(tmp_path, "pipeline_leakage_sample")
+    measurement_path = run_dir / "processed" / "lifecycle_integrity_measurements.json"
+    measurement_doc = json.loads(measurement_path.read_text(encoding="utf-8"))
+    kept = False
+    for row in measurement_doc["measurements"]:
+        can_keep = "without_owner" in str(row.get("id") or "")
+        row["available"] = can_keep and not kept
+        if row["available"]:
+            kept = True
+    assert kept
+    measurement_path.write_text(
+        json.dumps(measurement_doc, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+    write_judgment_artifacts(run_dir)
+    generate_reports_and_clear_safety(run_dir)
+
+    md = (run_dir / "lifecycle_integrity_report.md").read_text(encoding="utf-8")
+    html = (run_dir / "lifecycle_integrity_report.html").read_text(encoding="utf-8")
+    assert "Overall Lifecycle Integrity Score: Not scored" in md
+    assert "Insufficient evidence to rate lifecycle integrity" in md
+    assert "Missing evidence is not treated as lifecycle failure" in md
+    assert "<span class='hero-number unscored'>Not scored</span>" in html
+    gate = run_lifecycle_final_gate(run_dir)
+    assert gate["passed"] is True, gate
+
+
+def test_report_discloses_plan_limited_sources_without_score_penalty(tmp_path):
+    baseline_dir, _ = build_lifecycle_run(tmp_path / "baseline", "pipeline_leakage_sample")
+    write_judgment_artifacts(baseline_dir)
+    generate_reports_and_clear_safety(baseline_dir)
+    baseline_score = json.loads(
+        (baseline_dir / "lifecycle_score.json").read_text(encoding="utf-8")
+    )
+
+    limited_dir, _ = build_lifecycle_run(tmp_path / "limited", "pipeline_leakage_sample")
+    manifest_path = limited_dir / "manifest.json"
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest["automation"] = {
+        "status": "unavailable",
+        "limitations": ["The portal plan or token did not expose automation."],
+    }
+    manifest_path.write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+
+    summary_path = limited_dir / "processed" / "intent_signal_summary.json"
+    summary = json.loads(summary_path.read_text(encoding="utf-8"))
+    summary.setdefault("coverage", {}).setdefault("sources", {})["campaigns"] = {
+        "status": "permission_or_api_unavailable",
+        "metadata_only": True,
+    }
+    summary_path.write_text(
+        json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+
+    write_judgment_artifacts(limited_dir)
+    generate_reports_and_clear_safety(limited_dir)
+    limited_score = json.loads(
+        (limited_dir / "lifecycle_score.json").read_text(encoding="utf-8")
+    )
+    assert limited_score["overall_lifecycle_integrity_score"] == baseline_score[
+        "overall_lifecycle_integrity_score"
+    ]
+    assert limited_score["coverage_percentage"] == baseline_score["coverage_percentage"]
+
+    md = (limited_dir / "lifecycle_integrity_report.md").read_text(encoding="utf-8")
+    html = (limited_dir / "lifecycle_integrity_report.html").read_text(encoding="utf-8")
+    for text in (md, html):
+        assert "Evidence and Feature Coverage" in text
+        assert "Workflow and scoring root causes" in text
+        assert "Campaign and channel context" in text
+        assert "Unavailable from portal or token" in text
+        assert "workflow and scoring configuration was not available" in text.lower()
+        assert "Other readable record-linked activity" in text
+        assert "No automatic deduction" in text
+        assert (
+            f"{baseline_score['coverage_percentage']}% scored control coverage"
+            in text
+        )
+        assert "Limited" in text
+        assert "diagnostic data coverage" in text.lower()
+        assert "weighted lifecycle control points were assessable" in text
+        assert "Actions That Should Not Be Automated" not in text
+    gate = run_lifecycle_final_gate(limited_dir)
+    assert gate["passed"] is True, gate
 
 
 def test_blocked_phrase_outside_html_marker_is_not_clearable(tmp_path):
@@ -134,12 +232,13 @@ def test_report_separates_real_deal_amount_from_no_deal_recovery_population(tmp_
         assert "No amount assigned" in text
         assert "Inbound One" in text
         assert "portal default currency" not in text
-    assert "Lifecycle Integrity Score:" in md and "/100 —" in md
-    assert "100 baseline" in md
-    assert "total deductions" in md
+        assert "Unnamed contact (reference CONTACT-" in text
+    assert "Lifecycle Integrity Score: Not scored" in md
+    assert "65/100 weighted control points were assessable" in md
+    assert "below the 70% minimum" in md
     assert "half weight" not in md
     assert "Evidence confidence by motion" not in md
-    assert "<span class='hero-number'>" in html
+    assert "<span class='hero-number unscored'>" in html
     assert "Inbound New Business" in html
     assert "report_record_evidence.csv" in html
     assert "report_account_evidence.csv" in html

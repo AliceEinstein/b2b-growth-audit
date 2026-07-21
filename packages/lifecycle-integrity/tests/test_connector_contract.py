@@ -49,6 +49,13 @@ def test_write_requests_are_blocked_before_any_network_call():
         ("DELETE", "/automation/v4/flows/123"),
         ("POST", "/automation/v4/flows/123/enrollments"),
         ("POST", "/automation/v4/actions"),
+        ("POST", "/forms/v2/forms"),
+        ("PATCH", "/forms/v2/forms/form-1"),
+        ("DELETE", "/forms/v2/forms/form-1"),
+        ("POST", "/crm/v3/objects/emails"),
+        ("PATCH", "/crm/v3/objects/emails/123"),
+        ("DELETE", "/crm/v3/objects/emails/123"),
+        ("PUT", "/crm/v3/objects/emails/123/associations/contacts/456/198"),
         ("PUT", "/settings/currencies/2026-03/company-currency"),
         ("POST", "/settings/currencies/2026-03/company-currency"),
     ]:

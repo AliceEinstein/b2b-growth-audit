@@ -122,11 +122,15 @@ def run_lifecycle_final_gate(run_dir: Path) -> Dict[str, Any]:
             measurement_doc = json.loads(measurement_path.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError):
             measurement_doc = {}
-        recomputed = compute_lifecycle_score(
-            findings,
-            registry,
-            measurement_doc.get("measurements", []),
-        )
+        try:
+            recomputed = compute_lifecycle_score(
+                findings,
+                registry,
+                measurement_doc.get("measurements", []),
+            )
+        except ValueError as exc:
+            recomputed = None
+            problems.setdefault("scoring_contract", []).append(str(exc))
         score_path = run_dir / "lifecycle_score.json"
         try:
             stored = (
@@ -139,15 +143,18 @@ def run_lifecycle_final_gate(run_dir: Path) -> Dict[str, Any]:
             problems.setdefault("score", []).append(
                 f"lifecycle_score.json is invalid: {exc}"
             )
-        if stored != recomputed:
+        if recomputed is not None and stored != recomputed:
             problems.setdefault("score", []).append("lifecycle_score.json does not match deterministic recomputation")
         for report_name in ("lifecycle_integrity_report.md", "lifecycle_integrity_report.html"):
             report_path = run_dir / report_name
-            if report_path.exists():
+            if report_path.exists() and recomputed is not None:
                 report_text = report_path.read_text(encoding="utf-8")
-                score_text = f"{recomputed['overall_lifecycle_integrity_score']}/100"
+                overall = recomputed["overall_lifecycle_integrity_score"]
+                score_text = "Not scored" if overall is None else f"{overall}/100"
                 html_score = re.search(
-                    rf"class=['\"]hero-number['\"][^>]*>\s*{re.escape(str(recomputed['overall_lifecycle_integrity_score']))}\s*</span>.*?class=['\"]hero-denom['\"][^>]*>\s*/100",
+                    r"class=['\"][^'\"]*\bhero-number\b[^'\"]*['\"][^>]*>\s*Not scored\s*</span>"
+                    if overall is None
+                    else rf"class=['\"][^'\"]*\bhero-number\b[^'\"]*['\"][^>]*>\s*{re.escape(str(overall))}\s*</span>.*?class=['\"]hero-denom['\"][^>]*>\s*/100",
                     report_text,
                     flags=re.DOTALL,
                 )

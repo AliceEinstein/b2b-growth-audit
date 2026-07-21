@@ -52,17 +52,30 @@ skill was installed by symlink, the run's `agent_workspace/task_manifest.json`
 records the absolute `repo_root` to change into.
 
 1. Read `hubspot_scopes.md`. Create one dedicated Private App token with all
-   seven exact CRM object/schema read scopes plus `settings.currencies.read`, `automation`, `forms`,
-   `marketing.campaigns.read`, and `sales-email-read` for the complete
-   intent-enabled workflow/scoring root-cause diagnostic. There is no wildcard
-   schema scope and no separate scoring scope used by this implementation. `automation` is
-   mutation-capable at the HubSpot platform level, but this connector permits
-   only workflow reads and read-style batch reads. Put the token in local
-   `.env` as `HUBSPOT_PRIVATE_APP_TOKEN`; never print it.
+   seven exact CRM object/schema read scopes plus `settings.currencies.read`,
+   `automation`, `forms`, `marketing.campaigns.read`, and `sales-email-read`
+   for the complete intent-enabled workflow/scoring root-cause diagnostic.
+   `automation` and `marketing.campaigns.read` depend on HubSpot plan
+   availability; if either is absent, continue with the documented fallback
+   and disclose the missing coverage rather than treating it as zero evidence.
+   There is no wildcard schema scope and no separate scoring scope used by this
+   implementation. HubSpot's `automation`, `forms`, and `sales-email-read`
+   scopes are broader at the platform level, but this connector permits only
+   workflow reads/read-style batch reads, Forms retrieval, and CRM email
+   retrieval/search. Keep `sales-email-read` so follow-up timing, direction,
+   reply/status, owner, and associations are available; never request message
+   content or addresses. Put the token in local `.env` as
+   `HUBSPOT_PRIVATE_APP_TOKEN`; never print it.
 2. Run `python -m scripts.check_hubspot_connection`. All core probes must pass.
    A missing `automation` result means workflow/scoring root-cause coverage is
    incomplete and must be disclosed; do not present the run as a complete
-   Automation & Scoring Integrity Audit.
+   Automation & Scoring Integrity Audit. A missing campaign scope or endpoint
+   means aggregate campaign/channel context is unavailable, but it does not
+   invalidate record-linked intent evidence from other readable sources.
+   The Events API adds no picker scope in this implementation but requires an
+   eligible Professional/Enterprise portal. A failed Events probe must be
+   disclosed as unavailable record-linked event coverage, not zero visits or
+   zero intent.
 3. Run `python -m scripts.run_lifecycle_integrity_audit`. Full history is
    the default and the authoritative mode: B2B sales cycles run 6-18 months,
    so a creation-date window truncates journeys and drops the older
@@ -215,7 +228,7 @@ The run must produce the files in `output_contract.md`, including:
 `operator_appendix.md`, `journey_map.md`,
 `journey_pattern_registry.json`, `findings.json`, `recommendations.md`,
 `agent_handoff.md`, `outlier_registry.csv`, `evidence.csv`,
-`report_record_evidence.csv`, `crm_context.yaml`,
+`report_record_evidence.csv`, `report_account_evidence.csv`, `crm_context.yaml`,
 `schema_discovery_report.md`, `review_trace.json`, `audit_log.json`,
-`lifecycle_score.json`, `automation_evidence.csv`, and a passing
+`lifecycle_score.json`, `manifest.json`, `automation_evidence.csv`, and a passing
 `final_gate_report.json`.

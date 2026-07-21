@@ -10,10 +10,13 @@ agent_handoff.md             # safety-bounded instructions for a later implement
 findings.json                # machine-readable validated findings
 evidence.csv                 # hashed-record evidence rows
 report_record_evidence.csv   # local Company/Deal labels mapped to hashes
+score.json                   # deterministic CRM Trust score and arithmetic
+recommendations.json         # validated action plan and decision ownership
 crm_context.yaml             # inferred CRM operating model
 schema_discovery_report.md   # schema interpretation + confidence notes
 audit_log.json               # run details, no secrets
 manifest.json                # snapshot status, counts, and truncation flags
+final_gate_report.json       # hashes and deterministic release-gate result
 ```
 
 ## Intermediate artifacts (per run)

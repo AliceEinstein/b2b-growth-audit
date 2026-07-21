@@ -10,6 +10,7 @@ from typing import Any, Dict, List, Optional, Tuple
 from connectors.hubspot.normalize import write_json
 
 from .journey_evidence import build_journey_evidence_store
+from .lifecycle_score_contract import validate_scoring_contract
 from .metrics import (
     is_empty,
     load_association_map,
@@ -169,6 +170,7 @@ def measure_lifecycle_integrity(run_dir: Path) -> Dict[str, Any]:
     measurements: List[Dict[str, Any]] = []
     leakage_deal_ids: set[str] = set()
     potential_recoverable_contact_ids: set[str] = set()
+    active_intent_deal_ids: set[str] = set()
     active_escalation_deal_ids: set[str] = set()
     closed_lost_recovery_deal_ids: set[str] = set()
     intent_missing_deal_contact_ids: set[str] = set()
@@ -195,6 +197,11 @@ def measure_lifecycle_integrity(run_dir: Path) -> Dict[str, Any]:
             recoverability: str = "unknown",
             potential_recoverable_pipeline_population: bool = False,
             include_closed_deal_amount: bool = True,
+            score_link: Optional[str] = None,
+            score_control: Optional[str] = None,
+            score_population_key: Optional[str] = None,
+            score_role: str = "not_scored",
+            outside_score_reason: Optional[str] = None,
         ) -> None:
             affected_count = len(affected) if affected is not None else None
             affected_deal_ids = sorted(
@@ -269,6 +276,11 @@ def measure_lifecycle_integrity(run_dir: Path) -> Dict[str, Any]:
                     "leakage_candidate": leakage_candidate,
                     "leakage_point": leakage_point,
                     "recoverability": recoverability,
+                    "score_link": score_link,
+                    "score_control": score_control,
+                    "score_population_key": score_population_key,
+                    "score_role": score_role,
+                    "outside_score_reason": outside_score_reason,
                     "potential_recoverable_pipeline_population": (
                         affected_count
                         if potential_recoverable_pipeline_population and affected_count is not None
@@ -378,6 +390,10 @@ def measure_lifecycle_integrity(run_dir: Path) -> Dict[str, Any]:
             leakage_candidate=True,
             leakage_point="Lifecycle path regression",
             recoverability="requires_business_confirmation",
+            score_link="deal_continuity",
+            score_control="contact_lifecycle_state",
+            score_population_key="contact_lifecycle_state_continuity",
+            score_role="primary",
         )
 
         add(
@@ -396,6 +412,10 @@ def measure_lifecycle_integrity(run_dir: Path) -> Dict[str, Any]:
             leakage_candidate=True,
             leakage_point="Deal to company association break",
             recoverability="open_deal_review",
+            score_link="deal_continuity",
+            score_control="deal_company_association",
+            score_population_key="deal_company_association",
+            score_role="primary",
         )
         add(
             "deals_without_contact",
@@ -413,6 +433,10 @@ def measure_lifecycle_integrity(run_dir: Path) -> Dict[str, Any]:
             leakage_candidate=True,
             leakage_point="Deal to buying-contact association break",
             recoverability="open_deal_review",
+            score_link="deal_continuity",
+            score_control="deal_contact_association",
+            score_population_key="deal_contact_association",
+            score_role="primary",
         )
 
         won_state_gaps: List[Tuple[str, str]] = []
@@ -460,8 +484,6 @@ def measure_lifecycle_integrity(run_dir: Path) -> Dict[str, Any]:
             journey = assignment_by_hash.get(deal_hash, {}).get("assigned_journey", "unassigned")
             deals_by_journey[str(journey)].append(deal)
         for journey, journey_deals in sorted(deals_by_journey.items()):
-            if journey == "unassigned":
-                continue
             missing_owner = [
                 ("deals", str(deal.get("id")))
                 for deal in journey_deals
@@ -478,6 +500,10 @@ def measure_lifecycle_integrity(run_dir: Path) -> Dict[str, Any]:
                 leakage_candidate=True,
                 leakage_point="Journey deal without accountable owner",
                 recoverability="open_deal_review",
+                score_link="deal_progression",
+                score_control="open_deal_owner",
+                score_population_key=f"open_deal_owner:{journey}",
+                score_role="primary",
             )
             if deal_company is not None:
                 missing_company = [
@@ -495,6 +521,10 @@ def measure_lifecycle_integrity(run_dir: Path) -> Dict[str, Any]:
                     leakage_candidate=True,
                     leakage_point="Journey deal without account association",
                     recoverability="open_deal_review",
+                    score_link="deal_continuity",
+                    score_control="deal_company_association",
+                    score_population_key="deal_company_association",
+                    score_role="breakdown",
                 )
 
         inbound_deals = deals_by_journey.get("inbound_new_business", [])
@@ -524,6 +554,10 @@ def measure_lifecycle_integrity(run_dir: Path) -> Dict[str, Any]:
                 leakage_candidate=True,
                 leakage_point="Inbound deal without source continuity",
                 recoverability="system_repair",
+                score_link="deal_continuity",
+                score_control="inbound_source_continuity",
+                score_population_key="inbound_source_continuity",
+                score_role="primary",
             )
         else:
             add(
@@ -536,6 +570,10 @@ def measure_lifecycle_integrity(run_dir: Path) -> Dict[str, Any]:
                 field_name="hs_analytics_source",
                 available=False,
                 note="deal-contact associations unavailable",
+                score_link="deal_continuity",
+                score_control="inbound_source_continuity",
+                score_population_key="inbound_source_continuity",
+                score_role="primary",
             )
 
         expansion_deals = deals_by_journey.get("expansion_renewal", [])
@@ -568,6 +606,10 @@ def measure_lifecycle_integrity(run_dir: Path) -> Dict[str, Any]:
                 leakage_candidate=True,
                 leakage_point="Expansion deal disconnected from customer state",
                 recoverability="requires_business_confirmation",
+                score_link="post_close_recovery",
+                score_control="expansion_customer_state",
+                score_population_key="expansion_customer_state",
+                score_role="primary",
             )
 
         high_intent_by_journey: Dict[str, List[Dict[str, Any]]] = defaultdict(list)
@@ -604,6 +646,10 @@ def measure_lifecycle_integrity(run_dir: Path) -> Dict[str, Any]:
                 leakage_point="High-intent contact without accountable owner",
                 recoverability="potential_recoverable_population",
                 potential_recoverable_pipeline_population=True,
+                score_link="intent_to_owner",
+                score_control="intent_owner",
+                score_population_key=f"intent_owner:{journey}",
+                score_role="primary",
             )
             no_deal = (
                 [
@@ -634,6 +680,10 @@ def measure_lifecycle_integrity(run_dir: Path) -> Dict[str, Any]:
                 leakage_point="High-intent contact without deal progression",
                 recoverability="potential_recoverable_population",
                 potential_recoverable_pipeline_population=True,
+                score_link="owner_to_deal",
+                score_control="owner_deal",
+                score_population_key=f"owner_deal:{journey}",
+                score_role="primary",
             )
 
         lifecycle_fields = store.get("candidate_fields", {}).get("lifecycle", [])
@@ -674,6 +724,26 @@ def measure_lifecycle_integrity(run_dir: Path) -> Dict[str, Any]:
         intent_events = read_jsonl(processed / "intent_signal_store.jsonl") if (processed / "intent_signal_store.jsonl").exists() else []
         intent_status = str(intent_coverage.get("status") or "not_requested")
         intent_available = intent_status in {"available", "full", "partial"}
+        activity_source = (intent_coverage.get("sources") or {}).get("activities", {})
+        activity_objects = activity_source.get("activity_objects", {}) or {}
+        seller_activity_types = {
+            "tasks",
+            "meetings",
+            "notes",
+            "calls",
+            "emails",
+            "communications",
+        }
+        seller_followup_complete = (
+            str(activity_source.get("status") or "")
+            in {"available", "full", "observed_no_events"}
+            and seller_activity_types.issubset(activity_objects)
+            and all(
+                bool(activity_objects[object_type].get("contact_association_available"))
+                or bool(activity_objects[object_type].get("deal_association_available"))
+                for object_type in seller_activity_types
+            )
+        )
         add(
             "intent_signal_coverage",
             "all_detected_journeys",
@@ -732,6 +802,15 @@ def measure_lifecycle_integrity(run_dir: Path) -> Dict[str, Any]:
                 leakage_point="Record-linked intent signal without deal progression",
                 recoverability="potential_recoverable_population",
                 potential_recoverable_pipeline_population=True,
+                score_link="owner_to_deal",
+                score_control="owner_deal",
+                score_population_key="record_linked_intent_deal_path",
+                score_role="supporting",
+                outside_score_reason=(
+                    "This activity-derived population corroborates the mutually "
+                    "exclusive journey populations and may overlap them, so it is "
+                    "shown as supporting evidence rather than scored again."
+                ),
             )
 
             for deal in deals:
@@ -757,32 +836,40 @@ def measure_lifecycle_integrity(run_dir: Path) -> Dict[str, Any]:
                     and parse_ms(row.get("occurred_at")) > latest_signal_ms
                     for row in rows
                 )
-                if not deal_flags.get("closed") and (
-                    is_empty(props.get("hubspot_owner_id")) or not has_follow_up
-                ):
-                    active_escalation_deal_ids.add(deal_id)
+                if not deal_flags.get("closed"):
+                    active_intent_deal_ids.add(deal_id)
+                    if seller_followup_complete and (
+                        is_empty(props.get("hubspot_owner_id")) or not has_follow_up
+                    ):
+                        active_escalation_deal_ids.add(deal_id)
             add(
                 "active_deal_intent_without_escalation",
                 "all_detected_journeys",
                 "handoff_integrity",
                 "deals",
-                sum(
-                    1
-                    for deal in deals
-                    if not flags.get(
-                        (str(_props(deal).get("pipeline")), str(_props(deal).get("dealstage"))), {}
-                    ).get("closed", False)
+                len(active_intent_deal_ids) if seller_followup_complete else None,
+                (
+                    [("deals", deal_id) for deal_id in sorted(active_escalation_deal_ids)]
+                    if seller_followup_complete
+                    else None
                 ),
-                [("deals", deal_id) for deal_id in sorted(active_escalation_deal_ids)],
+                available=seller_followup_complete,
                 note=(
                     "Open deal has a linked high or medium intent signal but no "
                     "deterministic owner/follow-up continuity after that signal. "
                     "Review before treating it as commercial leakage."
+                    if seller_followup_complete
+                    else "Seller activity or record-association coverage is incomplete; "
+                    "the audit cannot prove that an open deal lacked follow-up after intent."
                 ),
                 confidence="medium",
                 leakage_candidate=True,
                 leakage_point="Active-deal intent signal without escalation path",
                 recoverability="open_deal_review",
+                score_link="deal_progression",
+                score_control="active_deal_followup",
+                score_population_key="active_deal_followup",
+                score_role="primary",
             )
 
             company_deals: Dict[str, List[str]] = defaultdict(list)
@@ -882,6 +969,13 @@ def measure_lifecycle_integrity(run_dir: Path) -> Dict[str, Any]:
                 leakage_point="Closed-lost reactivation without recovery path",
                 recoverability="closed_lost_recovery",
                 include_closed_deal_amount=False,
+                score_link="post_close_recovery",
+                score_population_key="closed_lost_reactivation",
+                score_role="opportunity_only",
+                outside_score_reason=(
+                    "Renewed intent after closed-lost is a commercial recovery "
+                    "opportunity, not proof that the prior lifecycle control failed."
+                ),
             )
 
     open_leakage_ids = []
@@ -1019,6 +1113,9 @@ def measure_lifecycle_integrity(run_dir: Path) -> Dict[str, Any]:
         "evidence_file": "evidence.csv",
         "evidence_columns": EVIDENCE_COLUMNS,
     }
+    scoring_problems = validate_scoring_contract(measurements)
+    if scoring_problems:
+        raise ValueError("invalid lifecycle scoring contract: " + "; ".join(scoring_problems))
     write_json(processed / "lifecycle_integrity_measurements.json", doc)
     write_json(processed / "recovery_routing.json", recovery_routing)
     write_outlier_registry(run_dir)

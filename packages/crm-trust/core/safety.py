@@ -105,9 +105,11 @@ def scan_file(path: Path) -> list[SafetyHit]:
 
 def scan_final_outputs(run_dir: Path) -> list[SafetyHit]:
     """Scan every final artifact in a run directory, skipping raw/."""
+    run_dir = Path(run_dir)
     hits: list[SafetyHit] = []
-    for path in sorted(Path(run_dir).rglob("*")):
-        if "raw" in path.parts:
+    for path in sorted(run_dir.rglob("*")):
+        relative = path.relative_to(run_dir)
+        if relative.parts and relative.parts[0] == "raw":
             continue
         if path.is_file() and path.suffix in SCANNED_SUFFIXES:
             hits.extend(scan_file(path))

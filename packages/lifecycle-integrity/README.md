@@ -47,9 +47,10 @@ detected and scored separately.
 ## Safety model
 
 - The client rejects every request outside its read-only allowlist.
-- The single token for a full diagnostic includes HubSpot's `automation`
-  scope, but the client allowlist contains only workflow GET and batch-read
-  endpoints; workflow create, update, delete, enroll, and action endpoints are
+- The single token for a full diagnostic includes HubSpot's broader
+  `automation`, `forms`, and `sales-email-read` scopes. The client allowlist
+  contains only workflow GET/batch-read, Forms GET, and CRM email
+  retrieval/search endpoints; workflow, form, and email writes are
   structurally blocked.
 - Tokens are loaded locally and never written to artifacts or error messages.
 - Raw snapshots, including full workflow responses needed for local parsing,
@@ -91,9 +92,47 @@ this implementation. Projects are not read as a separate object;
 project values synced into CRM records are covered by the relevant object read.
 See
 [`hubspot_scopes.md`](skills/hubspot-lifecycle-integrity-audit/hubspot_scopes.md)
-for the scope-to-feature map, the `automation` safety boundary, activity
+for the scope-to-feature map, the broad-scope safety boundary, activity
 coverage, the write-access warning, and read scopes that are not current report
-inputs.
+inputs. `sales-email-read` is retained so one-to-one email follow-up evidence
+is not redacted; the audit uses only timing, direction, reply/status, owner,
+and record associations, never message content or addresses.
+
+### What happens when a scope is unavailable?
+
+The full diagnostic is designed to degrade transparently. `automation` is only
+available to eligible HubSpot Professional/Enterprise portals because HubSpot
+does not expose a narrower workflow-read scope. `marketing.campaigns.read` is
+available to Marketing Hub Professional/Enterprise portals. If either is
+unavailable, the audit does not fail and does not treat the missing source as
+zero data:
+
+- Without `automation`, the core lifecycle audit and available intent analysis
+  still run. Workflow and scoring configuration are shown as unavailable, so
+  the report cannot claim to identify a workflow root cause.
+- Without `marketing.campaigns.read`, campaign, asset, and aggregate channel
+  context are omitted. Record-linked Events, Forms, Calls, Emails, and synced
+  HubSpot properties can still support journey and leakage analysis when
+  available. Campaign aggregates are context only and never prove a
+  person-level intent or recovery opportunity.
+- Missing activity sources are labeled `partial` or
+  `permission_or_api_unavailable`; a successful endpoint with no rows is
+  labeled `observed_no_events`.
+- HubSpot's Events API also requires an eligible Professional or Enterprise
+  subscription, but it does not add another Private App scope selection. The
+  preflight probes that entitlement directly. If unavailable, page/visit and
+  conversion-style event coverage is disclosed as unavailable while Forms,
+  CRM activities, and properties continue to support the audit.
+
+This does not automatically reduce the Lifecycle Integrity Score. The score is
+based on nine explicit controls grouped into five lifecycle links. A missing
+source only affects the score indirectly when it makes one of those controls
+unassessable: that control is excluded
+from the assessed denominator, scored control coverage is shown, and the
+numeric score is withheld below 70% assessable coverage. This percentage is
+not total diagnostic data completeness: automation, campaign/channel, and
+record-linked activity coverage are reported separately. CRM Trust scoring is
+unaffected by these Lifecycle-only permissions.
 
 ~~~bash
 cp .env.example .env

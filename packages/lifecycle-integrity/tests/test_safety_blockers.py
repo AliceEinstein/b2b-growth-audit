@@ -106,3 +106,13 @@ def test_scan_final_outputs_skips_raw_but_scans_reports(tmp_path):
         "Contact leaked.person@example.com about this.", encoding="utf-8"
     )
     assert has_hard_leaks(scan_final_outputs(run))
+
+
+def test_scan_final_outputs_does_not_skip_run_beneath_parent_named_raw(tmp_path):
+    run = tmp_path / "raw" / "run_x"
+    run.mkdir(parents=True)
+    (run / "lifecycle_integrity_report.md").write_text(
+        "Contact leaked.person@example.com about this.", encoding="utf-8"
+    )
+
+    assert has_hard_leaks(scan_final_outputs(run))

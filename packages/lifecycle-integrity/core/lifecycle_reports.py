@@ -23,6 +23,7 @@ from .lifecycle_validators import (
     load_registry,
     load_reviews,
     validate_findings,
+    validate_measurement_scoring_contract,
     validate_recommendation_plan,
     validate_reviews,
 )
@@ -59,7 +60,7 @@ def generate_lifecycle_reports(run_dir: Path) -> Dict[str, object]:
     # Keep the report path deterministic for both live snapshots and legacy
     # example runs.  When the token has no automation scope, this produces
     # explicit unavailable/empty artifacts and leaves the lifecycle score and
-    # nine-section report contract unchanged.
+    # seven-section report contract unchanged.
     build_automation_integrity_artifacts(run_dir)
     registry, registry_problems = load_registry(run_dir)
     findings, finding_problems = load_findings(run_dir)
@@ -69,6 +70,7 @@ def generate_lifecycle_reports(run_dir: Path) -> Dict[str, object]:
         + finding_problems
         + review_problems
         + validate_findings(run_dir)
+        + validate_measurement_scoring_contract(run_dir)
         + validate_reviews(run_dir, final=True)
         + validate_recommendation_plan(run_dir)
     )

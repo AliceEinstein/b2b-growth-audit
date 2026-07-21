@@ -2,19 +2,21 @@
 
 Use one dedicated Private App token for this audit. In HubSpot, open
 **Settings → Integrations → Private Apps**, create the app, open **Scopes**, and
-select every scope below exactly as written.
+use the scope search to select every scope ID below. HubSpot can show a
+human-readable permission label beside the ID; the code-formatted value in this
+table is the exact internal scope ID that the token must report.
 
 ## Required scopes
 
-| HubSpot scope | Why the audit needs it |
-|---|---|
-| `crm.objects.contacts.read` | Contact records, contact properties, contact-side associations, and task/meeting/note metadata access used by HubSpot's CRM activity APIs. |
-| `crm.objects.companies.read` | Company records and company-side associations. |
-| `crm.objects.deals.read` | Deal records, `/crm/v3/pipelines/deals` pipeline/stage definitions, and deal-side associations. |
-| `crm.objects.owners.read` | Owner identity and assignment coverage. |
-| `crm.schemas.contacts.read` | Contact property definitions, types, options, and governance signals. |
-| `crm.schemas.companies.read` | Company property definitions, types, options, and governance signals. |
-| `crm.schemas.deals.read` | Deal property definitions, types, options, and governance signals. |
+| Exact HubSpot scope ID | HubSpot availability | Why the audit needs it |
+|---|---|---|
+| `crm.objects.contacts.read` | All accounts | Contact records, contact properties, contact-side associations, and task/meeting/note metadata access used by HubSpot's CRM activity APIs. |
+| `crm.objects.companies.read` | All accounts | Company records and company-side associations. |
+| `crm.objects.deals.read` | All accounts | Deal records, `/crm/v3/pipelines/deals` pipeline/stage definitions, and deal-side associations. |
+| `crm.objects.owners.read` | All accounts | Owner identity and assignment coverage. |
+| `crm.schemas.contacts.read` | All accounts | Contact property definitions, types, options, and governance signals. |
+| `crm.schemas.companies.read` | All accounts | Company property definitions, types, options, and governance signals. |
+| `crm.schemas.deals.read` | All accounts | Deal property definitions, types, options, and governance signals. |
 
 Do not enter a wildcard such as `crm.schemas.*.read`; the three exact schema
 scopes must be selected separately.
@@ -23,6 +25,13 @@ There is no `crm.pipelines.deals.read` scope in HubSpot's current scope list.
 Deal pipeline and stage reads are covered by `crm.objects.deals.read` and are
 also tested as a separate endpoint probe. `crm.pipelines.orders.read` is only
 for **Order** pipelines and is not needed here.
+
+If one of these seven IDs does not appear in the Private App scope search, do
+not choose a similarly named permission. Confirm that the user configuring the
+app can manage Private Apps, reload the scope editor, and search for the full
+ID. All seven are listed by HubSpot as available to all accounts. The audit
+must stop at preflight if an exact required scope or its endpoint is still
+unavailable.
 
 ## Write access is not required
 
@@ -44,8 +53,8 @@ For clarity, the current audit does not use:
   the property definitions through its schema scopes but deliberately excludes
   protected property values from snapshot candidates.
 - `automation`: CRM Trust does not inspect workflows or scoring automation.
-- `crm.objects.projects.read` or `crm.schemas.projects.read`: the current audit
-  does not call the HubSpot Projects API.
+- HubSpot Projects object permissions: the current audit does not call the
+  Projects API, so no Projects permission belongs in this checklist.
 - `crm.objects.leads.read`, `crm.lists.read`, custom-object, campaign, form, or
   email scopes: the current connector does not call those APIs.
 
@@ -67,7 +76,8 @@ customer Company record as the portal's identity.
 4. Do not start the audit until all seven required scopes and endpoint probes
    pass.
 
-Official references: [HubSpot app scopes](https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes),
+Scope IDs and account availability were rechecked against HubSpot's current
+scope list on 21 July 2026. Official references: [HubSpot app scopes](https://developers.hubspot.com/docs/apps/developer-platform/build-apps/authentication/scopes),
 [HubSpot Sensitive Data API](https://developers.hubspot.com/docs/api-reference/latest/crm/properties/sensitive-data),
 [CRM properties](https://developers.hubspot.com/docs/api-reference/latest/crm/properties/guide),
 and [CRM owners](https://developers.hubspot.com/docs/api-reference/latest/crm/owners/guide).

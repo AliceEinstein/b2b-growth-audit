@@ -192,7 +192,13 @@ def _source_status(
     reported: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     files = EVENT_SOURCE_FILES[source]
-    present = [name for name in files if (raw / name).exists() or (raw / name).is_dir()]
+    present = [
+        f"{name}.jsonl" if source == "activities" else name
+        for name in files
+        if (
+            raw / (f"{name}.jsonl" if source == "activities" else name)
+        ).exists()
+    ]
     if reported and reported.get("status") in {
         "permission_or_api_unavailable",
         "permission_denied",

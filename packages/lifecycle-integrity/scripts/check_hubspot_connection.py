@@ -49,10 +49,23 @@ FULL_DIAGNOSTIC_PROBES = [
     ("workflow/scoring root-cause coverage", FULL_DIAGNOSTIC_SCOPE, "/automation/v4/flows", {"limit": 1}),
 ]
 INTENT_PROBES = [
-    ("activity metadata", "crm.objects.contacts.read", "/crm/v3/objects/calls", {"limit": 1}),
+    ("call activity metadata", "crm.objects.contacts.read", "/crm/v3/objects/calls", {"limit": 1}),
+    (
+        "one-to-one email engagement metadata",
+        "sales-email-read",
+        "/crm/v3/objects/emails",
+        {
+            "limit": 1,
+            "properties": "createdate,hs_timestamp,hubspot_owner_id,hs_email_status,hs_email_direction,hs_email_type",
+        },
+    ),
+    ("task activity metadata", "crm.objects.contacts.read", "/crm/v3/objects/tasks", {"limit": 1}),
+    ("meeting activity metadata", "crm.objects.contacts.read", "/crm/v3/objects/meetings", {"limit": 1}),
+    ("note activity metadata", "crm.objects.contacts.read", "/crm/v3/objects/notes", {"limit": 1}),
+    ("communication activity metadata", "crm.objects.contacts.read", "/crm/v3/objects/communications", {"limit": 1}),
     ("forms and submission metadata", "forms", "/forms/v2/forms", None),
     ("campaign/channel context", "marketing.campaigns.read", "/marketing/campaigns/2026-03", {"limit": 1}),
-    ("record-linked event occurrences", "crm.objects.contacts.read", "/events/event-occurrences/2026-03/event-types", None),
+    ("record-linked event occurrences", "Professional+ Events API entitlement", "/events/event-occurrences/2026-03/event-types", None),
 ]
 
 
@@ -90,12 +103,15 @@ def main() -> int:
         # endpoint-level probes if unavailable.
         missing_core_scopes: list[str] = []
         automation_reported = False
+        scopes_verified = False
+        missing_intent_scopes: list[str] = list(INTENT_SCOPES)
         try:
             info = client.post(
                 "/oauth/v2/private-apps/get/access-token-info",
                 json={"tokenKey": token},
             )
             scopes = {str(scope) for scope in (info.get("scopes") or [])}
+            scopes_verified = True
             console.print(f"✅ Token reports {len(scopes)} scope(s)")
             missing_core_scopes = [
                 scope for scope in CORE_REQUIRED_SCOPES if scope not in scopes
@@ -109,9 +125,11 @@ def main() -> int:
             automation_reported = FULL_DIAGNOSTIC_SCOPE in scopes
             if not automation_reported:
                 console.print(
-                    "[yellow]⚠️ Missing automation: this token can run only the "
-                    "core journey audit, not the complete workflow/scoring "
-                    "root-cause diagnostic.[/yellow]"
+                    "[yellow]⚠️ Missing automation: the portal plan or token does "
+                    "not expose workflow configuration. The core journey audit "
+                    "can still run, but workflow/scoring root causes will not be "
+                    "assessed. automation is available only to eligible "
+                    "Professional/Enterprise portals.[/yellow]"
                 )
             write_scopes = sorted(s for s in scopes if ".write" in s)
             if write_scopes:
@@ -126,12 +144,37 @@ def main() -> int:
                     "mutations under this scope, but this audit connector only "
                     "allows workflow reads.[/yellow]"
                 )
+            if "forms" in scopes:
+                console.print(
+                    "[yellow]⚠️ forms scope detected: HubSpot does not offer a "
+                    "narrower forms.read scope, but this audit connector only "
+                    "allows form and submission retrieval.[/yellow]"
+                )
+            if "sales-email-read" in scopes:
+                console.print(
+                    "[yellow]⚠️ sales-email-read scope detected: HubSpot describes "
+                    "this as read/manage access to one-to-one email engagements. "
+                    "This audit connector only retrieves metadata and associations; "
+                    "email writes and message content access are not allowlisted.[/yellow]"
+                )
             missing_intent_scopes = [scope for scope in INTENT_SCOPES if scope not in scopes]
             if missing_intent_scopes:
+                campaign_missing = "marketing.campaigns.read" in missing_intent_scopes
+                suffix = (
+                    " Campaign/channel context will be unavailable; this scope is "
+                    "only available to Marketing Hub Professional/Enterprise "
+                    "portals. Other readable record-linked intent sources can "
+                    "still be used, and the missing source does not create an "
+                    "automatic score deduction."
+                    if campaign_missing
+                    else ""
+                )
                 console.print(
                     "[yellow]⚠️ Missing intent source scope(s): "
                     + ", ".join(missing_intent_scopes)
-                    + ". The run will disclose those source limitations.[/yellow]"
+                    + ". The run will disclose those source limitations."
+                    + suffix
+                    + "[/yellow]"
                 )
         except HubSpotError:
             console.print(
@@ -200,12 +243,24 @@ def main() -> int:
         )
         return 1
     if automation_reachable:
-        if len(intent_reachable) == len(INTENT_PROBES):
+        if (
+            len(intent_reachable) == len(INTENT_PROBES)
+            and scopes_verified
+            and not missing_intent_scopes
+        ):
             console.print("✅ Full Lifecycle + Intent + Automation & Scoring diagnostic ready")
         else:
+            scope_note = (
+                " token intent scopes are incomplete"
+                if scopes_verified and missing_intent_scopes
+                else " token scopes could not be verified"
+                if not scopes_verified
+                else ""
+            )
             console.print(
                 "⚠️ Lifecycle + Automation ready; intent source probes are partial "
-                f"({len(intent_reachable)}/{len(INTENT_PROBES)}) and will be disclosed"
+                f"({len(intent_reachable)}/{len(INTENT_PROBES)});{scope_note or ' source coverage is incomplete'} "
+                "and the limitation will be disclosed"
             )
     else:
         console.print(

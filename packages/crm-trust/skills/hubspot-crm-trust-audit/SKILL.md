@@ -52,9 +52,17 @@ This audit does not:
 ## Required local setup
 
 - `.env` with `HUBSPOT_PRIVATE_APP_TOKEN`
+- A dedicated virtual environment for this package
 - Python dependencies installed (`pip install -e ".[dev]"`)
 - HubSpot Private App with all seven exact read scopes in
   `hubspot_scopes.md`; wildcards are invalid
+
+Every `python -m scripts.*` command below must run from the package root (the
+directory containing `pyproject.toml` and `.env`). With a normal repository or
+Claude symlink install, that is `packages/crm-trust`. If Claude was installed
+with `python -m scripts.install_skill --agent claude --copy`, run from the
+copied skill's sibling `package/` directory instead. Do not run commands from
+an unrelated project merely because the skill is globally discoverable.
 
 ## Workflow
 
@@ -149,11 +157,13 @@ Snapshot safety and recovery:
 - `findings.json`
 - `evidence.csv`
 - `report_record_evidence.csv`
+- `score.json`
 - `crm_context.yaml`
 - `schema_discovery_report.md`
 - `audit_log.json`
 - `manifest.json`
 - `recommendations.json`
+- `final_gate_report.json`
 
 The report renderer follows `reporting_standard.md`: the HTML/Markdown report
 is written for decision use, while the operator appendix carries complete

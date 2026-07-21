@@ -24,6 +24,7 @@ from .lifecycle_schemas import (
     ReviewDecision,
     RootCauseAssessmentsDoc,
 )
+from .lifecycle_score_contract import cited_measurement_ids, validate_scoring_contract
 from pydantic import ValidationError as _ValidationError
 from .lifecycle_workspace import validate_agent_workspace
 from .outliers import OUTLIER_COLUMNS, classify_outliers
@@ -149,6 +150,20 @@ def load_findings(run_dir: Path) -> Tuple[List[LifecycleFinding], List[str]]:
     return findings, []
 
 
+def validate_measurement_scoring_contract(run_dir: Path) -> List[str]:
+    path = Path(run_dir) / "processed" / "lifecycle_integrity_measurements.json"
+    if not path.exists():
+        return ["processed/lifecycle_integrity_measurements.json not found"]
+    try:
+        document = json.loads(path.read_text(encoding="utf-8"))
+        rows = document.get("measurements") if isinstance(document, dict) else None
+        if not isinstance(rows, list):
+            raise TypeError("measurements must be a JSON array")
+    except (json.JSONDecodeError, OSError, TypeError) as exc:
+        return [f"processed lifecycle measurements are invalid: {exc}"]
+    return validate_scoring_contract(rows)
+
+
 def validate_findings(run_dir: Path) -> List[str]:
     run_dir = Path(run_dir)
     registry, problems = load_registry(run_dir)
@@ -216,15 +231,20 @@ def validate_findings(run_dir: Path) -> List[str]:
             filename = ref.split("#", 1)[0]
             if not (run_dir / filename).exists():
                 problems.append(f"{finding.finding_id}: missing evidence file {filename}")
-        cited_measurements = [
-            measurement_id
-            for measurement_id in measurement_ids
-            if any(measurement_id in ref for ref in finding.evidence_refs)
-        ]
+        cited_measurements = sorted(
+            cited_measurement_ids(finding.evidence_refs, measurement_ids)
+        )
         if not cited_measurements:
             problems.append(f"{finding.finding_id}: no deterministic measurement cited")
         else:
             cited = [measurements[measurement_id] for measurement_id in cited_measurements]
+            scored_citations = [
+                row for row in cited if row.get("score_role") == "primary"
+            ]
+            if len(scored_citations) > 1:
+                problems.append(
+                    f"{finding.finding_id}: finding cites multiple primary score populations; split it into one finding per canonical population"
+                )
             if finding.severity != "observation" and not any(
                 evidence_rows.get(measurement_id, 0) > 0
                 for measurement_id in cited_measurements
@@ -607,6 +627,7 @@ def validate_lifecycle_run(run_dir: Path, *, final: bool = False) -> Dict[str, L
         "snapshot": validate_snapshot_completed(run_dir),
         "registry": registry_problems,
         "findings": validate_findings(run_dir),
+        "scoring_contract": validate_measurement_scoring_contract(run_dir),
         "reviews": validate_reviews(run_dir, final=final),
         "outliers": validate_outlier_registry(run_dir),
         "workspace": validate_agent_workspace(run_dir, require_complete=final),

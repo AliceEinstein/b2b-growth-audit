@@ -70,6 +70,8 @@ read scopes this audit does not use.
 cp .env.example .env
 # add your dedicated HubSpot Private App token to .env
 
+python3 -m venv .venv && source .venv/bin/activate
+pip install --upgrade pip
 pip install -e ".[dev]"
 
 python -m scripts.check_hubspot_connection
@@ -112,6 +114,12 @@ The skill is agent-agnostic: deterministic Python scripts + markdown role
 instructions that any capable coding agent can follow. Each agent picks up
 its native context file at the repo root, and all three route to the same
 canonical rules (AGENTS.md):
+
+Run the agent and every `python -m scripts.*` command from this package root
+(the directory containing this README, `pyproject.toml`, and the local `.env`).
+For a Claude `--copy` install, use the copied skill's sibling `package/`
+directory instead. A normal Claude symlink install continues to execute from
+this repository package root.
 
 | Agent | Context file | Setup |
 |---|---|---|

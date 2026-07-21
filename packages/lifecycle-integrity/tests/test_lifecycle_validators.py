@@ -5,7 +5,10 @@ import json
 import pytest
 
 from core.lifecycle_reports import generate_lifecycle_reports
-from core.lifecycle_validators import validate_findings
+from core.lifecycle_validators import (
+    validate_findings,
+    validate_measurement_scoring_contract,
+)
 from lifecycle_test_support import build_lifecycle_run, write_judgment_artifacts
 
 
@@ -61,3 +64,65 @@ def test_every_scored_finding_requires_an_evidence_row(tmp_path):
     )
     problems = validate_findings(run_dir)
     assert any("no deterministic measurement cited" in row for row in problems)
+
+
+def test_validator_rejects_duplicate_or_inferred_scoring_ownership(tmp_path):
+    run_dir, _ = build_lifecycle_run(tmp_path, "pipeline_leakage_sample")
+    path = run_dir / "processed" / "lifecycle_integrity_measurements.json"
+    document = json.loads(path.read_text(encoding="utf-8"))
+    primary = next(
+        row
+        for row in document["measurements"]
+        if row.get("score_role") == "primary"
+    )
+    duplicate = dict(primary)
+    duplicate["id"] = "duplicate_primary_population"
+    document["measurements"].append(duplicate)
+    path.write_text(json.dumps(document), encoding="utf-8")
+
+    problems = validate_measurement_scoring_contract(run_dir)
+    assert any("multiple primary measurements" in row for row in problems)
+    write_judgment_artifacts(run_dir)
+    with pytest.raises(ValueError, match="multiple primary measurements"):
+        generate_lifecycle_reports(run_dir)
+
+
+def test_validator_rejects_leakage_candidate_without_explicit_score_role(tmp_path):
+    run_dir, _ = build_lifecycle_run(tmp_path, "pipeline_leakage_sample")
+    path = run_dir / "processed" / "lifecycle_integrity_measurements.json"
+    document = json.loads(path.read_text(encoding="utf-8"))
+    row = next(
+        item for item in document["measurements"] if item.get("leakage_candidate")
+    )
+    row["score_role"] = "not_scored"
+    row["score_link"] = None
+    row["score_population_key"] = None
+    path.write_text(json.dumps(document), encoding="utf-8")
+
+    problems = validate_measurement_scoring_contract(run_dir)
+    assert any("leakage_candidate requires" in problem for problem in problems)
+
+
+def test_finding_cannot_confirm_multiple_primary_score_populations(tmp_path):
+    run_dir, _ = build_lifecycle_run(tmp_path, "pipeline_leakage_sample")
+    write_judgment_artifacts(run_dir, "deals_without_company")
+    measurement_doc = json.loads(
+        (run_dir / "processed" / "lifecycle_integrity_measurements.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    second_primary = next(
+        row["id"]
+        for row in measurement_doc["measurements"]
+        if row.get("score_role") == "primary" and row["id"] != "deals_without_company"
+    )
+    findings = _load_findings(run_dir)
+    findings["findings"][0]["evidence_refs"].append(
+        f"evidence.csv#finding_id={second_primary}"
+    )
+    (run_dir / "findings.json").write_text(json.dumps(findings), encoding="utf-8")
+
+    assert any(
+        "cites multiple primary score populations" in problem
+        for problem in validate_findings(run_dir)
+    )

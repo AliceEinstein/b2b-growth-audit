@@ -4,9 +4,10 @@
 
 - Local-only token loading; never print or persist the token.
 - Explicit read-endpoint allowlist; no HubSpot write client methods.
-- The automation scope is accepted only to diagnose workflows and score
-  activation. The client allowlist is method-sensitive and excludes workflow
-  create, update, delete, enroll, and action endpoints.
+- The `automation`, `forms`, and `sales-email-read` scopes are broader at the
+  HubSpot platform level but are accepted only for diagnostic retrieval. The
+  client allowlist is method-sensitive and excludes workflow, form, and email
+  create, update, delete, enroll, send, association, and action endpoints.
 - The acquisition pass may store full workflow responses under the local,
   gitignored `raw/automation/` directory for deterministic parsing. Never read
   `outputs/*/raw/` in an LLM or agent role, and never share the raw directory.
@@ -45,7 +46,8 @@ business owner are allowed. Any action that changes CRM truth belongs in
 
 Run the deterministic leak scan after the report and handoff are written. Hard
 email, phone, or token-format leaks fail unconditionally. Soft blocked phrases
-may legitimately appear in the explicit blocked-actions section. The Privacy
-+ Safety Reviewer must record each accepted occurrence in
+may legitimately appear in an explicit internal blocked-actions section in the
+agent handoff or safety-review artifact, but not as prescriptive instructions in
+the business-facing report. The Privacy + Safety Reviewer must record each accepted occurrence in
 `safety_clearance.json` with the exact phrase, filename, current file SHA-256,
 and contextual reason. A clearance never overrides a hard PII or token leak.

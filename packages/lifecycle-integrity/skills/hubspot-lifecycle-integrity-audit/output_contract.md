@@ -18,6 +18,7 @@ outputs/run_<timestamp>/
   outlier_registry.csv
   evidence.csv
   report_record_evidence.csv
+  report_account_evidence.csv
   crm_context.yaml
   schema_discovery_report.md
   review_trace.json
@@ -59,6 +60,32 @@ or materiality explanation, `affected_records` or a qualitative explanation,
 `auto_fix_allowed: false`,
 `assumptions`, and `limitations`.
 
+Every row in `processed/lifecycle_integrity_measurements.json` must declare a
+`score_role`. Use `not_scored` for unrelated diagnostics. Every `primary`,
+`breakdown`, `supporting`, or `opportunity_only` row must declare one valid
+`score_link` and one canonical `score_population_key`. `primary`, `breakdown`,
+and `supporting` rows must also declare a defined `score_control`:
+
+- `primary` is the only role that can make a control assessable, change the
+  Lifecycle Integrity Score, or increment the unresolved scored-population
+  count. A link/population key can have only one primary row. Mutually
+  exclusive motion populations in one control are weighted by denominator.
+- `breakdown` must point to an existing primary link/population key and is
+  report context only.
+- `opportunity_only` must include `outside_score_reason`; it cannot earn
+  healthy points, create a deduction, or make a link assessable.
+- `supporting` must include `outside_score_reason`; it may support a named
+  leakage conclusion but cannot make a control assessable or change the score.
+- `not_scored` cannot declare a score link, score control, or population key. A deterministic
+  `leakage_candidate` cannot use `not_scored`.
+
+Measurement IDs, notes, dimensions, and keywords must never determine scoring
+ownership. Invalid or duplicate ownership fails report generation and the
+final gate. A reviewed finding may cite additional breakdown or supporting
+evidence, but it must cite no more than one `primary` score population; split
+multiple canonical populations into separate findings so one reviewer decision
+cannot silently confirm several deductions.
+
 `evidence.csv` columns:
 
 ```text
@@ -94,6 +121,15 @@ the selected snapshot window. The report must still show the time window and
 any partial/association limitations. This status never creates a scored
 finding by itself.
 
+The executive Markdown and HTML reports must include a plain-language evidence
+and feature coverage table. At minimum it must disclose lifecycle-handoff
+coverage, workflow/scoring root-cause coverage, campaign/channel context, and
+record-linked activity coverage. For every limited or unavailable capability,
+state what was not assessed, which remaining evidence was still used, and that
+the missing permission or product entitlement does not create an automatic
+score deduction. Do not replace `permission_or_api_unavailable` with language
+that implies a successful zero-row read.
+
 ## Report headings
 
 `lifecycle_integrity_report.md` and the HTML report must use the same seven
@@ -120,17 +156,29 @@ pipeline or recoverable revenue. General CRM completeness, identity,
 association, lifecycle distribution, and data-age diagnostics belong in
 `operator_appendix.md`.
 
-The overall lifecycle integrity score must be visually prominent and explain
-its deterministic interpretation: it is a weighted health score for five
-journey links (intent→owner, owner→deal/valid skip, record continuity, deal
-progression, and post-close recovery). Confirmed breaks use their affected
-share; unresolved deterministic candidates are included at half weight in the
-deterministic formula. The executive report explains once, in plain language,
-that unresolved rule matches can move the score; the exact formula belongs in
-the operator appendix. Closed-lost recovery opportunities remain visible but
-do not move the score by themselves. Mapping confidence remains separate. The
-score is not a healthy-record percentage, conversion rate, or estimate of
-revenue loss.
+The overall lifecycle integrity score must be visually prominent when at least
+70% of weighted control points are assessable. Below that threshold, withhold the
+numeric score and show `Not scored — insufficient evidence`; missing evidence
+is not lifecycle failure. At reportable coverage, normalize retained assessed
+points to 100 and display scored control coverage separately. The report must
+not call this broad `evidence coverage`: 100% means all weighted scored controls
+were assessable, not that automation, campaign, or activity diagnostics were
+complete. Show diagnostic data coverage as a separate status. The score is a weighted
+health score for five journey links (intent→owner, owner→deal/valid skip,
+record continuity, deal progression, and post-close recovery). Confirmed
+breaks use their affected share; unresolved deterministic candidates are
+included at half weight in the deterministic formula. The executive report
+explains this once in plain language and states assessed weight and coverage.
+Closed-lost recovery opportunities remain visible but do not move the score by
+themselves. Mapping confidence remains separate. The score is not a
+healthy-record percentage, conversion rate, or estimate of revenue loss.
+
+The business-facing report may state that the audit itself is read-only and
+that the business owner decides which recommendations to approve, reject, or
+automate. Do not include a prescriptive “Actions That Should Not Be Automated”
+section in the main report. Keep connector prohibitions and agent safety
+boundaries in the skill policy, handoff, and final gate rather than presenting
+them as commands to the customer.
 
 Every deal and pipeline claim must trace to `evidence.csv` by salted record
 hash plus sanitised pipeline/stage labels. The local-only
