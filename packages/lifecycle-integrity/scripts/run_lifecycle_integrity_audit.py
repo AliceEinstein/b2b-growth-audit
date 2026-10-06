@@ -9,6 +9,7 @@ from __future__ import annotations
 import argparse
 import json
 import shutil
+from datetime import datetime, timezone
 from pathlib import Path
 
 from rich.console import Console
@@ -115,6 +116,19 @@ def _rebuild_run(source: Path, output_root: Path) -> Path:
     manifest["rebuilt_from"] = source.name
     manifest.pop("client_config", None)
     (run_dir / "manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+    # The fetch log is a final deliverable: it records the read-only HubSpot
+    # calls behind this snapshot. The rebuild adds its own entry.
+    log_path = source / "audit_log.json"
+    log = json.loads(log_path.read_text(encoding="utf-8")) if log_path.exists() else {"events": []}
+    log.setdefault("events", []).append(
+        {
+            "event": "rebuilt_from_snapshot",
+            "at": datetime.now(timezone.utc).isoformat(),
+            "source_run": source.name,
+            "hubspot_calls": 0,
+        }
+    )
+    (run_dir / "audit_log.json").write_text(json.dumps(log, indent=2), encoding="utf-8")
     return run_dir
 
 

@@ -293,7 +293,7 @@ def canonical_field(canonical: Dict[str, Dict[str, Any]], role: str) -> str:
 DRAFT_DIR = "client_config_draft"
 QUESTIONS_FILE = "questions.json"
 SCHEMA_DISCOVERY_OUTPUT = Path("agent_workspace") / "analysis" / "schema_discovery_agent.json"
-MAX_EVIDENCE_LEN = 200
+MAX_EVIDENCE_LEN = 400
 
 ROLE_QUESTIONS = {
     "lifecycle_stage": "Which contact property does your team use as the lifecycle stage?",

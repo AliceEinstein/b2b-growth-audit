@@ -147,6 +147,9 @@ def test_rebuild_rederives_a_completed_snapshot_with_new_config(tmp_path):
     manifest = json.loads((rebuilt[0] / "manifest.json").read_text())
     assert manifest["rebuilt_from"] == source.name
     assert manifest["client_config"]["journey_mapping.yaml"]["confirmed_by"] == "test owner"
+    log = json.loads((rebuilt[0] / "audit_log.json").read_text())
+    assert log["events"][-1]["event"] == "rebuilt_from_snapshot"
+    assert log["events"][-1]["source_run"] == source.name
     after = json.loads((rebuilt[0] / "processed" / "journey_evidence_store.json").read_text())["assignment_counts"]
     assert after.get("partner_led", 0) > before.get("partner_led", 0)
     # The source run is untouched.

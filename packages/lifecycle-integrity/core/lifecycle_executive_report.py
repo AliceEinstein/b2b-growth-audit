@@ -669,12 +669,11 @@ def _confirmation_intro(confirmation: dict[str, Any]) -> str:
 
 
 def _field_question_text(question: dict[str, Any]) -> str:
-    alternatives = ", ".join(question.get("alternatives") or []) or "none"
-    return (
-        f"Suggested: {question['suggested']} ({question['basis']}). "
-        f"Measured with: {question['measured_with']}. Alternatives: {alternatives}. "
-        f"Evidence: {question.get('evidence') or '—'}"
-    )
+    others = [f for f in question.get("alternatives") or [] if f != question["measured_with"]]
+    text = f"Suggested: {question['suggested']} ({question['basis']}). This audit measured {question['measured_with']}."
+    if others:
+        text += " Other candidates: " + ", ".join(others) + "."
+    return text + f" Evidence: {question.get('evidence') or '—'}"
 
 
 def _confirmation_md(view: dict[str, Any]) -> list[str]:
