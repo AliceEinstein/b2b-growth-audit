@@ -152,7 +152,7 @@ def test_deal_own_source_outranks_linked_records():
 
     candidate_names = {"ns_lead_source", "ns_original_source", "ns_source_detail"}
     deal = {"properties": {"ns_lead_source": "outbound"}}
-    referral_contact = {"properties": {"ns_original_source": "referral"}}
+    referral_contact = {"properties": {"ns_original_source": "partner_referral"}}
     journey, _, evidence = classify_deal(
         deal,
         linked_contacts=[referral_contact],
@@ -163,7 +163,7 @@ def test_deal_own_source_outranks_linked_records():
     assert journey == "outbound_sales_led"
     assert "on deal" in evidence[0]
 
-    silent_deal = {"properties": {"ns_lead_source": "trade_show"}}
+    silent_deal = {"properties": {"ns_lead_source": "board_introduction"}}
     journey, _, evidence = classify_deal(
         silent_deal,
         linked_contacts=[referral_contact],
@@ -180,7 +180,7 @@ def test_generic_acquisition_channel_is_not_partner():
 
     candidate_names = {"ns_source_detail", "ns_lead_source"}
     company = {"properties": {"ns_source_detail": "Standard acquisition channel"}}
-    deal = {"properties": {"ns_lead_source": "trade_show"}}
+    deal = {"properties": {"ns_lead_source": "board_introduction"}}
     journey, _, _ = classify_deal(
         deal,
         linked_contacts=[],
@@ -189,3 +189,72 @@ def test_generic_acquisition_channel_is_not_partner():
         candidate_names=candidate_names,
     )
     assert journey == "unassigned"
+
+
+def test_owner_mapping_outranks_keywords_and_can_mark_values_unassigned():
+    from core.client_config import parse_journey_mapping
+    from core.journey_evidence import classify_contact, classify_deal
+
+    mapping = parse_journey_mapping(
+        {
+            "values": {"executive_referral": "inbound_new_business", "standard acquisition channel": "unassigned"},
+            "fields": {"ns_lead_source": {"customer_success": "expansion_renewal"}},
+        }
+    )
+    names = {"ns_lead_source", "ns_source_detail"}
+    deal = {"properties": {"ns_lead_source": "executive_referral"}}
+    journey, confidence, evidence = classify_deal(
+        deal, linked_contacts=[], linked_companies=[], pipeline_label="New Business",
+        candidate_names=names, journey_mapping=mapping,
+    )
+    assert journey == "inbound_new_business" and confidence == 90
+    assert "journey_mapping.yaml" in evidence[0]
+
+    expansion = {"properties": {"ns_lead_source": "customer_success"}}
+    journey, _, _ = classify_deal(
+        expansion, linked_contacts=[], linked_companies=[], pipeline_label="Expansion",
+        candidate_names=names, journey_mapping=mapping,
+    )
+    assert journey == "expansion_renewal"
+
+    # A value mapped to "unassigned" no longer feeds keyword matching.
+    mapping.values["retail events"] = "unassigned"
+    contact = {"properties": {"ns_source_detail": "retail_events"}}
+    journey, _, _ = classify_contact(
+        contact, linked_companies=[], candidate_names=names, intent_signals=[], journey_mapping=mapping,
+    )
+    assert journey == "unassigned"
+
+
+def test_keywords_match_whole_words_and_bare_referral_is_not_partner():
+    from core.journey_evidence import classify_contact
+
+    names = {"ns_original_source"}
+    unpaid = {"properties": {"ns_original_source": "unpaid_invoice"}}
+    assert classify_contact(unpaid, linked_companies=[], candidate_names=names, intent_signals=[])[0] == "unassigned"
+    referral = {"properties": {"ns_original_source": "referral"}}
+    assert classify_contact(referral, linked_companies=[], candidate_names=names, intent_signals=[])[0] == "unassigned"
+    events = {"properties": {"ns_original_source": "retail_events"}}
+    assert classify_contact(events, linked_companies=[], candidate_names=names, intent_signals=[])[0] == "inbound_new_business"
+
+
+def test_intent_signal_property_names_do_not_classify_contacts():
+    from core.journey_evidence import classify_contact
+
+    journey, _, _ = classify_contact(
+        {"properties": {}}, linked_companies=[], candidate_names=set(),
+        intent_signals=["positive signal in hs_email_partner_referral"],
+    )
+    assert journey == "unassigned"
+
+
+def test_property_name_counts_only_beside_free_text():
+    from core.journey_evidence import classify_contact
+
+    names = {"partner_source", "ns_source_email", "ns_renewal_date"}
+    partner = {"properties": {"partner_source": "Acme Systems"}}
+    assert classify_contact(partner, linked_companies=[], candidate_names=names, intent_signals=[])[0] == "partner_led"
+    email_only = {"properties": {"ns_source_email": "person@example.test"}}
+    assert classify_contact(email_only, linked_companies=[], candidate_names=names, intent_signals=[])[0] == "unassigned"
+    dated = {"properties": {"ns_renewal_date": "2027-03-01"}}
+    assert classify_contact(dated, linked_companies=[], candidate_names=names, intent_signals=[])[0] == "unassigned"

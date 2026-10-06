@@ -8,11 +8,13 @@ from __future__ import annotations
 
 import argparse
 import json
+import shutil
 from pathlib import Path
 
 from rich.console import Console
 
-from core.config import default_output_root, latest_run
+from core.client_config import ClientConfigError, install_client_config
+from core.config import create_run_dir, default_output_root, latest_run
 from core.automation_integrity import build_automation_integrity_artifacts
 from core.intent_evidence import build_intent_evidence
 from core.journey_evidence import build_journey_evidence_store
@@ -70,13 +72,62 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
         default=None,
         help="Business name shown in the report (recommended for a branded report).",
     )
+    parser.add_argument(
+        "--field-overrides",
+        type=Path,
+        default=None,
+        help="Owner-confirmed canonical lifecycle and source fields (see examples/client_config/).",
+    )
+    parser.add_argument(
+        "--journey-mapping",
+        type=Path,
+        default=None,
+        help="Owner-confirmed mapping of source values to journeys (see examples/client_config/).",
+    )
+    parser.add_argument(
+        "--rebuild-from",
+        type=Path,
+        default=None,
+        help=(
+            "Re-derive evidence, measurements and agent tasks from a completed "
+            "snapshot into a new run directory, without calling HubSpot. Use it "
+            "after confirming client config; the original run stays unchanged."
+        ),
+    )
     parser.add_argument("--raw-retention-days", type=positive_days, default=365)
     parser.add_argument("--dry-run", action="store_true")
     return parser.parse_args(argv)
 
 
+def _rebuild_run(source: Path, output_root: Path) -> Path:
+    """Copy a completed snapshot into a fresh run directory for re-derivation."""
+    manifest_path = source / "manifest.json"
+    if not manifest_path.exists():
+        raise ValueError(f"{source} has no manifest.json")
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    if manifest.get("status") != "completed":
+        raise ValueError(f"{source} is not a completed snapshot")
+    run_dir = create_run_dir(output_root)
+    shutil.copytree(source / "raw", run_dir / "raw", dirs_exist_ok=True)
+    if (source / "processed").exists():
+        shutil.copytree(source / "processed", run_dir / "processed", dirs_exist_ok=True)
+    manifest["run_id"] = run_dir.name
+    manifest["rebuilt_from"] = source.name
+    manifest.pop("client_config", None)
+    (run_dir / "manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+    return run_dir
+
+
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
+    if args.rebuild_from is not None:
+        try:
+            run_dir = _rebuild_run(Path(args.rebuild_from), args.output_root)
+        except (OSError, ValueError) as exc:
+            console.print(f"[red]❌ Cannot rebuild: {exc}[/red]")
+            return 1
+        console.print(f"✅ Rebuilding {args.rebuild_from} into {run_dir} (no HubSpot calls)")
+        return _prepare(run_dir, args)
     if args.days is not None and args.resume is None:
         console.print(
             f"[yellow]⚠️ --days {args.days} restricts the snapshot to records "
@@ -123,7 +174,21 @@ def main(argv: list[str] | None = None) -> int:
     if run_dir is None:
         console.print("[red]❌ Snapshot completed but no run directory was found.[/red]")
         return 1
-    run_dir = Path(run_dir)
+    return _prepare(Path(run_dir), args)
+
+
+def _prepare(run_dir: Path, args: argparse.Namespace) -> int:
+    try:
+        installed = install_client_config(
+            run_dir,
+            field_overrides=args.field_overrides,
+            journey_mapping=args.journey_mapping,
+        )
+    except ClientConfigError as exc:
+        console.print(f"[red]❌ Client config rejected: {exc}[/red]")
+        return 1
+    for name, info in installed.items():
+        console.print(f"✅ Client config: {name} (confirmed by {info.get('confirmed_by') or 'unstated'})")
     try:
         intent = build_intent_evidence(run_dir)
         store = build_journey_evidence_store(run_dir)

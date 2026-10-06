@@ -1,0 +1,18 @@
+# Owner-confirmed mapping of source values to journeys for one client.
+# Copy outside the repository, fill in, and pass with --journey-mapping.
+# Values match case-insensitively; "_" and "-" count as spaces.
+# Journeys: inbound_new_business, outbound_sales_led, abm_account_based,
+# partner_led, expansion_renewal, or unassigned (the value says nothing about
+# the journey and is left out of keyword matching).
+values:
+  trade_show: inbound_new_business
+  demo_request: inbound_new_business
+  partner_referral: partner_led
+  customer_referral: inbound_new_business
+  standard acquisition channel: unassigned
+fields:
+  # A table for one property wins over `values` for that property.
+  deal_lead_source:
+    customer_success: expansion_renewal
+confirmed_by: Head of Marketing
+confirmed_on: 2026-01-01

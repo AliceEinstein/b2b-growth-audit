@@ -88,6 +88,17 @@ records the absolute `repo_root` to change into.
    single-token, read-only pass. Use `--core-only` only for an explicitly
    limited CRM-object run; it cannot support reliable activity-based recovery
    claims. This is the only data-acquisition pass.
+   **Client configuration.** Without config, measurements read HubSpot's
+   default lifecycle and source fields and journeys are assigned by keyword.
+   When `crm_context.yaml` marks a canonical field `requires_confirmation`, or
+   deals carry no journey signal, the schema discovery role drafts
+   `proposed_client_config`. Ask the owner to confirm `field_overrides.yaml`
+   and `journey_mapping.yaml` (templates in `examples/client_config/`; keep
+   filled copies outside this repository), then re-derive without calling
+   HubSpot:
+   `python -m scripts.run_lifecycle_integrity_audit --rebuild-from <run_dir> --field-overrides <file> --journey-mapping <file>`.
+   The rebuilt run is a new directory with new task contracts; run the
+   judgment phase on it. The manifest records each file's hash and confirmer.
 4. Confirm the run manifest is `completed`. If fetching was interrupted, use
    the runner's resume path; do not consume a partial snapshot.
 5. Read only `processed/`, `evidence/`, `manifest.json`, and the generated

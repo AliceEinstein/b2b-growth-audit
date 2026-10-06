@@ -4,12 +4,19 @@ from __future__ import annotations
 from collections import Counter, defaultdict
 from pathlib import Path
 import re
-from typing import Any, Dict, Iterable, List, Optional
+from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 import yaml
 
 from connectors.hubspot.normalize import write_json
 
+from .client_config import (
+    JourneyMapping,
+    canonical_field,
+    load_journey_mapping,
+    normalize_value,
+    resolve_canonical_fields,
+)
 from .journey_confidence import build_registry
 from .metrics import (
     is_empty,
@@ -40,12 +47,34 @@ INTENT_PATTERNS = {
 }
 
 JOURNEY_KEYWORDS = {
-    "inbound_new_business": ("inbound", "organic", "paid", "direct", "social", "email"),
-    "outbound_sales_led": ("outbound", "sdr", "prospect", "import"),
-    "abm_account_based": ("abm", "target account", "account tier", "named account"),
-    "partner_led": ("partner", "referral", "reseller", "channel partner"),
-    "expansion_renewal": ("expansion", "renewal", "renew", "upsell", "up sell", "cross sell"),
+    "inbound_new_business": (
+        "inbound", "organic", "paid", "direct", "social", "email", "demo", "form",
+        "contact sales", "hand raiser", "webinar", "trade show", "conference", "event",
+    ),
+    "outbound_sales_led": ("outbound", "sdr", "prospect", "import", "outreach"),
+    "abm_account_based": ("abm", "target account", "account tier", "named account", "executive briefing"),
+    # A bare "referral" is ambiguous (customer, executive or partner), so it
+    # maps to no journey unless config/journey_mapping.yaml says otherwise.
+    "partner_led": ("partner", "reseller", "channel partner"),
+    "expansion_renewal": (
+        "expansion", "renewal", "renew", "upsell", "up sell", "cross sell",
+        "customer success", "account review",
+    ),
 }
+# Portal-level evidence that a motion exists is broader than the terms that
+# assign one record: referral fields and values suggest a referral or partner
+# program even though a single "referral" value can't say which.
+JOURNEY_EVIDENCE_KEYWORDS = {
+    **JOURNEY_KEYWORDS,
+    "partner_led": JOURNEY_KEYWORDS["partner_led"] + ("referral",),
+}
+JOURNEY_CHECK_ORDER = (
+    "expansion_renewal",
+    "partner_led",
+    "abm_account_based",
+    "outbound_sales_led",
+    "inbound_new_business",
+)
 # A deal's own pipeline or deal type naming new business outranks expansion
 # hints on its linked company or contacts.
 NEW_BUSINESS_MARKERS = ("new business", "newbusiness", "new logo")
@@ -73,8 +102,17 @@ def _safe_text(values: Iterable[Any]) -> str:
     return " ".join(str(v).lower().replace("_", " ") for v in values if v not in (None, ""))
 
 
+def _matched_keywords(text: str, keywords: Iterable[str]) -> List[str]:
+    """Whole-word matches, allowing a plural "s"; "paid" no longer hits "unpaid"."""
+    return [
+        keyword
+        for keyword in keywords
+        if re.search(rf"(?<![a-z0-9]){re.escape(keyword)}s?(?![a-z0-9])", text)
+    ]
+
+
 def _contains_any(text: str, keywords: Iterable[str]) -> bool:
-    return any(keyword in text for keyword in keywords)
+    return bool(_matched_keywords(text, keywords))
 
 
 def _candidate_fields(
@@ -168,29 +206,119 @@ def _intent_contact_signals(index: Dict[str, Any], contact_hash: str) -> List[st
     return list(dict.fromkeys(signals))
 
 
-def _record_signal_text(record: Dict[str, Any], candidate_names: set[str]) -> str:
+SIGNAL_FIELDS = {
+    "hs_analytics_source",
+    "hs_latest_source",
+    "hs_object_source",
+    "dealtype",
+    "pipeline",
+    "lifecyclestage",
+}
+
+
+def _record_values(record: Dict[str, Any], candidate_names: set[str]) -> List[Tuple[str, Any]]:
     props = _props(record)
-    values = []
-    for field, value in props.items():
-        if field in IDENTITY_FIELDS:
-            continue
-        if field in candidate_names or field in {
-            "hs_analytics_source",
-            "hs_latest_source",
-            "hs_object_source",
-            "dealtype",
-            "pipeline",
-            "lifecyclestage",
-        }:
-            if is_empty(value):
-                continue
-            # Match on values, not property names: a name such as
-            # ns_renewal_date would otherwise tag every record that has the
-            # property as expansion. A name counts only when it is a set flag.
-            if str(value).strip().lower() in TRUTHY_FLAG_VALUES:
-                values.append(field)
-            values.append(value)
+    return [
+        (field, value)
+        for field, value in props.items()
+        if field not in IDENTITY_FIELDS
+        and (field in candidate_names or field in SIGNAL_FIELDS)
+        and not is_empty(value)
+    ]
+
+
+NON_TEXT_VALUE = re.compile(
+    r"^\d{4}-\d{2}-\d{2}"          # dates and timestamps
+    r"|^[\d.,:\s+-]+$"              # numbers
+    r"|@|://|^www\."                # emails and URLs
+    r"|^(?=\S*\d)[a-z0-9_-]{8,}$",  # opaque keys and IDs
+    re.I,
+)
+
+
+def _name_counts(value: Any) -> bool:
+    """Whether a property name is evidence alongside this value.
+
+    A name says something when the property is a set flag (is_partner = true)
+    or holds free text (partner_source = "Acme"). It says nothing beside a
+    date, number, email, URL or ID: ns_renewal_date on a company, or
+    ns_source_email on a contact, must not label the record expansion or
+    inbound. Empty properties never count.
+    """
+    text = str(value).strip()
+    return text.lower() in TRUTHY_FLAG_VALUES or not NON_TEXT_VALUE.search(text)
+
+
+def _record_signal_text(record: Dict[str, Any], candidate_names: set[str]) -> str:
+    values: List[Any] = []
+    for field, value in _record_values(record, candidate_names):
+        if _name_counts(value):
+            values.append(field)
+        values.append(value)
     return _safe_text(values)
+
+
+def _tier_evidence(
+    records: List[Dict[str, Any]],
+    candidate_names: set[str],
+    mapping: Optional[JourneyMapping],
+) -> Tuple[List[Tuple[str, str]], str]:
+    """Owner-mapped journeys and keyword text for one group of records.
+
+    A value the owner mapped (to a journey or to "unassigned") is decided by
+    the mapping and left out of keyword matching.
+    """
+    mapped: List[Tuple[str, str]] = []
+    values: List[Any] = []
+    for record in records:
+        for field, value in _record_values(record, candidate_names):
+            journey = mapping.lookup(field, value) if mapping else None
+            if journey is None:
+                if _name_counts(value):
+                    values.append(field)
+                values.append(value)
+            elif journey != "unassigned":
+                mapped.append((journey, f"{field}={normalize_value(value)}"))
+    return mapped, _safe_text(values)
+
+
+def _classify_tiers(
+    tiers: List[Tuple[str, List[Tuple[str, str]], str, str]],
+    *,
+    skip_expansion: bool,
+    base_confidence: int,
+    cap: int,
+    term_label: str,
+) -> Optional[tuple[str, int, List[str]]]:
+    """First tier with a mapped journey or a keyword match decides."""
+    for source, mapped, text, text_without_pipeline in tiers:
+        candidates = [
+            (journey, evidence)
+            for journey, evidence in mapped
+            if not (journey == "expansion_renewal" and skip_expansion)
+        ]
+        if candidates:
+            candidates.sort(key=lambda item: JOURNEY_CHECK_ORDER.index(item[0]))
+            journey = candidates[0][0]
+            evidence = [item for j, item in candidates if j == journey]
+            return (
+                journey,
+                90,
+                [f"mapped in config/journey_mapping.yaml: {', '.join(evidence[:3])} (on {source})"],
+            )
+        for journey in JOURNEY_CHECK_ORDER:
+            if journey == "expansion_renewal" and skip_expansion:
+                continue
+            # Inbound terms such as "direct" are not read from pipeline labels.
+            haystack = text_without_pipeline if journey == "inbound_new_business" else text
+            matched = _matched_keywords(haystack, JOURNEY_KEYWORDS[journey])
+            if matched:
+                return (
+                    journey,
+                    min(cap, base_confidence + len(matched) * 10),
+                    [f"{term_label}: {', '.join(matched[:3])} (on {source})"],
+                )
+    return None
 
 
 def classify_deal(
@@ -200,54 +328,47 @@ def classify_deal(
     linked_companies: List[Dict[str, Any]],
     pipeline_label: str,
     candidate_names: set[str],
+    journey_mapping: Optional[JourneyMapping] = None,
 ) -> tuple[str, int, List[str]]:
-    deal_text = _record_signal_text(deal, candidate_names)
     pipeline_text = pipeline_label.lower().replace("_", " ")
-    own_text = deal_text + " " + pipeline_text
-    explicit_new_business = _contains_any(own_text, NEW_BUSINESS_MARKERS) and not _contains_any(
-        own_text, JOURNEY_KEYWORDS["expansion_renewal"]
+    full_own_text = _record_signal_text(deal, candidate_names) + " " + pipeline_text
+    deal_mapped, deal_text = _tier_evidence([deal], candidate_names, journey_mapping)
+    # A deal's own pipeline or deal type naming new business outranks
+    # expansion hints on its linked company or contacts.
+    explicit_new_business = (
+        _contains_any(full_own_text, NEW_BUSINESS_MARKERS)
+        and not _contains_any(full_own_text, JOURNEY_KEYWORDS["expansion_renewal"])
+        and not any(journey == "expansion_renewal" for journey, _ in deal_mapped)
     )
     # The deal's own fields and pipeline decide first. Linked contacts, then
     # linked companies, only fill in when the deal itself carries no signal,
     # so one referral contact can't relabel a deal with its own source.
-    contact_text = " ".join(_record_signal_text(c, candidate_names) for c in linked_contacts)
-    company_text = " ".join(_record_signal_text(c, candidate_names) for c in linked_companies)
-    tiers = [
-        ("deal", own_text, deal_text),
-        ("linked contacts", contact_text, contact_text),
-        ("linked companies", company_text, company_text),
-    ]
-    checks = [
-        ("expansion_renewal", JOURNEY_KEYWORDS["expansion_renewal"]),
-        ("partner_led", JOURNEY_KEYWORDS["partner_led"]),
-        ("abm_account_based", JOURNEY_KEYWORDS["abm_account_based"]),
-        ("outbound_sales_led", ("outbound", "sdr", "prospect", "import")),
-        ("inbound_new_business", JOURNEY_KEYWORDS["inbound_new_business"]),
-    ]
-    for source, text, text_without_pipeline in tiers:
-        for journey, keywords in checks:
-            if journey == "expansion_renewal" and explicit_new_business:
-                continue
-            # Inbound terms such as "direct" are not read from pipeline labels.
-            haystack = text_without_pipeline if journey == "inbound_new_business" else text
-            matched = [k for k in keywords if k in haystack]
-            if matched:
-                return (
-                    journey,
-                    min(95, 55 + len(matched) * 10),
-                    [f"matched journey terms: {', '.join(matched[:3])} (on {source})"],
-                )
-    return "unassigned", 20, ["no journey-specific source, pipeline, or field signal"]
+    contact_mapped, contact_text = _tier_evidence(linked_contacts, candidate_names, journey_mapping)
+    company_mapped, company_text = _tier_evidence(linked_companies, candidate_names, journey_mapping)
+    result = _classify_tiers(
+        [
+            ("deal", deal_mapped, deal_text + " " + pipeline_text, deal_text),
+            ("linked contacts", contact_mapped, contact_text, contact_text),
+            ("linked companies", company_mapped, company_text, company_text),
+        ],
+        skip_expansion=explicit_new_business,
+        base_confidence=55,
+        cap=95,
+        term_label="matched journey terms",
+    )
+    return result or ("unassigned", 20, ["no journey-specific source, pipeline, or field signal"])
 
 
 def contact_intent_signals(
-    contact: Dict[str, Any], fields: Dict[str, List[Dict[str, Any]]]
+    contact: Dict[str, Any],
+    fields: Dict[str, List[Dict[str, Any]]],
+    lifecycle_field: str = "lifecyclestage",
 ) -> List[str]:
     """Return structural HubSpot signals that place a contact in a potential
     recoverable-pipeline cohort. Values never leave the deterministic layer."""
     props = _props(contact)
     signals: List[str] = []
-    stage = str(props.get("lifecyclestage") or "").lower()
+    stage = normalize_value(props.get(lifecycle_field)).replace(" ", "")
     if stage in QUALIFIED_PRE_DEAL_STAGES:
         signals.append(f"lifecycle stage {stage}")
     for entry in fields.get("high_intent", []):
@@ -267,30 +388,26 @@ def classify_contact(
     linked_companies: List[Dict[str, Any]],
     candidate_names: set[str],
     intent_signals: List[str],
+    journey_mapping: Optional[JourneyMapping] = None,
 ) -> tuple[str, int, List[str]]:
     # The contact's own fields and signals decide first; linked companies only
-    # fill in when the contact carries no journey signal.
-    tiers = [
-        ("contact", " ".join([_record_signal_text(contact, candidate_names), _safe_text(intent_signals)])),
-        ("linked companies", " ".join(_record_signal_text(c, candidate_names) for c in linked_companies)),
-    ]
-    checks = [
-        ("expansion_renewal", JOURNEY_KEYWORDS["expansion_renewal"]),
-        ("partner_led", JOURNEY_KEYWORDS["partner_led"]),
-        ("abm_account_based", JOURNEY_KEYWORDS["abm_account_based"]),
-        ("outbound_sales_led", JOURNEY_KEYWORDS["outbound_sales_led"]),
-        ("inbound_new_business", JOURNEY_KEYWORDS["inbound_new_business"] + ("demo", "form", "contact sales", "hand raiser")),
-    ]
-    for source, text in tiers:
-        for journey, keywords in checks:
-            matched = [keyword for keyword in keywords if keyword in text]
-            if matched:
-                return (
-                    journey,
-                    min(90, 50 + len(matched) * 10),
-                    [f"matched contact journey terms: {', '.join(matched[:3])} (on {source})"],
-                )
-    return "unassigned", 25, ["high-intent signal present but journey type is unclassified"]
+    # fill in when the contact carries no journey signal. "positive signal in
+    # <property>" entries are left out: they would match on property names.
+    contact_mapped, contact_text = _tier_evidence([contact], candidate_names, journey_mapping)
+    signal_text = _safe_text(s for s in intent_signals if not s.startswith("positive signal in "))
+    company_mapped, company_text = _tier_evidence(linked_companies, candidate_names, journey_mapping)
+    own_text = " ".join([contact_text, signal_text])
+    result = _classify_tiers(
+        [
+            ("contact", contact_mapped, own_text, own_text),
+            ("linked companies", company_mapped, company_text, company_text),
+        ],
+        skip_expansion=False,
+        base_confidence=50,
+        cap=90,
+        term_label="matched contact journey terms",
+    )
+    return result or ("unassigned", 25, ["high-intent signal present but journey type is unclassified"])
 
 
 def build_journey_evidence_store(run_dir: Path) -> Dict[str, Any]:
@@ -313,6 +430,9 @@ def build_journey_evidence_store(run_dir: Path) -> Dict[str, Any]:
     }
     usage = read_json(processed / "property_usage_summary.json", {})
     fields = _candidate_fields(prop_defs, usage)
+    canonical, canonical_notes = resolve_canonical_fields(run_dir, prop_defs, fields)
+    journey_mapping = load_journey_mapping(run_dir)
+    contact_lifecycle_field = canonical_field(canonical, "lifecycle_stage")
     intent_summary = read_json(processed / "intent_signal_summary.json", {})
     intent_index = read_json(processed / "intent_record_index.json", {}).get("contacts", {})
     candidate_names = {
@@ -348,7 +468,10 @@ def build_journey_evidence_store(run_dir: Path) -> Dict[str, Any]:
         deal_ms = parse_created_ms(deal)
         linked = [by_id["contacts"].get(i) for i in (deal_contact or {}).get(deal_id, [])]
         linked = [row for row in linked if row]
-        if not any(str(_props(row).get("lifecyclestage") or "").lower() in MQL_PLUS for row in linked):
+        if not any(
+            normalize_value(_props(row).get(contact_lifecycle_field)).replace(" ", "") in MQL_PLUS
+            for row in linked
+        ):
             deals_without_mql += 1
         for contact in linked:
             contact_ms = parse_created_ms(contact)
@@ -416,6 +539,7 @@ def build_journey_evidence_store(run_dir: Path) -> Dict[str, Any]:
             linked_companies=linked_companies,
             pipeline_label=pipeline_labels.get(str(_props(deal).get("pipeline")), ""),
             candidate_names=candidate_names,
+            journey_mapping=journey_mapping,
         )
         assignment_counts[journey] += 1
         assignments.append(
@@ -431,7 +555,7 @@ def build_journey_evidence_store(run_dir: Path) -> Dict[str, Any]:
     for contact in records["contacts"]:
         contact_id = str(contact.get("id"))
         contact_hash = hash_record_id("contacts", contact_id, salt)
-        intent_signals = contact_intent_signals(contact, fields)
+        intent_signals = contact_intent_signals(contact, fields, contact_lifecycle_field)
         intent_signals.extend(_intent_contact_signals(intent_index, contact_hash))
         intent_signals = list(dict.fromkeys(intent_signals))
         if not intent_signals:
@@ -446,6 +570,7 @@ def build_journey_evidence_store(run_dir: Path) -> Dict[str, Any]:
             linked_companies=linked_companies,
             candidate_names=candidate_names,
             intent_signals=intent_signals,
+            journey_mapping=journey_mapping,
         )
         has_owner = not is_empty(_props(contact).get("hubspot_owner_id"))
         has_deal = bool(contact_deals.get(contact_id)) if deal_contact is not None else None
@@ -550,7 +675,7 @@ def build_journey_evidence_store(run_dir: Path) -> Dict[str, Any]:
         ),
     }
     journey_signals: Dict[str, Any] = {}
-    for journey, keywords in JOURNEY_KEYWORDS.items():
+    for journey, keywords in JOURNEY_EVIDENCE_KEYWORDS.items():
         field_hits = sum(1 for keyword in keywords if keyword in field_text)
         pipeline_hits = sum(1 for keyword in keywords if keyword in pipeline_text)
         path_strength = path_strengths[journey]
@@ -687,6 +812,13 @@ def build_journey_evidence_store(run_dir: Path) -> Dict[str, Any]:
                     if truncated_objects
                     else None
                 ),
+                *canonical_notes,
+                (
+                    f"{assignment_counts.get('unassigned', 0)} deals carry no journey signal; "
+                    "map their source values in config/journey_mapping.yaml and re-run"
+                    if assignment_counts.get("unassigned") and not journey_mapping
+                    else None
+                ),
             )
             if message
         ],
@@ -707,29 +839,17 @@ def build_journey_evidence_store(run_dir: Path) -> Dict[str, Any]:
     write_json(processed / "stage_transition_summary.json", stage_transitions)
     write_json(run_dir / "journey_pattern_registry.json", registry.model_dump())
 
-    canonical_fields = {}
-    def_names = {obj: {str(d.get("name")) for d in defs} for obj, defs in prop_defs.items()}
-    if "lifecyclestage" in def_names.get("contacts", set()):
-        canonical_fields["lifecycle_stage"] = {
-            "object": "contact",
-            "field": "lifecyclestage",
-            "confidence": "high",
-            "requires_confirmation": False,
-            "evidence": "HubSpot-defined lifecycle field present in the snapshot",
-        }
-    if "hs_analytics_source" in def_names.get("contacts", set()):
-        canonical_fields["original_source"] = {
-            "object": "contact",
-            "field": "hs_analytics_source",
-            "confidence": "high",
-            "requires_confirmation": False,
-            "evidence": "HubSpot-defined original source field present in the snapshot",
-        }
     crm_context = {
         "audit_focus": "lifecycle_integrity",
         "primary_journey_model": registry.primary_model,
         "mapping_confidence": registry.overall_confidence,
-        "canonical_fields": canonical_fields,
+        "canonical_fields": canonical,
+        "client_config": {
+            "field_overrides": bool(canonical) and any(
+                "field_overrides" in str(entry.get("evidence")) for entry in canonical.values()
+            ),
+            "journey_mapping": bool(journey_mapping),
+        },
         "candidate_fields": fields,
         "suspected_legacy_fields": sorted(
             {

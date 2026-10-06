@@ -22,3 +22,11 @@ deterministically — never write or edit them; when your analysis disagrees
 with them, record the disagreement in `contradictions` or
 `human_confirmation_needed`. Every mapping has a confidence and evidence;
 anything below high confidence requires confirmation.
+
+Also return `proposed_client_config` with two drafts for the owner to confirm,
+in the shape of `examples/client_config/`: `field_overrides` (the canonical
+`lifecycle_stage`, `company_lifecycle_stage` and `original_source` you
+recommend, each with the evidence) and `journey_mapping` (a journey, or
+`unassigned`, for every material source value, each with the evidence). These
+are drafts: the code uses them only after the owner confirms a file and the run
+is rebuilt with `--field-overrides` / `--journey-mapping`.

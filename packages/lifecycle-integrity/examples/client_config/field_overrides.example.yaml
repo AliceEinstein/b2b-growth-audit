@@ -1,0 +1,9 @@
+# Owner-confirmed canonical fields for one client.
+# Copy outside the repository, fill in, and pass with --field-overrides.
+# Every property must exist on the named object in the snapshot.
+canonical_fields:
+  lifecycle_stage: lifecyclestage            # contact lifecycle field
+  company_lifecycle_stage: lifecyclestage    # company lifecycle field
+  original_source: hs_analytics_source       # contact original-source field
+confirmed_by: RevOps owner
+confirmed_on: 2026-01-01

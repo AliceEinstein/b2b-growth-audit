@@ -9,6 +9,9 @@ from typing import Any, Dict, List, Optional, Tuple
 
 from connectors.hubspot.normalize import write_json
 
+import yaml
+
+from .client_config import canonical_field, normalize_value
 from .journey_evidence import build_journey_evidence_store
 from .lifecycle_score_contract import validate_scoring_contract
 from .metrics import (
@@ -166,6 +169,17 @@ def measure_lifecycle_integrity(run_dir: Path) -> Dict[str, Any]:
     assignments = read_json(processed / "journey_record_assignments.json", [])
     assignment_by_hash = {row["record_id_hash"]: row for row in assignments}
     store = read_json(processed / "journey_evidence_store.json", {})
+    # Measurements read the canonical fields chosen in crm_context.yaml
+    # (owner override, or the HubSpot default), never hard-coded names.
+    context_path = run_dir / "crm_context.yaml"
+    crm_context = yaml.safe_load(context_path.read_text(encoding="utf-8")) if context_path.exists() else {}
+    canonical = (crm_context or {}).get("canonical_fields") or {}
+    contact_lifecycle_field = canonical_field(canonical, "lifecycle_stage")
+    company_lifecycle_field = canonical_field(canonical, "company_lifecycle_stage")
+    contact_source_field = canonical_field(canonical, "original_source")
+
+    def is_customer(record: Dict[str, Any]) -> bool:
+        return normalize_value(_props(record).get(company_lifecycle_field)).replace(" ", "") in CUSTOMER_STATES
     salt = load_or_create_salt(run_dir)
     measurements: List[Dict[str, Any]] = []
     leakage_deal_ids: set[str] = set()
@@ -330,7 +344,7 @@ def measure_lifecycle_integrity(run_dir: Path) -> Dict[str, Any]:
         missing_lifecycle = [
             ("contacts", str(row.get("id")))
             for row in contacts
-            if is_empty(_props(row).get("lifecyclestage"))
+            if is_empty(_props(row).get(contact_lifecycle_field))
         ]
         add(
             "contacts_missing_lifecycle",
@@ -339,7 +353,7 @@ def measure_lifecycle_integrity(run_dir: Path) -> Dict[str, Any]:
             "contacts",
             len(contacts),
             missing_lifecycle,
-            field_name="lifecyclestage",
+            field_name=contact_lifecycle_field,
         )
 
         stage_paths = analyze_contact_stages(contacts)
@@ -454,10 +468,7 @@ def measure_lifecycle_integrity(run_dir: Path) -> Dict[str, Any]:
                 if windowed and associated and not linked:
                     won_out_of_window += 1
                     continue
-                if linked and not any(
-                    str(_props(company).get("lifecyclestage") or "").lower() in CUSTOMER_STATES
-                    for company in linked
-                ):
+                if linked and not any(is_customer(company) for company in linked):
                     won_state_gaps.append(("deals", str(deal.get("id"))))
         won_total = sum(
             1
@@ -473,7 +484,7 @@ def measure_lifecycle_integrity(run_dir: Path) -> Dict[str, Any]:
             "deals",
             won_total if deal_company is not None else None,
             won_state_gaps if deal_company is not None else None,
-            field_name="lifecyclestage",
+            field_name=company_lifecycle_field,
             available=deal_company is not None,
             note=_out_of_window_note(won_out_of_window, "companies"),
         )
@@ -538,7 +549,7 @@ def measure_lifecycle_integrity(run_dir: Path) -> Dict[str, Any]:
                     inbound_out_of_window += 1
                     continue
                 if not linked or not any(
-                    not is_empty(_props(contact).get("hs_analytics_source"))
+                    not is_empty(_props(contact).get(contact_source_field))
                     for contact in linked
                 ):
                     no_source_trace.append(("deals", str(deal.get("id"))))
@@ -549,7 +560,7 @@ def measure_lifecycle_integrity(run_dir: Path) -> Dict[str, Any]:
                 "deals",
                 len(inbound_deals),
                 no_source_trace,
-                field_name="hs_analytics_source",
+                field_name=contact_source_field,
                 note=_out_of_window_note(inbound_out_of_window, "contacts"),
                 leakage_candidate=True,
                 leakage_point="Inbound deal without source continuity",
@@ -567,7 +578,7 @@ def measure_lifecycle_integrity(run_dir: Path) -> Dict[str, Any]:
                 "deals",
                 None,
                 None,
-                field_name="hs_analytics_source",
+                field_name=contact_source_field,
                 available=False,
                 note="deal-contact associations unavailable",
                 score_link="deal_continuity",
@@ -589,10 +600,7 @@ def measure_lifecycle_integrity(run_dir: Path) -> Dict[str, Any]:
                     # this check meaningless on windowed runs.
                     expansion_out_of_window += 1
                     continue
-                if not linked or not any(
-                    str(_props(company).get("lifecyclestage") or "").lower() in CUSTOMER_STATES
-                    for company in linked
-                ):
+                if not linked or not any(is_customer(company) for company in linked):
                     invalid_expansion.append(("deals", str(deal.get("id"))))
             add(
                 "expansion_deals_without_customer_company",
@@ -601,7 +609,7 @@ def measure_lifecycle_integrity(run_dir: Path) -> Dict[str, Any]:
                 "deals",
                 len(expansion_deals),
                 invalid_expansion,
-                field_name="lifecyclestage",
+                field_name=company_lifecycle_field,
                 note=_out_of_window_note(expansion_out_of_window, "companies"),
                 leakage_candidate=True,
                 leakage_point="Expansion deal disconnected from customer state",
@@ -687,7 +695,7 @@ def measure_lifecycle_integrity(run_dir: Path) -> Dict[str, Any]:
             )
 
         lifecycle_fields = store.get("candidate_fields", {}).get("lifecycle", [])
-        extra_fields = [entry for entry in lifecycle_fields if entry.get("field") != "lifecyclestage"]
+        extra_fields = [entry for entry in lifecycle_fields if entry.get("field") != contact_lifecycle_field]
         add(
             "lifecycle_field_fragmentation",
             "all_detected_journeys",
