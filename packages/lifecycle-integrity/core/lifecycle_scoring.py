@@ -49,7 +49,10 @@ def _measurement_statuses(
         if len(scored_citations) != 1:
             continue
         for measurement_id in scored_citations:
-            statuses[measurement_id].append(str(finding.review_status))
+            status = str(finding.review_status)
+            if status == "rejected" and finding.rejection_basis == "invalid_measurement":
+                status = "invalid"
+            statuses[measurement_id].append(status)
 
     resolved: dict[str, str] = {}
     for measurement_id, values in statuses.items():
@@ -57,7 +60,9 @@ def _measurement_statuses(
             resolved[measurement_id] = "approved"
         elif any(value in {"pending", "human_confirmation"} for value in values):
             resolved[measurement_id] = "pending"
-        elif values and all(value in {"rejected", "observation"} for value in values):
+        elif values and all(value == "invalid" for value in values):
+            resolved[measurement_id] = "invalid"
+        elif values and all(value in {"rejected", "observation", "invalid"} for value in values):
             resolved[measurement_id] = "rejected"
     return resolved
 
@@ -88,12 +93,41 @@ def _control_assessment(
 ) -> dict[str, Any]:
     definition = SCORE_CONTROL_DEFINITIONS[control_id]
     weight = int(definition["weight"])
-    primary = [
+    all_primary = [
         row
         for row in rows
         if row.get("score_role") == "primary"
         and row.get("score_control") == control_id
     ]
+    # Populations reviewers set aside as invalid measurements leave the
+    # control: they are neither healthy nor broken, just not assessed.
+    invalid = [row for row in all_primary if statuses.get(str(row.get("id") or "")) == "invalid"]
+    primary = [row for row in all_primary if row not in invalid]
+    invalid_evidence = [
+        {
+            "measurement_id": row.get("id"),
+            "population_key": row.get("score_population_key"),
+            "denominator": row.get("denominator"),
+            "affected_records": row.get("affected_records"),
+            "affected_percentage": row.get("affected_percentage"),
+            "available": row.get("available"),
+            "status": "invalid_measurement",
+            "risk_multiplier": 0.0,
+        }
+        for row in invalid
+    ]
+    if invalid and not primary:
+        return {
+            "control_id": control_id,
+            "weight": weight,
+            "assessed_weight": 0,
+            "score": None,
+            "deducted": None,
+            "status": "not_assessable",
+            "assessment_reason": "measurement_rejected_as_invalid",
+            "affected_percentage": None,
+            "evidence_measurements": invalid_evidence,
+        }
     evidence = [
         {
             "measurement_id": row.get("id"),
@@ -189,7 +223,7 @@ def _control_assessment(
         "assessment_reason": "assessed",
         "affected_percentage": round(risk * 100, 1),
         "population_denominator": round(total_denominator),
-        "evidence_measurements": evidence,
+        "evidence_measurements": evidence + invalid_evidence,
     }
 
 

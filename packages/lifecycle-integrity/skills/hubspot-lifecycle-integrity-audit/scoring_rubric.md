@@ -57,7 +57,12 @@ source, or denominator cannot create a lifecycle-risk verdict by itself.
 - An unresolved deterministic candidate with an affected population uses half
   of its affected share until reviewer adjudication, and the verdict is
   provisional.
-- Rejected findings and observations do not reduce the score.
+- Rejected findings and observations do not reduce the score. A rejection
+  states its basis: `valid_exception` keeps the population in the score as
+  healthy; `invalid_measurement`, agreed by at least 2 reviewers with cited
+  evidence, removes the population from the assessed weight, so the control
+  reads as not assessed (`measurement_rejected_as_invalid`) rather than
+  healthy.
 - Bind reviewer status through an exact `evidence.csv#finding_id=...`
   measurement citation, never by matching a finding name or substring. One
   finding may confirm at most one `primary` population; split combined scored

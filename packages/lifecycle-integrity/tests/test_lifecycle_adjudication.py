@@ -45,6 +45,7 @@ def _reviews(verdict="approved"):
             reviewer=reviewer,
             verdict=verdict,
             reason="Evidence checked.",
+            rejection_basis="valid_exception" if verdict == "rejected" else None,
         )
         for reviewer in REVIEWERS
     ]
@@ -92,3 +93,33 @@ def test_review_revision_round_is_capped_at_one():
             reason="Too many loops.",
             revision_round=2,
         )
+
+
+def _decision(reviewer, verdict, basis=None, refs=("evidence.csv#finding_id=f1",)):
+    return ReviewDecision(
+        finding_id="f1", reviewer=reviewer, verdict=verdict, reason="Checked.",
+        rejection_basis=basis, evidence_refs=list(refs),
+    )
+
+
+def test_invalid_measurement_needs_two_reviewers():
+    one = [_decision(r, "approved") for r in REVIEWERS[:4]] + [_decision(REVIEWERS[4], "rejected", "invalid_measurement")]
+    assert adjudicate_findings([_finding()], one)[0]["rejection_basis"] == "valid_exception"
+    two = [_decision(r, "approved") for r in REVIEWERS[:3]] + [
+        _decision(REVIEWERS[3], "rejected", "invalid_measurement"),
+        _decision(REVIEWERS[4], "rejected", "invalid_measurement"),
+    ]
+    result = adjudicate_findings([_finding()], two)[0]
+    assert result["review_status"] == "rejected"
+    assert result["rejection_basis"] == "invalid_measurement"
+    approved = adjudicate_findings([_finding()], _reviews("approved"))[0]
+    assert approved["rejection_basis"] is None
+
+
+def test_rejection_basis_contract():
+    with pytest.raises(ValueError, match="must state rejection_basis"):
+        _decision("logic_reviewer", "rejected")
+    with pytest.raises(ValueError, match="must cite evidence_refs"):
+        _decision("logic_reviewer", "rejected", "invalid_measurement", refs=())
+    with pytest.raises(ValueError, match="only allowed on rejected"):
+        _decision("logic_reviewer", "approved", "valid_exception")

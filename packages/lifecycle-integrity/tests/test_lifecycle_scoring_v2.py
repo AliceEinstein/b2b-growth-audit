@@ -244,3 +244,44 @@ def test_malformed_measurements_fail_closed(malformed, message):
         rows.append(malformed)
     with pytest.raises(ValueError, match=message):
         compute_lifecycle_score([], _registry(), rows)
+
+
+def _rejected(measurement_id: str, basis: str) -> LifecycleFinding:
+    finding = _finding(measurement_id)
+    return finding.model_copy(update={"review_status": "rejected", "rejection_basis": basis})
+
+
+def test_valid_exception_counts_as_healthy_but_invalid_measurement_is_unassessed():
+    rows = _full_coverage()
+    rows[-1] = _measurement(
+        "expansion_customer_state", link="post_close_recovery", control="expansion_customer_state",
+        affected=6, percentage=60,
+    )
+    exception = compute_lifecycle_score([_rejected("expansion_customer_state", "valid_exception")], _registry(), rows)
+    control = exception["control_scores"]["expansion_customer_state"]
+    assert control["status"] == "healthy" and control["assessed_weight"] == 15
+    assert exception["coverage_percentage"] == 100
+
+    invalid = compute_lifecycle_score([_rejected("expansion_customer_state", "invalid_measurement")], _registry(), rows)
+    control = invalid["control_scores"]["expansion_customer_state"]
+    assert control["status"] == "not_assessable"
+    assert control["assessment_reason"] == "measurement_rejected_as_invalid"
+    assert control["assessed_weight"] == 0
+    assert control["evidence_measurements"][0]["status"] == "invalid_measurement"
+    assert invalid["coverage_percentage"] == 85
+
+
+def test_invalid_motion_population_leaves_the_rest_of_the_control_assessed():
+    rows = [row for row in _full_coverage() if row["score_control"] != "open_deal_owner"] + [
+        _measurement("inbound_deals_without_owner", link="deal_progression", control="open_deal_owner",
+                     population_key="open_deal_owner:inbound", denominator=10, affected=10, percentage=100),
+        _measurement("expansion_deals_without_owner", link="deal_progression", control="open_deal_owner",
+                     population_key="open_deal_owner:expansion", denominator=30, affected=0, percentage=0),
+    ]
+    score = compute_lifecycle_score([_rejected("inbound_deals_without_owner", "invalid_measurement")], _registry(), rows)
+    control = score["control_scores"]["open_deal_owner"]
+    assert control["assessed_weight"] == 10
+    assert control["population_denominator"] == 30
+    assert control["status"] == "healthy"
+    statuses = {item["measurement_id"]: item["status"] for item in control["evidence_measurements"]}
+    assert statuses["inbound_deals_without_owner"] == "invalid_measurement"

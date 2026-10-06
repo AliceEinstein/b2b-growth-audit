@@ -19,6 +19,12 @@ REQUIRED_REVIEWERS = {
 }
 
 
+# A measurement is set aside as invalid only when at least this many distinct
+# reviewers reject its finding on that basis; one dissent can't remove a
+# control from the score.
+INVALID_MEASUREMENT_QUORUM = 2
+
+
 def aggregate_review_status(decisions: Iterable[ReviewDecision]) -> str:
     verdicts = [decision.verdict for decision in decisions]
     if "rejected" in verdicts:
@@ -78,6 +84,19 @@ def adjudicate_findings(
             status = "revised"
         item = finding.model_dump()
         item["review_status"] = status
+        if status == "rejected":
+            invalid_votes = {
+                review.reviewer
+                for review in latest_reviews
+                if review.verdict == "rejected" and review.rejection_basis == "invalid_measurement"
+            }
+            item["rejection_basis"] = (
+                "invalid_measurement"
+                if len(invalid_votes) >= INVALID_MEASUREMENT_QUORUM
+                else "valid_exception"
+            )
+        else:
+            item["rejection_basis"] = None
         item["action_lane"] = action_lane(finding, status)
         result.append(item)
     return result

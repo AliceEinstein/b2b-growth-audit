@@ -28,6 +28,7 @@ RecommendationType = Literal[
     "requires_human_confirmation",
     "do_not_auto_fix",
 ]
+RejectionBasis = Literal["valid_exception", "invalid_measurement"]
 ReviewVerdict = Literal[
     "approved",
     "needs_revision",
@@ -86,6 +87,9 @@ class LifecycleFinding(BaseModel):
         "human_confirmation",
         "rejected",
     ] = "pending"
+    # Set by adjudication on rejected findings: a valid exception is healthy;
+    # an invalid measurement is removed from the assessed score weight.
+    rejection_basis: Optional[RejectionBasis] = None
 
     @model_validator(mode="after")
     def _materiality_contract(self) -> "LifecycleFinding":
@@ -110,6 +114,22 @@ class ReviewDecision(BaseModel):
     reason: str = Field(min_length=1)
     evidence_refs: List[str] = Field(default_factory=list)
     revision_round: int = Field(default=0, ge=0, le=1)
+    # Required on "rejected": "valid_exception" (the records are fine) or
+    # "invalid_measurement" (the population itself is wrong, so the control
+    # wasn't really assessed). The latter must cite evidence.
+    rejection_basis: Optional[RejectionBasis] = None
+
+    @model_validator(mode="after")
+    def _rejection_basis_contract(self) -> "ReviewDecision":
+        if self.verdict == "rejected" and self.rejection_basis is None:
+            raise ValueError(
+                "rejected decisions must state rejection_basis: valid_exception or invalid_measurement"
+            )
+        if self.verdict != "rejected" and self.rejection_basis is not None:
+            raise ValueError("rejection_basis is only allowed on rejected decisions")
+        if self.rejection_basis == "invalid_measurement" and not self.evidence_refs:
+            raise ValueError("an invalid_measurement rejection must cite evidence_refs")
+        return self
 
 
 class AnalysisResult(BaseModel):

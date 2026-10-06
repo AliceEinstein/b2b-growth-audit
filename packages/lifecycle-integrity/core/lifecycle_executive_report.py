@@ -130,6 +130,8 @@ def _score_lines(score: dict[str, Any]) -> list[dict[str, Any]]:
             reading = (
                 "No eligible population in the audit window"
                 if row.get("assessment_reason") == "no_eligible_population"
+                else "Not assessed; reviewers rejected the measurement as invalid"
+                if row.get("assessment_reason") == "measurement_rejected_as_invalid"
                 else "Not assessed; recovery opportunity shown separately"
                 if row.get("assessment_reason")
                 == "scored_control_population_unavailable"
@@ -389,6 +391,8 @@ def _score_scope_note(view: dict[str, Any]) -> str:
         reason_text = (
             "no eligible population was present in the audit window"
             if reason == "no_eligible_population"
+            else "reviewers rejected its measurement as invalid"
+            if reason == "measurement_rejected_as_invalid"
             else "the required source or denominator was unavailable"
         )
         unassessed.append(
