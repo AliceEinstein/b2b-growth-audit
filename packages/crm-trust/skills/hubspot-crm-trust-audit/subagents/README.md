@@ -20,5 +20,6 @@ judgment artifact → the next script validates the schema.
 | logic_reviewer | LLM | Phase 5 ✅ |
 | privacy_safety_reviewer | LLM (+ code leak net) | Phase 5 ✅ |
 | audit_scope_reviewer | LLM | Phase 5 ✅ |
+| revision_agent | LLM | Phase 5 ✅ |
 | recommendation_agent | LLM | Phase 6 ✅ |
 | final_report_agent | LLM | Phase 6 ✅ |

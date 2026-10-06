@@ -363,10 +363,17 @@ REVIEWERS = [
 
 
 def load_all_findings(run_dir: Path):
-    """Load every finding across module files. Returns (findings, problems)."""
+    """Load every finding across module files. Returns (findings, problems).
+
+    A finding sent back in review carries its revised wording, severity,
+    confidence and recommendation type; numbers always come from the
+    original file.
+    """
+    from .revisions import load_revisions, overlay
     from .rules import MODULES
 
     run_dir = Path(run_dir)
+    revisions = load_revisions(run_dir)
     findings: List[Finding] = []
     problems: List[str] = []
     seen_ids: Dict[str, str] = {}
@@ -382,7 +389,9 @@ def load_all_findings(run_dir: Path):
             continue
         for raw in doc.get("findings", []):
             try:
-                finding = Finding.model_validate(raw)
+                finding = Finding.model_validate(
+                    overlay(raw, revisions) if isinstance(raw, dict) else raw
+                )
             except ValidationError as exc:
                 problems.append(f"{path.name}: invalid finding — {exc}")
                 continue
@@ -406,9 +415,18 @@ def aggregate_verdicts(verdicts: List[str]) -> str:
     return "approved"
 
 
-def validate_reviews(run_dir: Path) -> List[str]:
-    """Every finding must be reviewed by all four gates, and review_status
-    must equal the deterministic aggregate of the recorded verdicts."""
+def validate_reviews(run_dir: Path, *, require_rereview: Optional[bool] = None) -> List[str]:
+    """Check review_log.json against the findings.
+
+    Every finding needs a round-0 verdict from all four gates. A reviewer who
+    asked for a revision re-reviews the revised finding once (round 1,
+    approve or reject); harness runs require that re-review unless
+    ``require_rereview`` is False. ``review_status`` must equal the
+    deterministic aggregate: any standing reject → ``rejected``; else any
+    round-0 revise → ``revised``; else ``approved``.
+    """
+    from .revisions import is_harness_run
+
     run_dir = Path(run_dir)
     path = run_dir / "review_log.json"
     if not path.exists():
@@ -418,14 +436,33 @@ def validate_reviews(run_dir: Path) -> List[str]:
         raw_entries = json.loads(path.read_text(encoding="utf-8"))
     except json.JSONDecodeError as exc:
         return [f"review_log.json: invalid JSON — {exc}"]
+    if not isinstance(raw_entries, list):
+        return ["review_log.json must contain a JSON array"]
+    if require_rereview is None:
+        require_rereview = is_harness_run(run_dir)
+    return check_review_entries(
+        run_dir, raw_entries, require_rereview=require_rereview, source="review_log.json"
+    )
 
+
+def check_review_entries(
+    run_dir: Path,
+    raw_entries: List[Any],
+    *,
+    require_rereview: bool,
+    source: str,
+) -> List[str]:
+    """Shared review-log rules; ``source`` names the files in problem text."""
+    from .revisions import final_review_status, load_revisions
+
+    run_dir = Path(run_dir)
     problems: List[str] = []
     entries: List[ReviewEntry] = []
     for raw in raw_entries:
         try:
             entries.append(ReviewEntry.model_validate(raw))
         except ValidationError as exc:
-            problems.append(f"review_log.json: invalid entry — {exc}")
+            problems.append(f"{source}: invalid entry — {exc}")
     if problems:
         return problems
 
@@ -433,31 +470,56 @@ def validate_reviews(run_dir: Path) -> List[str]:
     problems.extend(finding_problems)
     known_ids = {f.id for f in findings}
 
-    by_finding: Dict[str, Dict[str, str]] = {}
+    # finding id → revision round → reviewer → verdict
+    by_finding: Dict[str, Dict[int, Dict[str, str]]] = {}
     for entry in entries:
         if entry.finding_id not in known_ids:
             problems.append(
-                f"review_log.json: entry for unknown finding "
+                f"{source}: entry for unknown finding "
                 f"'{entry.finding_id}'."
             )
             continue
-        reviewer_map = by_finding.setdefault(entry.finding_id, {})
+        reviewer_map = by_finding.setdefault(entry.finding_id, {}).setdefault(
+            entry.revision_round, {}
+        )
         if entry.reviewer in reviewer_map:
             problems.append(
-                f"review_log.json: duplicate verdict from {entry.reviewer} "
-                f"on '{entry.finding_id}'."
+                f"{source}: duplicate verdict from {entry.reviewer} on "
+                f"'{entry.finding_id}' in round {entry.revision_round}."
             )
         reviewer_map[entry.reviewer] = entry.verdict
 
+    revisions = load_revisions(run_dir) if require_rereview else {}
     for finding in findings:
-        verdicts = by_finding.get(finding.id, {})
-        missing = [r for r in REVIEWERS if r not in verdicts]
+        rounds = by_finding.get(finding.id, {})
+        round0 = rounds.get(0, {})
+        round1 = rounds.get(1, {})
+        missing = [r for r in REVIEWERS if r not in round0]
         if missing:
             problems.append(
                 f"finding '{finding.id}': missing review from {', '.join(missing)}."
             )
             continue
-        expected = aggregate_verdicts(list(verdicts.values()))
+        rejected = "reject" in round0.values()
+        sent_back = set() if rejected else {r for r, v in round0.items() if v == "revise"}
+        for reviewer in sorted(set(round1) - sent_back):
+            problems.append(
+                f"finding '{finding.id}': re-review from {reviewer}, who did not "
+                "send it back for revision (or another reviewer already rejected it)."
+            )
+        if require_rereview and sent_back:
+            if finding.id not in revisions:
+                problems.append(
+                    f"finding '{finding.id}': sent back for revision but no revision "
+                    "was recorded."
+                )
+            pending = sorted(sent_back - set(round1))
+            if pending:
+                problems.append(
+                    f"finding '{finding.id}': revised but not yet re-reviewed by "
+                    f"{', '.join(pending)}."
+                )
+        expected = final_review_status(round0, round1)
         if finding.review_status != expected:
             problems.append(
                 f"finding '{finding.id}': review_status is "

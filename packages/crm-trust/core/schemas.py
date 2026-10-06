@@ -138,6 +138,16 @@ class ReviewEntry(BaseModel):
     reviewer: ReviewerName
     verdict: Literal["approve", "revise", "reject"]
     reason: str = Field(min_length=1)
+    # 0 = first review; 1 = the single re-review of a revised finding.
+    revision_round: int = Field(default=0, ge=0, le=1)
+
+    @model_validator(mode="after")
+    def _one_revision_round(self) -> "ReviewEntry":
+        if self.revision_round == 1 and self.verdict == "revise":
+            raise ValueError(
+                "a re-review can only approve or reject; each finding gets 1 revision round"
+            )
+        return self
 
 
 class RecommendationItem(BaseModel):

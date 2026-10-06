@@ -11,8 +11,20 @@ from core.integrity import sha256_file
 from core.profiler import PROCESSED_FILES
 from core.rules import MODULES
 from core.safety import scan_deliverables
+from core.revisions import (
+    REREVIEWS_DIR,
+    REVISIONS_DIR,
+    modules_needing_revision,
+    reviewers_needing_rereview,
+    round0_raw,
+    round1_raw,
+    stray_files,
+    validate_rereview,
+    validate_revision,
+)
 from core.schemas import ReportNarrative, ReviewEntry
 from core.validators import (
+    check_review_entries,
     validate_audit_profile,
     validate_business_context,
     validate_crm_context,
@@ -65,6 +77,38 @@ def _validate_review_artifact(run_dir: Path, stage_id: str) -> List[str]:
                 + "; expected "
                 + repr(reviewer)
             )
+        if entry.revision_round != 0:
+            problems.append(
+                "review entry " + str(index) + " is a first review; re-reviews go in "
+                + str(REREVIEWS_DIR / (reviewer + ".json"))
+            )
+    return problems
+
+
+def review_round0_problems(run_dir: Path) -> List[str]:
+    """Round-0 gate: all four reviewers judged every finding; no re-review required yet."""
+    try:
+        entries = round0_raw(run_dir) + round1_raw(run_dir)
+    except (ValueError, json.JSONDecodeError) as exc:
+        return ["review artifacts: " + str(exc)]
+    return check_review_entries(
+        run_dir, entries, require_rereview=False, source="harness/agent_outputs/reviews"
+    )
+
+
+def revisions_gate_problems(run_dir: Path) -> List[str]:
+    needed = modules_needing_revision(run_dir)
+    problems = stray_files(run_dir, REVISIONS_DIR, needed)
+    for module in sorted(needed):
+        problems.extend(validate_revision(run_dir, module))
+    return problems
+
+
+def rereviews_gate_problems(run_dir: Path) -> List[str]:
+    needed = reviewers_needing_rereview(run_dir)
+    problems = stray_files(run_dir, REREVIEWS_DIR, needed)
+    for reviewer in sorted(needed):
+        problems.extend(validate_rereview(run_dir, reviewer))
     return problems
 
 
@@ -109,7 +153,21 @@ def validate_stage_output(run_dir: Path, stage_id: str) -> List[str]:
     if stage_id.startswith("review_"):
         return _validate_review_artifact(run_dir, stage_id)
     if stage_id == "reviews_validation":
-        return validate_reviews(run_dir)
+        return review_round0_problems(run_dir)
+    if stage_id.startswith("revise_"):
+        module = stage_id.removeprefix("revise_")
+        if module not in modules_needing_revision(run_dir):
+            return []
+        return validate_revision(run_dir, module)
+    if stage_id == "revisions_validation":
+        return revisions_gate_problems(run_dir)
+    if stage_id.startswith("rereview_"):
+        reviewer = stage_id.removeprefix("rereview_")
+        if reviewer not in reviewers_needing_rereview(run_dir):
+            return []
+        return validate_rereview(run_dir, reviewer)
+    if stage_id == "rereviews_validation":
+        return rereviews_gate_problems(run_dir) + validate_reviews(run_dir, require_rereview=True)
     if stage_id == "consolidate":
         return _require_files(run_dir, ["findings.json", "score.json", "evidence.csv"])
     if stage_id == "recommendations":

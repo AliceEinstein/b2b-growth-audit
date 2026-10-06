@@ -71,6 +71,105 @@ def test_review_stage_does_not_reopen_after_deterministic_status_aggregation(tmp
     assert validate_stage_output(run, "reviews_validation") == []
 
 
+def _send_back(run: Path, reviewer: str, finding_id: str, reason: str) -> None:
+    path = run / "harness" / "agent_outputs" / "reviews" / (reviewer + ".json")
+    entries = json.loads(path.read_text(encoding="utf-8"))
+    for entry in entries:
+        if entry["finding_id"] == finding_id:
+            entry.update(verdict="revise", reason=reason)
+    path.write_text(json.dumps(entries), encoding="utf-8")
+
+
+def test_revise_verdict_opens_one_revision_round(tmp_path):
+    run = _copy_fixture(tmp_path)
+    first = advance(run)
+    assert first["ready_tasks"] == ["report_narrative"]
+    assert "revise_pipeline_hygiene" in first["skipped"]
+    assert "rereview_logic_reviewer" in first["skipped"]
+
+    target = "deals_without_amount"
+    reason = "Severity overstated: amount is optional before proposal stage."
+    _send_back(run, "logic_reviewer", target, reason)
+    # Editing a passed review reopens that review task; the reviewer resubmits.
+    reopened = advance(run)
+    assert reopened["ready_tasks"] == ["review_logic_reviewer"]
+    stale = next((run / "harness" / "stale").rglob("logic_reviewer.json"))
+    shutil.copyfile(stale, run / "harness" / "agent_outputs" / "reviews" / "logic_reviewer.json")
+
+    result = advance(run)
+    assert result["ready_tasks"] == ["revise_pipeline_hygiene"]
+    packet = json.loads((run / "harness" / "tasks" / "revise_pipeline_hygiene.json").read_text())
+    assert packet["revision_requests"] == [
+        {"finding_id": target, "reviewer": "logic_reviewer", "reason": reason}
+    ]
+    assert packet["role_instruction"].endswith("revision_agent.md")
+
+    findings_path = run / "findings" / "pipeline_hygiene_findings.json"
+    original = next(
+        f for f in json.loads(findings_path.read_text())["findings"] if f["id"] == target
+    )
+    assert original["review_status"] == "revised"
+    revision = dict(original, severity="low", revision_note="Lowered to low per logic review.")
+    revision.pop("review_status")
+    revisions_dir = run / "harness" / "agent_outputs" / "revisions"
+    (revisions_dir / "pipeline_hygiene.json").write_text(
+        json.dumps({"module": "pipeline_hygiene", "findings": [revision]}), encoding="utf-8"
+    )
+
+    result = advance(run)
+    assert result["ready_tasks"] == ["rereview_logic_reviewer"]
+    packet = json.loads((run / "harness" / "tasks" / "rereview_logic_reviewer.json").read_text())
+    assert [item["finding_id"] for item in packet["revision_requests"]] == [target]
+    allowed = "\n".join(packet["allowed_inputs"])
+    assert "reviews/logic_reviewer.json" in allowed
+    assert "reviews/data_fidelity_reviewer.json" not in allowed
+
+    rereview = run / "harness" / "agent_outputs" / "rereviews" / "logic_reviewer.json"
+    rereview.write_text(
+        json.dumps([{"finding_id": target, "reviewer": "logic_reviewer", "verdict": "revise",
+                     "reason": "Still not right.", "revision_round": 1}]),
+        encoding="utf-8",
+    )
+    assert any("1 revision round" in p for p in validate_stage_output(run, "rereview_logic_reviewer"))
+    rereview.write_text(
+        json.dumps([{"finding_id": target, "reviewer": "logic_reviewer", "verdict": "approve",
+                     "reason": "Severity now matches the stage rule.", "revision_round": 1}]),
+        encoding="utf-8",
+    )
+
+    result = advance(run)
+    assert "rereviews_validation" in result["passed"]
+    assert "consolidate" in result["passed"]
+    log = json.loads((run / "review_log.json").read_text())
+    rounds = {
+        e["revision_round"]
+        for e in log
+        if e["reviewer"] == "logic_reviewer" and e["finding_id"] == target
+    }
+    assert rounds == {0, 1}
+    consolidated = {f["id"]: f for f in json.loads((run / "findings.json").read_text())["findings"]}
+    assert consolidated[target]["severity"] == "low"
+    assert consolidated[target]["review_status"] == "revised"
+    # The audit role's own file keeps the original wording.
+    kept = {f["id"]: f for f in json.loads(findings_path.read_text())["findings"]}
+    assert kept[target]["severity"] == original["severity"]
+
+    # Resuming does not reopen the review, revision or re-review tasks.
+    again = advance(run)
+    assert not any(
+        stage.startswith(("review_", "revise_", "rereview_")) for stage in again["ready_tasks"]
+    )
+
+
+def test_every_agent_stage_has_a_role_file():
+    from harness.task_packets import REPO_ROOT
+    from harness.workflow import STAGES
+
+    for stage in STAGES:
+        if stage.kind == "agent":
+            assert (REPO_ROOT / stage.role_file).is_file(), stage.id
+
+
 def test_harness_rejects_raw_inputs(tmp_path):
     with pytest.raises(ValueError, match="raw snapshot"):
         expand_input_patterns(tmp_path, ["raw/*.jsonl"])

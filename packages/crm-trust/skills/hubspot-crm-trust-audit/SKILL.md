@@ -103,7 +103,11 @@ an unrelated project merely because the skill is globally discoverable.
 
    The harness validates the artifact, prepares parallel audit/reviewer tasks
    where possible, aggregates reviewer verdicts deterministically, and only
-   then unlocks recommendations and the report narrative.
+   then unlocks recommendations and the report narrative. A `revise` verdict
+   opens one revision round: a `revise_<module>` task for the audit role
+   (`revision_agent.md`), then a `rereview_<reviewer>` task in which the
+   reviewer can only approve or reject. Both are skipped when no finding was
+   sent back.
 5. Inspect progress or validate one stage directly:
 
    ```bash

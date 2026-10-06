@@ -19,9 +19,17 @@ from core.rules import MODULES, measure_all
 from core.safety import FINAL_DELIVERABLES, scan_deliverables
 from core.schemas import CrmContext
 from core.scoring import compute_score
+from core.revisions import (
+    REREVIEWS_DIR,
+    REVISIONS_DIR,
+    final_review_status,
+    modules_needing_revision,
+    reviewers_needing_rereview,
+    round0_raw,
+    round1_raw,
+)
 from core.validators import (
     REVIEWERS,
-    aggregate_verdicts,
     load_all_findings,
     validate_findings,
     validate_phase3_artifacts,
@@ -37,7 +45,12 @@ from .state import (
     state_path,
 )
 from .task_packets import create_task_packet
-from .validation import validate_stage_output
+from .validation import (
+    review_round0_problems,
+    revisions_gate_problems,
+    rereviews_gate_problems,
+    validate_stage_output,
+)
 from .workflow import STAGES, StageSpec
 
 MAX_ATTEMPTS = 3
@@ -49,6 +62,8 @@ def ensure_run(run_dir: Path) -> RunState:
         raise FileNotFoundError("run directory not found: " + str(run_dir))
     (run_dir / "harness" / "tasks").mkdir(parents=True, exist_ok=True)
     (run_dir / "harness" / "agent_outputs" / "reviews").mkdir(parents=True, exist_ok=True)
+    (run_dir / REVISIONS_DIR).mkdir(parents=True, exist_ok=True)
+    (run_dir / REREVIEWS_DIR).mkdir(parents=True, exist_ok=True)
     state = RunState.load_or_initialize(run_dir)
     _import_legacy_reviews(run_dir)
     state.save(run_dir)
@@ -71,7 +86,13 @@ def _import_legacy_reviews(run_dir: Path) -> None:
         target = target_dir / (reviewer + ".json")
         if target.exists():
             continue
-        scoped = [entry for entry in entries if isinstance(entry, dict) and entry.get("reviewer") == reviewer]
+        scoped = [
+            entry
+            for entry in entries
+            if isinstance(entry, dict)
+            and entry.get("reviewer") == reviewer
+            and entry.get("revision_round", 0) == 0
+        ]
         if scoped:
             target.write_text(json.dumps(scoped, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
@@ -112,33 +133,40 @@ def _run_measurements(run_dir: Path) -> None:
     (run_dir / "findings").mkdir(exist_ok=True)
 
 
-def _aggregate_reviews(run_dir: Path) -> None:
-    review_dir = run_dir / "harness" / "agent_outputs" / "reviews"
-    entries: List[Dict[str, Any]] = []
-    for reviewer in REVIEWERS:
-        path = review_dir / (reviewer + ".json")
-        if not path.exists():
-            raise ValueError("missing isolated review artifact: " + str(path))
-        raw = json.loads(path.read_text(encoding="utf-8"))
-        if not isinstance(raw, list):
-            raise ValueError(str(path) + " must contain a JSON array")
-        entries.extend(raw)
-
-    # review_log.json is code-owned aggregation.  Individual reviewers never
-    # race to append to this shared file.
-    write_json(run_dir / "review_log.json", entries)
+def _set_review_statuses(run_dir: Path, entries: List[Dict[str, Any]]) -> None:
+    """Write each finding's code-owned review_status from the recorded verdicts."""
+    rounds: Dict[str, Dict[int, Dict[str, str]]] = {}
+    for entry in entries:
+        rounds.setdefault(str(entry.get("finding_id")), {}).setdefault(
+            int(entry.get("revision_round", 0)), {}
+        )[str(entry.get("reviewer"))] = str(entry.get("verdict"))
     for module in MODULES:
         path = run_dir / "findings" / (module + "_findings.json")
         document = json.loads(path.read_text(encoding="utf-8"))
         for finding in document.get("findings", []):
-            verdicts = [
-                entry["verdict"]
-                for entry in entries
-                if entry.get("finding_id") == finding.get("id")
-            ]
-            if verdicts:
-                finding["review_status"] = aggregate_verdicts(verdicts)
+            verdicts = rounds.get(str(finding.get("id")), {})
+            if verdicts.get(0):
+                finding["review_status"] = final_review_status(verdicts[0], verdicts.get(1))
         write_json(path, document)
+
+
+def _aggregate_reviews(run_dir: Path) -> None:
+    """Round-0 gate: set provisional statuses; revise verdicts open revision tasks."""
+    review_dir = run_dir / "harness" / "agent_outputs" / "reviews"
+    for reviewer in REVIEWERS:
+        path = review_dir / (reviewer + ".json")
+        if not path.exists():
+            raise ValueError("missing isolated review artifact: " + str(path))
+    _set_review_statuses(run_dir, round0_raw(run_dir) + round1_raw(run_dir))
+
+
+def _finalize_reviews(run_dir: Path) -> None:
+    """Last review gate: write review_log.json with both rounds and final statuses."""
+    entries = round0_raw(run_dir) + round1_raw(run_dir)
+    # review_log.json is code-owned aggregation.  Individual reviewers never
+    # race to append to this shared file.
+    write_json(run_dir / "review_log.json", entries)
+    _set_review_statuses(run_dir, entries)
 
 
 def _consolidate(run_dir: Path) -> None:
@@ -165,9 +193,20 @@ def _deterministic_stage(run_dir: Path, state: RunState, stage: StageSpec) -> No
             raise ValueError("findings validation failed: " + "; ".join(problems))
     elif stage.id == "reviews_validation":
         _aggregate_reviews(run_dir)
-        problems = validate_reviews(run_dir)
+        problems = review_round0_problems(run_dir)
         if problems:
             raise ValueError("review validation failed: " + "; ".join(problems))
+    elif stage.id == "revisions_validation":
+        problems = revisions_gate_problems(run_dir)
+        if problems:
+            raise ValueError("revision validation failed: " + "; ".join(problems))
+    elif stage.id == "rereviews_validation":
+        problems = rereviews_gate_problems(run_dir)
+        if not problems:
+            _finalize_reviews(run_dir)
+            problems = validate_reviews(run_dir, require_rereview=True)
+        if problems:
+            raise ValueError("re-review validation failed: " + "; ".join(problems))
     elif stage.id == "consolidate":
         _consolidate(run_dir)
     elif stage.id == "render_reports":
@@ -191,10 +230,21 @@ def _privacy_clearance_needed(run_dir: Path) -> bool:
     return any(not hit.hard for hit in scan_deliverables(run_dir))
 
 
-def _handle_conditional_privacy(run_dir: Path, state: RunState, stage: StageSpec) -> bool:
-    if stage.id != "privacy_clearance":
+def _conditional_needed(run_dir: Path, stage: StageSpec) -> bool:
+    if stage.id == "privacy_clearance":
+        return _privacy_clearance_needed(run_dir)
+    if stage.id.startswith("revise_"):
+        return stage.module in modules_needing_revision(run_dir)
+    if stage.id.startswith("rereview_"):
+        return stage.id.removeprefix("rereview_") in reviewers_needing_rereview(run_dir)
+    return True
+
+
+def _handle_conditional(run_dir: Path, state: RunState, stage: StageSpec) -> bool:
+    """Record a conditional stage as skipped when nothing calls for it."""
+    if not stage.conditional:
         return False
-    if not _privacy_clearance_needed(run_dir):
+    if not _conditional_needed(run_dir, stage):
         _record_success(run_dir, state, stage, status="skipped")
         return True
     return False
@@ -245,7 +295,7 @@ def advance(run_dir: Path) -> Dict[str, Any]:
             continue
         if not state.dependencies_satisfied(stage):
             continue
-        if _handle_conditional_privacy(run_dir, state, stage):
+        if _handle_conditional(run_dir, state, stage):
             result["skipped"].append(stage.id)
             continue
         if stage.kind == "agent":

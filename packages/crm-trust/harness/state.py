@@ -113,13 +113,23 @@ def _findings_content_hash(run_dir: Path, relative_paths: Iterable[str]) -> str:
     return digest.hexdigest()
 
 
+# Stages that read findings before the review gates settle review_status.
+REVIEW_STATUS_BLIND_STAGES = (
+    "findings_validation",
+    "reviews_validation",
+    "revisions_validation",
+    "rereviews_validation",
+)
+REVIEW_STATUS_BLIND_PREFIXES = ("review_", "revise_", "rereview_")
+
+
 def stage_input_hash(run_dir: Path, stage: StageSpec) -> str:
     paths = expand_input_patterns(run_dir, stage.input_patterns)
-    # Review agents consume finding content, but the deterministic review
-    # aggregation later changes only each finding's review_status. That status
-    # is the output of the review stage, not an input to it; ignoring it here
-    # prevents a completed review from invalidating itself on the next resume.
-    if stage.id.startswith("review_") or stage.id == "findings_validation":
+    # Review and revision stages consume finding content, but the review gates
+    # later change only each finding's review_status. That status is their
+    # output, not an input; ignoring it here prevents a completed review from
+    # invalidating itself on the next resume.
+    if stage.id in REVIEW_STATUS_BLIND_STAGES or stage.id.startswith(REVIEW_STATUS_BLIND_PREFIXES):
         return _findings_content_hash(run_dir, paths)
     return content_hash(run_dir, paths)
 

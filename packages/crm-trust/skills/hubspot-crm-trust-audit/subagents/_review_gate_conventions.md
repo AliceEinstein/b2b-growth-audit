@@ -44,6 +44,26 @@ reviewer. Do not append to `review_log.json` and do not edit any finding file;
 the harness aggregates these files deterministically after all four reviewer
 tasks pass validation.
 
+In this mode **revise** means "send it back": say in `reason` exactly what
+must change (severity, wording, confidence, recommendation type) and why. Do
+not fix the finding yourself. The harness then runs one revision round:
+
+1. A `revise_<module>` task asks the module's audit role to answer your
+   reason with a revised copy in `harness/agent_outputs/revisions/`. Numbers,
+   measurement and evidence stay locked.
+2. A `rereview_<your_reviewer_name>` task asks you to judge the revised
+   copy of each finding you sent back. Write
+   `harness/agent_outputs/rereviews/<your_reviewer_name>.json` with one entry
+   per finding and `"revision_round": 1`. The verdict is `approve` or
+   `reject` only; there is no second revision round. If the revision
+   still falls short, reject it and say why.
+
+A finding another reviewer rejected in round 0 is not sent back; reject wins.
+After the round, `review_status` is `rejected` if any standing verdict is
+reject, `revised` if it went through the revision round and was approved,
+and `approved` otherwise. Reports use the revised copy; the audit role's
+original file stays as the audit trail.
+
 ## Stance
 
 You are a gate, not a rubber stamp. Rejecting a bad finding is a success

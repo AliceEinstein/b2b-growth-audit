@@ -55,6 +55,20 @@ def _review_inputs() -> Tuple[str, ...]:
     )
 
 
+def _context_for_revision() -> Tuple[str, ...]:
+    return (
+        "processed/snapshot_summary.json",
+        "audit_profile.json",
+        "crm_context.yaml",
+        "business_context.json",
+    )
+
+
+REVIEWS_OUTPUT = "harness/agent_outputs/reviews/"
+REVISIONS_OUTPUT = "harness/agent_outputs/revisions/"
+REREVIEWS_OUTPUT = "harness/agent_outputs/rereviews/"
+
+
 def _role(name: str) -> str:
     return "skills/hubspot-crm-trust-audit/subagents/" + name
 
@@ -141,19 +155,90 @@ def _build_stages() -> List[StageSpec]:
                 kind="agent",
                 dependencies=("findings_validation",),
                 input_patterns=_review_inputs(),
-                output_paths=("harness/agent_outputs/reviews/" + reviewer + ".json",),
+                output_paths=(REVIEWS_OUTPUT + reviewer + ".json",),
                 role_file=_role(reviewer + ".md"),
+            )
+        )
+
+    # Round 0 gate: every reviewer has judged every finding. A ``revise``
+    # verdict opens one revision task for the finding's module and one
+    # re-review task for each reviewer who asked; both are skipped when no
+    # finding was sent back.
+    stages.append(
+        StageSpec(
+            id="reviews_validation",
+            kind="gate",
+            dependencies=tuple("review_" + reviewer for reviewer in REVIEWERS),
+            input_patterns=(
+                REVIEWS_OUTPUT + "*.json",
+                "findings/*_findings.json",
+            ),
+        )
+    )
+
+    for module in MODULES:
+        stages.append(
+            StageSpec(
+                id="revise_" + module,
+                kind="agent",
+                dependencies=("reviews_validation",),
+                input_patterns=(
+                    "findings/" + module + "_findings.json",
+                    REVIEWS_OUTPUT + "*.json",
+                    "processed/measurements/" + module + ".json",
+                )
+                + _context_for_revision(),
+                output_paths=(REVISIONS_OUTPUT + module + ".json",),
+                role_file=_role("revision_agent.md"),
+                module=module,
+                conditional=True,
+            )
+        )
+
+    stages.append(
+        StageSpec(
+            id="revisions_validation",
+            kind="gate",
+            dependencies=tuple("revise_" + module for module in MODULES),
+            input_patterns=(
+                REVISIONS_OUTPUT + "*.json",
+                REVIEWS_OUTPUT + "*.json",
+                "findings/*_findings.json",
+            ),
+        )
+    )
+
+    for reviewer in REVIEWERS:
+        stages.append(
+            StageSpec(
+                id="rereview_" + reviewer,
+                kind="agent",
+                dependencies=("revisions_validation",),
+                # The reviewer sees its own round-0 reasons, never the other
+                # reviewers' verdicts.
+                input_patterns=(
+                    "findings/*_findings.json",
+                    REVISIONS_OUTPUT + "*.json",
+                    REVIEWS_OUTPUT + reviewer + ".json",
+                    "processed/measurements/*.json",
+                )
+                + _context_for_revision(),
+                output_paths=(REREVIEWS_OUTPUT + reviewer + ".json",),
+                role_file=_role(reviewer + ".md"),
+                conditional=True,
             )
         )
 
     stages.extend(
         [
             StageSpec(
-                id="reviews_validation",
+                id="rereviews_validation",
                 kind="gate",
-                dependencies=tuple("review_" + reviewer for reviewer in REVIEWERS),
+                dependencies=tuple("rereview_" + reviewer for reviewer in REVIEWERS),
                 input_patterns=(
-                    "harness/agent_outputs/reviews/*.json",
+                    REVIEWS_OUTPUT + "*.json",
+                    REREVIEWS_OUTPUT + "*.json",
+                    REVISIONS_OUTPUT + "*.json",
                     "findings/*_findings.json",
                 ),
                 output_paths=("review_log.json",),
@@ -161,9 +246,10 @@ def _build_stages() -> List[StageSpec]:
             StageSpec(
                 id="consolidate",
                 kind="deterministic",
-                dependencies=("reviews_validation",),
+                dependencies=("rereviews_validation",),
                 input_patterns=(
                     "findings/*_findings.json",
+                    REVISIONS_OUTPUT + "*.json",
                     "review_log.json",
                     "evidence/*.csv",
                 ),
