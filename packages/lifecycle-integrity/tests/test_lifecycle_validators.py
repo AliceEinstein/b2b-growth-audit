@@ -29,13 +29,15 @@ def test_validator_rejects_wrong_denominator(tmp_path):
 
 def test_low_confidence_pattern_can_only_produce_observation(tmp_path):
     run_dir, _ = build_lifecycle_run(tmp_path, "legacy_property_sprawl_sample")
-    write_judgment_artifacts(
-        run_dir,
-        "lifecycle_field_fragmentation",
-        journey_pattern="inbound_new_business",
-        severity="high",
-    )
-    assert any("below 50 can only produce observations" in row for row in validate_findings(run_dir))
+    # The harness now runs the finding rules at submit, so the audit role's
+    # candidate is rejected before any later phase is built on it.
+    with pytest.raises(AssertionError, match="below 50 can only produce observations"):
+        write_judgment_artifacts(
+            run_dir,
+            "lifecycle_field_fragmentation",
+            journey_pattern="inbound_new_business",
+            severity="high",
+        )
 
 
 def test_every_scored_finding_requires_an_evidence_row(tmp_path):

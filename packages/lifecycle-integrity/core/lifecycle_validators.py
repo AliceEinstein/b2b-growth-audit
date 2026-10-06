@@ -4,7 +4,7 @@ from __future__ import annotations
 import csv
 import json
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict, List, Optional, Tuple
 
 from pydantic import ValidationError
 
@@ -164,11 +164,20 @@ def validate_measurement_scoring_contract(run_dir: Path) -> List[str]:
     return validate_scoring_contract(rows)
 
 
-def validate_findings(run_dir: Path) -> List[str]:
+def validate_findings(
+    run_dir: Path, findings: Optional[List[LifecycleFinding]] = None
+) -> List[str]:
+    """Check findings against the registry, measurements and evidence.
+
+    ``findings`` defaults to the consolidated findings.json; the harness also
+    passes one audit role's candidates so these rules fail at submit, not
+    only at finalize.
+    """
     run_dir = Path(run_dir)
     registry, problems = load_registry(run_dir)
-    findings, finding_problems = load_findings(run_dir)
-    problems.extend(finding_problems)
+    if findings is None:
+        findings, finding_problems = load_findings(run_dir)
+        problems.extend(finding_problems)
     if registry is None:
         return problems
     patterns = {pattern.journey_type: pattern for pattern in registry.patterns}

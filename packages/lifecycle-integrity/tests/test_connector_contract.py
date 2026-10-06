@@ -81,6 +81,36 @@ def test_currency_read_is_allowlisted_and_only_code_is_persisted(tmp_path):
     assert json.loads((tmp_path / "account_info.json").read_text()) == result
 
 
+def test_currency_falls_back_to_account_info_when_endpoint_is_missing(tmp_path):
+    def handler(request):
+        assert request.method == "GET"
+        if request.url.path == "/settings/currencies/2026-03/company-currency":
+            return httpx.Response(404, text="<html>Not found</html>")
+        assert request.url.path == "/account-info/v3/details"
+        return httpx.Response(200, json={"companyCurrency": "usd", "portalId": 1})
+
+    result = fetch_company_currency(
+        make_client(handler), tmp_path / "account_info.json"
+    )
+    assert result == {
+        "status": "available",
+        "currency": "USD",
+        "currency_source": "account_info",
+    }
+    assert json.loads((tmp_path / "account_info.json").read_text()) == result
+
+
+def test_currency_error_is_raised_when_no_fallback_exists(tmp_path):
+    def handler(request):
+        if request.url.path == "/settings/currencies/2026-03/company-currency":
+            return httpx.Response(404, text="<html>Not found</html>")
+        return httpx.Response(200, json={"portalId": 1})
+
+    with pytest.raises(HubSpotError):
+        fetch_company_currency(make_client(handler), tmp_path / "account_info.json")
+    assert not (tmp_path / "account_info.json").exists()
+
+
 def test_portal_identity_keeps_only_report_navigation_fields():
     def handler(request):
         assert request.method == "GET"
@@ -264,3 +294,29 @@ def test_token_never_appears_in_error_messages():
     assert "jane.doe@example.com" not in str(exc_info.value)
     assert "11111111-1111-1111-1111-111111111111" not in str(exc_info.value)
     assert FAKE_TOKEN not in client.token_masked
+
+
+def test_campaign_list_survives_failing_asset_and_metric_endpoints(tmp_path):
+    from connectors.hubspot.fetch_intent_sources import (
+        CAMPAIGN_ASSET_TYPES,
+        fetch_campaign_context,
+    )
+
+    calls = []
+
+    def handler(request):
+        assert request.method == "GET"
+        calls.append(request.url.path)
+        if request.url.path == "/marketing/campaigns/2026-03":
+            return httpx.Response(200, json={"results": [{"id": "c1"}, {"id": "c2"}]})
+        return httpx.Response(500, json={"category": "INTERNAL_ERROR"})
+
+    summary = fetch_campaign_context(make_client(handler), tmp_path)
+    assert summary["campaign_count"] == 2
+    assert summary["asset_count"] == 0 and summary["metric_count"] == 0
+    assert summary["failed_asset_types"] == sorted(CAMPAIGN_ASSET_TYPES)
+    assert summary["asset_failures"] == len(CAMPAIGN_ASSET_TYPES)
+    assert summary["metric_failures"] == 1
+    assert json.loads((tmp_path / "campaigns.json").read_text()) == [{"id": "c1"}, {"id": "c2"}]
+    # A failed asset type or metrics endpoint is not retried for later campaigns.
+    assert not any("/c2/" in path for path in calls)

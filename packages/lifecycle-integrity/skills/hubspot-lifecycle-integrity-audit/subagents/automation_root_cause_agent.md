@@ -20,3 +20,10 @@ defect. Do not upgrade a lifecycle finding, add a new finding, assign a deal
 amount, or authorise a CRM write. If no defensible relationship exists, emit
 an empty assessment list or an explicit unverified assessment with evidence
 and limitations.
+
+`evidence_refs` may point only to these files, which the harness checks at
+submit: `automation_evidence.csv` (as `automation_evidence.csv#measurement_id=...`),
+`evidence.csv`, `processed/automation_scoring_measurements.json`,
+`processed/lifecycle_integrity_measurements.json`,
+`processed/scoring_activation_summary.json` and
+`processed/workflow_inventory.json`.

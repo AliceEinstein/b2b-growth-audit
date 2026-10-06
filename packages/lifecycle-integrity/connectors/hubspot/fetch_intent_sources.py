@@ -335,38 +335,56 @@ def fetch_campaign_context(
         end = datetime.now(timezone.utc).date()
         start = end - timedelta(days=days)
         date_params = {"startDate": start.isoformat(), "endDate": end.isoformat()}
+    # Asset and metric endpoints can fail (some portals answer 500) while the
+    # campaign list works. A failure skips that asset type or the metrics for
+    # the rest of the run instead of discarding the campaign list.
+    failed_asset_types: set[str] = set()
+    asset_failures = 0
+    metric_failures = 0
     for campaign in campaigns:
         campaign_id = str(campaign.get("id") or campaign.get("campaignGuid") or "")
         if not campaign_id:
             continue
         for asset_type in CAMPAIGN_ASSET_TYPES:
+            if asset_type in failed_asset_types:
+                continue
             if api_calls >= max_api_calls:
                 api_budget_truncated = True
                 break
             api_calls += 1
             params = dict(date_params)
-            for asset in _paginate(
-                client,
-                CAMPAIGN_ASSETS_PATH.format(campaign_id=campaign_id, asset_type=asset_type),
-                params=params,
-            ):
-                assets.append({
-                    "campaign_id": campaign_id,
-                    "asset_type": asset_type,
-                    "asset_id": asset.get("id"),
-                    "asset_name": asset.get("name"),
-                    "metrics": asset.get("metrics") or {},
-                })
+            try:
+                for asset in _paginate(
+                    client,
+                    CAMPAIGN_ASSETS_PATH.format(campaign_id=campaign_id, asset_type=asset_type),
+                    params=params,
+                ):
+                    assets.append({
+                        "campaign_id": campaign_id,
+                        "asset_type": asset_type,
+                        "asset_id": asset.get("id"),
+                        "asset_name": asset.get("name"),
+                        "metrics": asset.get("metrics") or {},
+                    })
+            except HubSpotError:
+                asset_failures += 1
+                failed_asset_types.add(asset_type)
         if api_budget_truncated:
             break
+        if metric_failures:
+            continue
         if api_calls >= max_api_calls:
             api_budget_truncated = True
             break
-        metric = client.get(
-            CAMPAIGN_METRICS_PATH.format(campaign_id=campaign_id),
-            params=date_params or None,
-        )
         api_calls += 1
+        try:
+            metric = client.get(
+                CAMPAIGN_METRICS_PATH.format(campaign_id=campaign_id),
+                params=date_params or None,
+            )
+        except HubSpotError:
+            metric_failures += 1
+            continue
         metrics.append({"campaign_id": campaign_id, "metrics": metric})
     write_json(raw_dir / "campaign_assets.json", assets)
     write_json(raw_dir / "campaign_metrics.json", metrics)
@@ -374,6 +392,9 @@ def fetch_campaign_context(
         "campaign_count": len(campaigns),
         "asset_count": len(assets),
         "metric_count": len(metrics),
+        "asset_failures": asset_failures,
+        "failed_asset_types": sorted(failed_asset_types),
+        "metric_failures": metric_failures,
         "truncated": campaign_truncated or api_budget_truncated,
         "campaign_limit": max_campaigns,
         "api_call_count": api_calls,

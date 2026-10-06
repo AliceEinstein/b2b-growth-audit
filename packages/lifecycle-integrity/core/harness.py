@@ -31,7 +31,12 @@ from typing import Any, Dict, List, Optional, Tuple
 from .integrity import sha256_file
 from .lifecycle_agent_tasks import REPO_ROOT, TASKS
 from .lifecycle_consolidation import consolidate_candidates, consolidate_reviews
-from .lifecycle_validators import validate_recommendation_plan
+from .lifecycle_schemas import LifecycleFinding
+from .lifecycle_validators import (
+    validate_findings,
+    validate_recommendation_plan,
+    validate_root_cause_assessments,
+)
 from .lifecycle_workspace import (
     GATE_OWNED_SCHEMAS,
     SCHEMA_MODELS,
@@ -173,6 +178,22 @@ def submit_task(
     problems = _validate_task_output(run_dir, task)
     if not problems and task["output_schema"] == "recommendation_lanes":
         problems = validate_recommendation_plan(run_dir)
+    # Run the finalize-time cross-artifact rules now, so a role learns about
+    # severity/intensity, measurement citations or evidence allowlists at
+    # submit instead of after every later phase has been built on it.
+    if not problems and task["output_schema"] == "candidate_findings":
+        candidates = [
+            LifecycleFinding.model_validate(row)
+            for row in document.get("candidate_findings", [])
+        ]
+        problems = validate_findings(run_dir, findings=candidates) if candidates else []
+    if (
+        not problems
+        and task["output_schema"] == "root_cause_assessments"
+        and (run_dir / "processed" / "workflow_inventory.json").exists()
+        and (run_dir / "processed" / "scoring_activation_summary.json").exists()
+    ):
+        problems = validate_root_cause_assessments(run_dir)
     entry["attempts"] = int(entry.get("attempts", 0)) + 1
     if problems:
         if previous is None:

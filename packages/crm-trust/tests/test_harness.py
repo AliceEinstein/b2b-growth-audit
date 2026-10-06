@@ -159,6 +159,9 @@ def test_report_uses_business_name_typed_hubspot_assets_and_safe_record_links(tm
     assert "Recommended accountable role" in report
     assert "How this score is calculated" in report
     assert "100 starting points − 52 deducted points = 48" in report
+    # The final gate needs the score as "<total>/100"; the renderer states it
+    # so the gate never depends on the narrative wording.
+    assert "deducted points = 48/100" in markdown
     assert "8 key properties" in report
     assert "Priority 3" in report
     assert report.index("Priority 1 · Customers Without Closed Won Deal Trace") < report.index(

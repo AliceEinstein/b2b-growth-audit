@@ -188,6 +188,13 @@ def main() -> int:
                 client.get(path, params=params)
                 console.print(f"  ✅ {label} [{scope}]")
             except HubSpotError:
+                # Some portals 404 the currencies endpoint; the audit falls
+                # back to the company currency in account info.
+                if label == "portal currency" and details.get("companyCurrency"):
+                    console.print(
+                        f"  ✅ {label} [account info fallback; currencies endpoint unavailable]"
+                    )
+                    continue
                 failures.append(f"{label} [{scope}]")
                 console.print(
                     f"  [red]❌ {label}: no access — verify {scope}[/red]"

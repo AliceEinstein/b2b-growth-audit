@@ -43,9 +43,13 @@ JOURNEY_KEYWORDS = {
     "inbound_new_business": ("inbound", "organic", "paid", "direct", "social", "email"),
     "outbound_sales_led": ("outbound", "sdr", "prospect", "import"),
     "abm_account_based": ("abm", "target account", "account tier", "named account"),
-    "partner_led": ("partner", "referral", "reseller", "channel"),
-    "expansion_renewal": ("expansion", "renewal", "renew", "upsell", "cross sell"),
+    "partner_led": ("partner", "referral", "reseller", "channel partner"),
+    "expansion_renewal": ("expansion", "renewal", "renew", "upsell", "up sell", "cross sell"),
 }
+# A deal's own pipeline or deal type naming new business outranks expansion
+# hints on its linked company or contacts.
+NEW_BUSINESS_MARKERS = ("new business", "newbusiness", "new logo")
+TRUTHY_FLAG_VALUES = {"true", "yes", "1"}
 
 IDENTITY_FIELDS = {"email", "firstname", "lastname", "phone", "mobilephone", "name", "dealname"}
 MQL_PLUS = {"marketingqualifiedlead", "salesqualifiedlead", "opportunity", "customer", "evangelist"}
@@ -178,7 +182,14 @@ def _record_signal_text(record: Dict[str, Any], candidate_names: set[str]) -> st
             "pipeline",
             "lifecyclestage",
         }:
-            values.extend([field, value])
+            if is_empty(value):
+                continue
+            # Match on values, not property names: a name such as
+            # ns_renewal_date would otherwise tag every record that has the
+            # property as expansion. A name counts only when it is a set flag.
+            if str(value).strip().lower() in TRUTHY_FLAG_VALUES:
+                values.append(field)
+            values.append(value)
     return _safe_text(values)
 
 
@@ -190,29 +201,42 @@ def classify_deal(
     pipeline_label: str,
     candidate_names: set[str],
 ) -> tuple[str, int, List[str]]:
-    record_text = " ".join(
-        [
-            _record_signal_text(deal, candidate_names),
-            *[_record_signal_text(c, candidate_names) for c in linked_contacts],
-            *[_record_signal_text(c, candidate_names) for c in linked_companies],
-        ]
-    )
+    deal_text = _record_signal_text(deal, candidate_names)
     pipeline_text = pipeline_label.lower().replace("_", " ")
-    checks = [
-        ("expansion_renewal", record_text + " " + pipeline_text, JOURNEY_KEYWORDS["expansion_renewal"]),
-        ("partner_led", record_text + " " + pipeline_text, JOURNEY_KEYWORDS["partner_led"]),
-        ("abm_account_based", record_text + " " + pipeline_text, JOURNEY_KEYWORDS["abm_account_based"]),
-        (
-            "outbound_sales_led",
-            record_text + " " + pipeline_text,
-            ("outbound", "sdr", "prospect", "import"),
-        ),
-        ("inbound_new_business", record_text, JOURNEY_KEYWORDS["inbound_new_business"]),
+    own_text = deal_text + " " + pipeline_text
+    explicit_new_business = _contains_any(own_text, NEW_BUSINESS_MARKERS) and not _contains_any(
+        own_text, JOURNEY_KEYWORDS["expansion_renewal"]
+    )
+    # The deal's own fields and pipeline decide first. Linked contacts, then
+    # linked companies, only fill in when the deal itself carries no signal,
+    # so one referral contact can't relabel a deal with its own source.
+    contact_text = " ".join(_record_signal_text(c, candidate_names) for c in linked_contacts)
+    company_text = " ".join(_record_signal_text(c, candidate_names) for c in linked_companies)
+    tiers = [
+        ("deal", own_text, deal_text),
+        ("linked contacts", contact_text, contact_text),
+        ("linked companies", company_text, company_text),
     ]
-    for journey, text, keywords in checks:
-        matched = [k for k in keywords if k in text]
-        if matched:
-            return journey, min(95, 55 + len(matched) * 10), [f"matched journey terms: {', '.join(matched[:3])}"]
+    checks = [
+        ("expansion_renewal", JOURNEY_KEYWORDS["expansion_renewal"]),
+        ("partner_led", JOURNEY_KEYWORDS["partner_led"]),
+        ("abm_account_based", JOURNEY_KEYWORDS["abm_account_based"]),
+        ("outbound_sales_led", ("outbound", "sdr", "prospect", "import")),
+        ("inbound_new_business", JOURNEY_KEYWORDS["inbound_new_business"]),
+    ]
+    for source, text, text_without_pipeline in tiers:
+        for journey, keywords in checks:
+            if journey == "expansion_renewal" and explicit_new_business:
+                continue
+            # Inbound terms such as "direct" are not read from pipeline labels.
+            haystack = text_without_pipeline if journey == "inbound_new_business" else text
+            matched = [k for k in keywords if k in haystack]
+            if matched:
+                return (
+                    journey,
+                    min(95, 55 + len(matched) * 10),
+                    [f"matched journey terms: {', '.join(matched[:3])} (on {source})"],
+                )
     return "unassigned", 20, ["no journey-specific source, pipeline, or field signal"]
 
 
@@ -244,13 +268,12 @@ def classify_contact(
     candidate_names: set[str],
     intent_signals: List[str],
 ) -> tuple[str, int, List[str]]:
-    record_text = " ".join(
-        [
-            _record_signal_text(contact, candidate_names),
-            *[_record_signal_text(company, candidate_names) for company in linked_companies],
-            _safe_text(intent_signals),
-        ]
-    )
+    # The contact's own fields and signals decide first; linked companies only
+    # fill in when the contact carries no journey signal.
+    tiers = [
+        ("contact", " ".join([_record_signal_text(contact, candidate_names), _safe_text(intent_signals)])),
+        ("linked companies", " ".join(_record_signal_text(c, candidate_names) for c in linked_companies)),
+    ]
     checks = [
         ("expansion_renewal", JOURNEY_KEYWORDS["expansion_renewal"]),
         ("partner_led", JOURNEY_KEYWORDS["partner_led"]),
@@ -258,14 +281,15 @@ def classify_contact(
         ("outbound_sales_led", JOURNEY_KEYWORDS["outbound_sales_led"]),
         ("inbound_new_business", JOURNEY_KEYWORDS["inbound_new_business"] + ("demo", "form", "contact sales", "hand raiser")),
     ]
-    for journey, keywords in checks:
-        matched = [keyword for keyword in keywords if keyword in record_text]
-        if matched:
-            return (
-                journey,
-                min(90, 50 + len(matched) * 10),
-                [f"matched contact journey terms: {', '.join(matched[:3])}"],
-            )
+    for source, text in tiers:
+        for journey, keywords in checks:
+            matched = [keyword for keyword in keywords if keyword in text]
+            if matched:
+                return (
+                    journey,
+                    min(90, 50 + len(matched) * 10),
+                    [f"matched contact journey terms: {', '.join(matched[:3])} (on {source})"],
+                )
     return "unassigned", 25, ["high-intent signal present but journey type is unclassified"]
 
 

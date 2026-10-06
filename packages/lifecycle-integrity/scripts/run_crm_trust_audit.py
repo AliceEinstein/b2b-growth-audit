@@ -469,7 +469,11 @@ def _run_audit(argv: list[str] | None = None) -> int:
                     client, raw, days=days
                 )
                 intent_coverage["sources"]["campaigns"] = {
-                    "status": "partial" if campaign_summary.get("truncated") else "available",
+                    "status": "partial"
+                    if campaign_summary.get("truncated")
+                    or campaign_summary.get("asset_failures")
+                    or campaign_summary.get("metric_failures")
+                    else "available",
                     "metadata_only": True,
                     **campaign_summary,
                 }

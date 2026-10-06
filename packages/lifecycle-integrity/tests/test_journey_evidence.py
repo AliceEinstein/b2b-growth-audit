@@ -81,3 +81,111 @@ def test_window_and_truncation_lower_confidence_and_surface_limitations(tmp_path
         row for row in registry["patterns"] if row["journey_type"] == "inbound_new_business"
     )
     assert inbound["evidence_components"]["contradiction_penalty"] >= 5
+
+
+def test_property_names_do_not_classify_deals_or_contacts():
+    from core.journey_evidence import classify_contact, classify_deal
+
+    candidate_names = {"ns_renewal_date", "ns_original_source", "ns_deal_type"}
+    company = {"properties": {"ns_renewal_date": None, "ns_original_source": "email_marketing"}}
+    deal = {"properties": {"ns_deal_type": None}}
+    journey, _, _ = classify_deal(
+        deal,
+        linked_contacts=[],
+        linked_companies=[company],
+        pipeline_label="Sales Pipeline",
+        candidate_names=candidate_names,
+    )
+    assert journey == "inbound_new_business"
+
+    contact = {"properties": {"ns_original_source": "paid_search"}}
+    journey, _, _ = classify_contact(
+        contact,
+        linked_companies=[company],
+        candidate_names=candidate_names,
+        intent_signals=["lifecycle stage marketingqualifiedlead"],
+    )
+    assert journey == "inbound_new_business"
+
+
+def test_new_business_deal_is_not_reclassified_by_customer_company():
+    from core.journey_evidence import classify_deal
+
+    candidate_names = {"ns_renewal_date", "ns_deal_type", "ns_lead_source"}
+    customer_company = {"properties": {"ns_renewal_date": "2027-03-01", "ns_lead_source": "renewal"}}
+    new_deal = {"properties": {"ns_deal_type": "new_business", "ns_lead_source": "partner"}}
+    journey, _, _ = classify_deal(
+        new_deal,
+        linked_contacts=[],
+        linked_companies=[customer_company],
+        pipeline_label="New Business",
+        candidate_names=candidate_names,
+    )
+    assert journey == "partner_led"
+
+    upsell = {"properties": {"ns_deal_type": "up_sell"}}
+    journey, _, _ = classify_deal(
+        upsell,
+        linked_contacts=[],
+        linked_companies=[customer_company],
+        pipeline_label="Expansion",
+        candidate_names=candidate_names,
+    )
+    assert journey == "expansion_renewal"
+
+
+def test_set_flag_property_name_still_counts():
+    from core.journey_evidence import classify_contact
+
+    contact = {"properties": {"is_partner_referral": "true"}}
+    journey, _, _ = classify_contact(
+        contact,
+        linked_companies=[],
+        candidate_names={"is_partner_referral"},
+        intent_signals=["positive signal"],
+    )
+    assert journey == "partner_led"
+
+
+def test_deal_own_source_outranks_linked_records():
+    from core.journey_evidence import classify_deal
+
+    candidate_names = {"ns_lead_source", "ns_original_source", "ns_source_detail"}
+    deal = {"properties": {"ns_lead_source": "outbound"}}
+    referral_contact = {"properties": {"ns_original_source": "referral"}}
+    journey, _, evidence = classify_deal(
+        deal,
+        linked_contacts=[referral_contact],
+        linked_companies=[],
+        pipeline_label="New Business",
+        candidate_names=candidate_names,
+    )
+    assert journey == "outbound_sales_led"
+    assert "on deal" in evidence[0]
+
+    silent_deal = {"properties": {"ns_lead_source": "trade_show"}}
+    journey, _, evidence = classify_deal(
+        silent_deal,
+        linked_contacts=[referral_contact],
+        linked_companies=[],
+        pipeline_label="New Business",
+        candidate_names=candidate_names,
+    )
+    assert journey == "partner_led"
+    assert "on linked contacts" in evidence[0]
+
+
+def test_generic_acquisition_channel_is_not_partner():
+    from core.journey_evidence import classify_deal
+
+    candidate_names = {"ns_source_detail", "ns_lead_source"}
+    company = {"properties": {"ns_source_detail": "Standard acquisition channel"}}
+    deal = {"properties": {"ns_lead_source": "trade_show"}}
+    journey, _, _ = classify_deal(
+        deal,
+        linked_contacts=[],
+        linked_companies=[company],
+        pipeline_label="New Business",
+        candidate_names=candidate_names,
+    )
+    assert journey == "unassigned"

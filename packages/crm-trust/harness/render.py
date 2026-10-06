@@ -694,7 +694,7 @@ def _score_explainer_html(score: Dict[str, Any]) -> str:
         '<div class="score-explainer">'
         '<div class="score-copy"><h3>How this score is calculated</h3>'
         f'<div class="score-copy-score" aria-label="CRM trust score {total} out of {max_total}"><strong>{html.escape(str(total))}</strong><span>/{html.escape(str(max_total))}</span></div>'
-        f'<p><strong>{max_total} starting points − {deducted} deducted points = {total}.</strong> '
+        f'<p><strong>{max_total} starting points − {deducted} deducted points = {total}/{max_total}.</strong> '
         "Only approved or revised findings count. Critical findings deduct 10 points, high 6, medium 3, and low 1, capped at each category maximum.</p>"
         f'<p>{_html_link("score.json", "Open the complete score calculation")}</p></div>'
         f'<div class="score-rows">{rows}</div></div>'
@@ -1007,7 +1007,7 @@ def render_reports(run_dir: Path) -> Tuple[Path, Path, Path, Path]:
         "",
         "### How the score is calculated",
         "",
-        f"**{score.get('max_total', 100)} starting points − {max(0, int(score.get('max_total', 100) or 100) - int(score.get('total', 0) or 0))} deducted points = {score.get('total', '—')}.** Only approved or revised findings count. Critical findings deduct 10 points, high 6, medium 3, and low 1, capped at each category maximum.",
+        f"**{score.get('max_total', 100)} starting points − {max(0, int(score.get('max_total', 100) or 100) - int(score.get('total', 0) or 0))} deducted points = {score.get('total', '—')}/{score.get('max_total', 100)}.** Only approved or revised findings count. Critical findings deduct 10 points, high 6, medium 3, and low 1, capped at each category maximum.",
         "",
     ]
     lines.extend(_score_table(score))
