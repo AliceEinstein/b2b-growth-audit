@@ -464,7 +464,10 @@ def _draft_header(run_dir: Path, what: str) -> List[str]:
 def _field_overrides_draft(run_dir: Path, rows: List[Dict[str, Any]]) -> str:
     lines = _draft_header(run_dir, "canonical fields") + ["canonical_fields:"]
     for row in rows:
-        note = f"{row['object']} {row['role'].replace('_', ' ')} · {row['basis']}"
+        label = row["role"].replace("_", " ")
+        if not label.startswith(row["object"]):
+            label = f"{row['object']} {label}"
+        note = f"{label} · {row['basis']}"
         if row["alternatives"]:
             note += " · alternatives: " + ", ".join(row["alternatives"])
         if row["needs_confirmation"]:
