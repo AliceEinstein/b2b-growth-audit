@@ -278,3 +278,31 @@ def test_high_intent_field_pattern_needs_whole_words():
         "mysql_host",
     ):
         assert not pattern.search(name), name
+
+
+def test_how_the_buyer_arrived_outranks_a_latest_touch():
+    from core.journey_evidence import classify_contact, classify_deal
+
+    names = {"ns_original_source", "ns_latest_source"}
+    arrived_inbound = {"properties": {"ns_original_source": "organic_search", "ns_latest_source": "sales_outreach"}}
+    journey, _, evidence = classify_contact(
+        arrived_inbound, linked_companies=[], candidate_names=names, intent_signals=[]
+    )
+    assert journey == "inbound_new_business", evidence
+
+    only_latest = {"properties": {"ns_latest_source": "sales_outreach"}}
+    journey, _, evidence = classify_contact(
+        only_latest, linked_companies=[], candidate_names=names, intent_signals=[]
+    )
+    assert journey == "outbound_sales_led"
+    assert "latest touch" in evidence[0]
+
+    deal = {"properties": {}}
+    journey, _, _ = classify_deal(
+        deal,
+        linked_contacts=[arrived_inbound],
+        linked_companies=[],
+        pipeline_label="New Business",
+        candidate_names=names,
+    )
+    assert journey == "inbound_new_business"

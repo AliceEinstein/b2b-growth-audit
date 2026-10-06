@@ -263,20 +263,31 @@ def _record_signal_text(record: Dict[str, Any], candidate_names: set[str]) -> st
     return _safe_text(values)
 
 
+# Latest-, last- and recent-touch fields record a later touch, not how the
+# buyer arrived; within one record group they only decide when nothing else
+# does. A contact from organic search later reached by sales stays inbound.
+LATEST_TOUCH_FIELD = re.compile(r"latest|last|recent", re.I)
+
+
 def _tier_evidence(
     records: List[Dict[str, Any]],
     candidate_names: set[str],
     mapping: Optional[JourneyMapping],
+    *,
+    latest_touch: Optional[bool] = None,
 ) -> Tuple[List[Tuple[str, str]], str]:
     """Owner-mapped journeys and keyword text for one group of records.
 
     A value the owner mapped (to a journey or to "unassigned") is decided by
-    the mapping and left out of keyword matching.
+    the mapping and left out of keyword matching. ``latest_touch`` keeps only
+    latest-touch fields (True) or only the others (False).
     """
     mapped: List[Tuple[str, str]] = []
     values: List[Any] = []
     for record in records:
         for field, value in _record_values(record, candidate_names):
+            if latest_touch is not None and bool(LATEST_TOUCH_FIELD.search(field)) != latest_touch:
+                continue
             journey = mapping.lookup(field, value) if mapping else None
             if journey is None:
                 if _name_counts(value):
@@ -350,6 +361,25 @@ def summarize_source_values(
     return rows[:MAX_SOURCE_VALUES]
 
 
+def _tiers(
+    source: str,
+    records: List[Dict[str, Any]],
+    candidate_names: set[str],
+    mapping: Optional[JourneyMapping],
+    *,
+    extra_text: str = "",
+    pipeline_text: str = "",
+) -> List[Tuple[str, List[Tuple[str, str]], str, str]]:
+    """A record group's origin evidence, then its latest-touch evidence."""
+    origin_mapped, origin_text = _tier_evidence(records, candidate_names, mapping, latest_touch=False)
+    latest_mapped, latest_text = _tier_evidence(records, candidate_names, mapping, latest_touch=True)
+    origin_text = " ".join(t for t in (origin_text, extra_text) if t)
+    return [
+        (source, origin_mapped, " ".join(t for t in (origin_text, pipeline_text) if t), origin_text),
+        (source + ", latest touch", latest_mapped, latest_text, latest_text),
+    ]
+
+
 def _classify_tiers(
     tiers: List[Tuple[str, List[Tuple[str, str]], str, str]],
     *,
@@ -410,15 +440,12 @@ def classify_deal(
     )
     # The deal's own fields and pipeline decide first. Linked contacts, then
     # linked companies, only fill in when the deal itself carries no signal,
-    # so one referral contact can't relabel a deal with its own source.
-    contact_mapped, contact_text = _tier_evidence(linked_contacts, candidate_names, journey_mapping)
-    company_mapped, company_text = _tier_evidence(linked_companies, candidate_names, journey_mapping)
+    # so one referral contact can't relabel a deal with its own source. Within
+    # each group, how the buyer arrived outranks a latest touch.
     result = _classify_tiers(
-        [
-            ("deal", deal_mapped, deal_text + " " + pipeline_text, deal_text),
-            ("linked contacts", contact_mapped, contact_text, contact_text),
-            ("linked companies", company_mapped, company_text, company_text),
-        ],
+        _tiers("deal", [deal], candidate_names, journey_mapping, pipeline_text=pipeline_text)
+        + _tiers("linked contacts", linked_contacts, candidate_names, journey_mapping)
+        + _tiers("linked companies", linked_companies, candidate_names, journey_mapping),
         skip_expansion=explicit_new_business,
         base_confidence=55,
         cap=95,
@@ -461,15 +488,10 @@ def classify_contact(
     # The contact's own fields and signals decide first; linked companies only
     # fill in when the contact carries no journey signal. "positive signal in
     # <property>" entries are left out: they would match on property names.
-    contact_mapped, contact_text = _tier_evidence([contact], candidate_names, journey_mapping)
     signal_text = _safe_text(s for s in intent_signals if not s.startswith("positive signal in "))
-    company_mapped, company_text = _tier_evidence(linked_companies, candidate_names, journey_mapping)
-    own_text = " ".join([contact_text, signal_text])
     result = _classify_tiers(
-        [
-            ("contact", contact_mapped, own_text, own_text),
-            ("linked companies", company_mapped, company_text, company_text),
-        ],
+        _tiers("contact", [contact], candidate_names, journey_mapping, extra_text=signal_text)
+        + _tiers("linked companies", linked_companies, candidate_names, journey_mapping),
         skip_expansion=False,
         base_confidence=50,
         cap=90,
