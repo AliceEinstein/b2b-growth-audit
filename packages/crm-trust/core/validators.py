@@ -88,7 +88,9 @@ def validate_crm_context(run_dir: Path) -> List[str]:
     except ValidationError as exc:
         return [f"{path.name}: schema validation failed — {exc}"]
 
-    problems: List[str] = []
+    from .client_config import override_problems
+
+    problems: List[str] = override_problems(run_dir, context.canonical_fields)
 
     # Anti-hallucination: every cited field must exist in the portal.
     for name, mapping in context.canonical_fields.items():

@@ -15,6 +15,7 @@ import os
 from datetime import datetime, timezone
 from pathlib import Path
 
+import yaml
 from rich.console import Console
 from rich.table import Table
 
@@ -32,6 +33,12 @@ from connectors.hubspot.auth import TokenError, load_token
 from connectors.hubspot.client import HubSpotClient, HubSpotError
 from connectors.hubspot.normalize import write_json
 from core.audit_logger import AuditLog
+from core.client_config import (
+    FIELD_OVERRIDES_PATH,
+    ClientConfigError,
+    install_field_overrides,
+    parse_field_overrides,
+)
 from core.config import (
     create_run_dir,
     default_output_root,
@@ -99,6 +106,15 @@ def parse_args() -> argparse.Namespace:
         ),
     )
     parser.add_argument("--output-root", type=Path, default=default_output_root())
+    parser.add_argument(
+        "--field-overrides",
+        type=Path,
+        default=None,
+        help=(
+            "Owner-confirmed canonical fields (field_overrides.yaml, as confirmed in "
+            "the lifecycle audit). Schema discovery must use them."
+        ),
+    )
     return parser.parse_args()
 
 
@@ -179,6 +195,14 @@ def _run_audit() -> int:
     except TokenError as exc:
         console.print(f"[red]❌ {exc}[/red]")
         return 1
+    if args.field_overrides is not None:
+        # Fail before fetching on a malformed file; properties are checked
+        # against the snapshot once it exists.
+        try:
+            parse_field_overrides(yaml.safe_load(args.field_overrides.read_text(encoding="utf-8")))
+        except (OSError, yaml.YAMLError, ClientConfigError) as exc:
+            console.print(f"[red]❌ Client config rejected: {exc}[/red]")
+            return 1
 
     if args.resume is not None:
         run_dir = args.resume
@@ -355,6 +379,18 @@ def _run_audit() -> int:
                 f"{old_run / 'raw'}[/yellow]"
             )
     log.write(run_dir / "audit_log.json")
+
+    if args.field_overrides is not None:
+        try:
+            install_field_overrides(run_dir, args.field_overrides)
+            console.print(f"✅ Owner-confirmed fields installed: {run_dir / FIELD_OVERRIDES_PATH}")
+        except ClientConfigError as exc:
+            # The snapshot itself is complete; only the config is refused.
+            console.print(
+                f"[red]❌ Client config not installed: {exc}. Fix the file, then run "
+                f"python -m scripts.run_audit_harness init --run {run_dir} "
+                "--field-overrides <file>[/red]"
+            )
 
     table = Table(title=f"Snapshot complete: {run_dir}")
     table.add_column("Object")

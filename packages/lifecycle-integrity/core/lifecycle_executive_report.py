@@ -646,6 +646,96 @@ def _cohort_md(cohort: dict[str, Any]) -> list[str]:
     return lines
 
 
+CONFIRM_COMMAND = 'python -m scripts.confirm_client_config --run <run_dir> --confirmed-by "<name>"'
+
+
+def _confirmation(view: dict[str, Any]) -> dict[str, Any]:
+    return view.get("client_confirmation") or {}
+
+
+def _confirmation_intro(confirmation: dict[str, Any]) -> str:
+    questions = confirmation.get("questions") or []
+    if not questions:
+        return (
+            "No open questions: the lifecycle and source fields and the source values "
+            "this audit relies on are confirmed or unambiguous."
+        )
+    return (
+        f"{_count(len(questions), 'question')} decide how this audit reads the CRM. "
+        "Each has a suggested answer, already written into the draft files in "
+        "client_config_draft/. Confirm or correct them; the audit is then rebuilt "
+        "from the same snapshot, and later audits reuse the answers."
+    )
+
+
+def _field_question_text(question: dict[str, Any]) -> str:
+    alternatives = ", ".join(question.get("alternatives") or []) or "none"
+    return (
+        f"Suggested: {question['suggested']} ({question['basis']}). "
+        f"Measured with: {question['measured_with']}. Alternatives: {alternatives}. "
+        f"Evidence: {question.get('evidence') or '—'}"
+    )
+
+
+def _confirmation_md(view: dict[str, Any]) -> list[str]:
+    confirmation = _confirmation(view)
+    if not confirmation:
+        return []
+    lines = ["", "### Questions to Confirm", "", _confirmation_intro(confirmation), ""]
+    for index, question in enumerate(confirmation.get("questions") or [], 1):
+        if question["kind"] == "canonical_field":
+            lines.append(f"{index}. **{_md(question['question'])}** {_md(_field_question_text(question))}")
+            continue
+        lines.append(
+            f"{index}. **{_md(question['question'])}** "
+            f"{_count(question.get('unassigned_deals'), 'deal')} currently match no selling motion."
+        )
+        lines.extend(["", "| Property | Value | Deals | Suggested motion | Basis |", "|---|---|---:|---|---|"])
+        for row in question.get("values") or []:
+            lines.append(
+                f"| {_md(row['field'])} | {_md(row['value'])} | {row['deal_count']} | "
+                f"{_md(humanize(row['suggested']))} | {_md(row['basis'])} |"
+            )
+        lines.append("")
+    if confirmation.get("questions"):
+        lines.extend(["", f"To confirm, the owner's answers go into the drafts, then: `{CONFIRM_COMMAND}`"])
+    return lines
+
+
+def _confirmation_html(view: dict[str, Any]) -> str:
+    confirmation = _confirmation(view)
+    if not confirmation:
+        return ""
+    items = []
+    for question in confirmation.get("questions") or []:
+        if question["kind"] == "canonical_field":
+            items.append(f"<li><strong>{_h(question['question'])}</strong> {_h(_field_question_text(question))}</li>")
+            continue
+        rows = "".join(
+            f"<tr><td>{_h(row['field'])}</td><td>{_h(row['value'])}</td><td>{_h(row['deal_count'])}</td>"
+            f"<td>{_h(humanize(row['suggested']))}</td><td>{_h(row['basis'])}</td></tr>"
+            for row in question.get("values") or []
+        )
+        items.append(
+            f"<li><strong>{_h(question['question'])}</strong> "
+            f"{_h(_count(question.get('unassigned_deals'), 'deal'))} currently match no selling motion."
+            "<div class='table-wrap'><table><thead><tr><th>Property</th><th>Value</th><th>Deals</th>"
+            f"<th>Suggested motion</th><th>Basis</th></tr></thead><tbody>{rows}</tbody></table></div></li>"
+        )
+    command = (
+        f"<p>To confirm, the owner's answers go into the drafts, then: <code>{_h(CONFIRM_COMMAND)}</code></p>"
+        if items
+        else ""
+    )
+    return (
+        "<div class='coverage-panel'><h3>Questions to Confirm</h3>"
+        f"<p>{_h(_confirmation_intro(confirmation))}</p>"
+        + (f"<ol>{''.join(items)}</ol>" if items else "")
+        + command
+        + "</div>"
+    )
+
+
 def render_markdown(view: dict[str, Any]) -> str:
     score = view["score"]
     business = _business(view)
@@ -722,6 +812,7 @@ def render_markdown(view: dict[str, Any]) -> str:
         lines.append(f"| {_md(row['motion'])} | {_md(row['confidence'])}/100 | {_md(row['contacts'])} | {_md(row['deals'])} |")
     if not motions:
         lines.append("| No motion reached the evidence threshold | — | — | — |")
+    lines.extend(_confirmation_md(view))
     lines.extend(["", "## 3. Where the Journey Breaks by Account, Contact, and Deal", "", "The groups below are ordered from the first missed handoff to downstream recovery. Each group shows its scale, the evidence behind the conclusion, its account-level meaning, and a small set of representative cases. The complete population remains in the linked evidence files.", ""])
     if cohorts:
         for cohort in cohorts:
@@ -881,7 +972,7 @@ def render_html(view: dict[str, Any], markdown_text: str) -> str:
     html_body = f"""
 <header class='cover'><div class='eyebrow light'>Smartify Marketing · Lifecycle Integrity Audit</div><h1>{_h(title)}</h1><p class='lede'>How buyer intent moves through { _h(business) }, where it stops becoming accountable pipeline, and what can be recovered or repaired next.</p><p class='cover-meta'>Audit date: {_h(view.get('generated'))} · Scope: {_h(view.get('window'))} · Based on HubSpot evidence · Read-only audit</p></header>
 <section id='executive'><h2>1. Executive Verdict</h2><div class='score-hero'><div class='score-number'><div class='eyebrow light'>Overall Lifecycle Integrity Score</div><div><span class='{score_number_class}'>{_h(score_value)}</span><span class='hero-denom'>{_h(score_denominator) if score_denominator else ''}</span></div><div class='score-status'>{_h(_score_status(score))}</div></div><div class='score-explanation'><h3>How the score is calculated</h3><p>{_h(_score_intro(score))} It is not conversion, CRM hygiene, or lost revenue.</p><p class='formula'>{_h(_score_formula(score))}</p><div class='score-waterfall'>{score_rows}</div>{score_facts}<p class='score-scope-note'><strong>Why this score can coexist with missing diagnostic data:</strong> {_h(_score_scope_note(view))}</p><p class='score-caveat'>Closed-lost recovery is shown as a commercial opportunity and does not reduce the score unless a separate scored control break is confirmed.</p></div></div><div class='coverage-panel'><h3>Evidence and Feature Coverage</h3><p>HubSpot plan and token access determine which diagnostic layers can be assessed. Unavailable access is shown as a limitation, never as zero activity or proof that a control does not exist.</p><div class='table-wrap'><table><thead><tr><th>Capability</th><th>Status</th><th>What this report could assess</th><th>Score treatment</th></tr></thead><tbody>{capability_html}</tbody></table></div></div><div class='summary-grid'><article><span>Pre-deal demand</span><strong>{_h(summary['predeal_contacts'])}</strong><p>high-intent contacts without a visible deal path</p></article><article><span>Open pipeline to protect</span><strong>{_h(summary['open_deals'])}</strong><p>{_h(summary['open_amount'])} actual deal amount under review</p></article><article><span>Closed-lost recovery</span><strong>{_h(summary['closed_lost'])}</strong><p>deals with renewed activity to re-qualify</p></article></div></section>
-<section id='journey'><h2>2. How {_h(business)} Sells</h2><p>The available evidence points to a <strong>{_h(humanize(view['registry'].primary_model))}</strong> selling model. Confidence describes the evidence for that classification, not funnel performance.</p><div class='journey-rail'><span>Buyer signal</span><b>→</b><span>Accountable owner</span><b>→</b><span>Deal or valid skip</span><b>→</b><span>Next sales action</span><b>→</b><span>Won / lost / re-engaged</span></div><div class='table-wrap'><table><thead><tr><th>Selling motion</th><th>Evidence confidence</th><th>Contacts</th><th>Deals</th></tr></thead><tbody>{motion_rows}</tbody></table></div></section>
+<section id='journey'><h2>2. How {_h(business)} Sells</h2><p>The available evidence points to a <strong>{_h(humanize(view['registry'].primary_model))}</strong> selling model. Confidence describes the evidence for that classification, not funnel performance.</p><div class='journey-rail'><span>Buyer signal</span><b>→</b><span>Accountable owner</span><b>→</b><span>Deal or valid skip</span><b>→</b><span>Next sales action</span><b>→</b><span>Won / lost / re-engaged</span></div><div class='table-wrap'><table><thead><tr><th>Selling motion</th><th>Evidence confidence</th><th>Contacts</th><th>Deals</th></tr></thead><tbody>{motion_rows}</tbody></table></div>{_confirmation_html(view)}</section>
 <section id='breaks'><h2>3. Where the Journey Breaks by Account, Contact, and Deal</h2><p>Problems are grouped by the first missed handoff and then explained at account, contact, and deal level. Each group includes its actual evidence and a small representative sample; the complete population remains in the linked files.</p><div class='problem-list'>{cohort_html}</div></section>
 <section id='actions'><h2>4. Action Queue</h2><p>Work from the first missed handoff downstream. The queue is grouped so one approved process repair can be checked against the full affected population.</p><div class='table-wrap'><table><thead><tr><th>Order</th><th>Problem group</th><th>Named accounts</th><th>Unresolved account links</th><th>Contacts</th><th>Deals / amount</th><th>First action</th></tr></thead><tbody>{action_rows}</tbody></table></div><p><a href='report_account_evidence.csv'>Open account-level evidence</a> · <a href='report_record_evidence.csv'>Open full record evidence</a></p></section>
 <section id='causes'><h2>5. Why These Breaks Exist</h2><p>{_h(automation_note)} A workflow name is never invented.</p><div class='cause-list'>{''.join(f"<article><strong>{_h(cohort['title'])}</strong><ul>{''.join(f'<li>{_linkified_html(item, _sample_rows(cohort))}</li>' for item in (_cohort_root_cause(cohort) or [no_cause_text]))}</ul></article>" for cohort in cohorts) or f'<div class="empty">{_h(no_cause_text)}</div>'}</div></section>

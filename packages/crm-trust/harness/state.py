@@ -123,8 +123,15 @@ REVIEW_STATUS_BLIND_STAGES = (
 REVIEW_STATUS_BLIND_PREFIXES = ("review_", "revise_", "rereview_")
 
 
-def stage_input_hash(run_dir: Path, stage: StageSpec) -> str:
+def stage_inputs(run_dir: Path, stage: StageSpec) -> List[str]:
+    """Declared inputs, plus each optional input that exists."""
     paths = expand_input_patterns(run_dir, stage.input_patterns)
+    present = [rel for rel in stage.optional_inputs if _safe_run_path(run_dir, rel).is_file()]
+    return sorted(set(paths) | set(present))
+
+
+def stage_input_hash(run_dir: Path, stage: StageSpec) -> str:
+    paths = stage_inputs(run_dir, stage)
     # Review and revision stages consume finding content, but the review gates
     # later change only each finding's review_status. That status is their
     # output, not an input; ignoring it here prevents a completed review from

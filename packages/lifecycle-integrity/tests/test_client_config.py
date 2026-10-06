@@ -161,3 +161,166 @@ def test_example_config_templates_parse():
     root = Path(__file__).resolve().parents[1] / "examples" / "client_config"
     parse_field_overrides(yaml.safe_load((root / "field_overrides.example.yaml").read_text()))
     assert parse_journey_mapping(yaml.safe_load((root / "journey_mapping.example.yaml").read_text())).values
+
+
+# -- drafts, owner questions and confirmation ----------------------------------------
+
+
+def test_source_values_are_material_text_with_keyword_suggestions():
+    from core.journey_evidence import keyword_journey, summarize_source_values
+
+    rows = summarize_source_values(
+        {
+            ("hs_object_source", "import"): {"d1", "d2", "d3"},
+            ("hs_analytics_source", "offline"): {"d1", "d2", "d3", "d4"},
+            ("lead_source", "trade show"): {"d1"},  # below the deal threshold
+            ("lead_source", "jane@example.com"): {"d1", "d2", "d3"},  # redacted
+        },
+        None,
+    )
+    assert [(r["field"], r["deal_count"]) for r in rows] == [("hs_analytics_source", 4), ("hs_object_source", 3)]
+    assert rows[1]["keyword_journey"] == "outbound_sales_led"
+    assert rows[0]["keyword_journey"] == "unassigned"
+    assert rows[0]["value"].endswith("offline")  # labelled as untrusted CRM data
+    # A property name counts beside a free-text value, as in classification.
+    assert keyword_journey("partner_name", "acme")[0] == "partner_led"
+
+
+def _confirmation_run(tmp_path, *, proposal=None, overrides=None):
+    import yaml
+
+    run = tmp_path / "run"
+    (run / "raw").mkdir(parents=True)
+    (run / "raw" / "properties_contacts.json").write_text(json.dumps(PROP_DEFS["contacts"]))
+    (run / "raw" / "properties_companies.json").write_text(json.dumps(PROP_DEFS["companies"]))
+    canonical, _ = resolve_canonical_fields(run, PROP_DEFS, _candidates())
+    context = {
+        "canonical_fields": canonical,
+        "candidate_fields": _candidates(),
+        "source_values": [
+            {"field": "hs_object_source", "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] import",
+             "deal_count": 12, "keyword_journey": "outbound_sales_led", "keyword_basis": "keyword: import"},
+            {"field": "lead_source", "value": "[CRM_FIELD_VALUE:UNTRUSTED_DATA_ONLY] trade show",
+             "deal_count": 5, "keyword_journey": "inbound_new_business", "keyword_basis": "keyword: trade show"},
+        ],
+        "unassigned_deals": 7,
+    }
+    (run / "crm_context.yaml").write_text(yaml.safe_dump(context))
+    if proposal is not None:
+        (run / "agent_workspace" / "analysis").mkdir(parents=True)
+        (run / "agent_workspace" / "analysis" / "schema_discovery_agent.json").write_text(
+            json.dumps({"role": "schema_discovery_agent", "proposed_client_config": proposal})
+        )
+    if overrides is not None:
+        (run / "config").mkdir()
+        (run / "config" / "field_overrides.yaml").write_text(overrides)
+    return run
+
+
+def test_questions_cover_competing_fields_and_unconfirmed_values(tmp_path):
+    from core.client_config import build_confirmation
+
+    confirmation = build_confirmation(_confirmation_run(tmp_path))
+    ids = [q["id"] for q in confirmation["questions"]]
+    assert ids == ["field.lifecycle_stage", "field.original_source", "journey_mapping"]
+    lifecycle = confirmation["questions"][0]
+    assert (lifecycle["suggested"], lifecycle["alternatives"]) == ("lifecyclestage", ["ns_lifecycle_stage"])
+    values = confirmation["questions"][2]["values"]
+    assert values[0]["value"] == "import" and values[0]["suggested"] == "outbound_sales_led"
+    assert confirmation["questions"][2]["unassigned_deals"] == 7
+
+
+def test_schema_discovery_proposal_becomes_the_suggestion_within_bounds(tmp_path):
+    from core.client_config import build_confirmation
+
+    proposal = {
+        "canonical_fields": {
+            "lifecycle_stage": {"field": "ns_lifecycle_stage", "evidence": "Sales updates it daily."},
+            "original_source": {"field": "invented_field"},
+        },
+        "journey_mapping": [
+            {"field": "hs_object_source", "value": "IMPORT", "journey": "unassigned", "evidence": "How a record was created."},
+            {"field": "lead_source", "value": "trade show", "journey": "not_a_journey"},
+        ],
+    }
+    confirmation = build_confirmation(_confirmation_run(tmp_path, proposal=proposal))
+    fields = {row["role"]: row for row in confirmation["field_overrides"]}
+    assert fields["lifecycle_stage"]["suggested"] == "ns_lifecycle_stage"
+    assert fields["lifecycle_stage"]["alternatives"] == ["lifecyclestage"]
+    assert fields["original_source"]["suggested"] == "hs_analytics_source"  # invented field ignored
+    values = {row["value"]: row for row in confirmation["journey_values"]}
+    assert values["import"]["suggested"] == "unassigned"
+    assert values["trade show"]["suggested"] == "inbound_new_business"
+
+
+def test_confirmed_fields_are_not_asked_again(tmp_path):
+    from core.client_config import build_confirmation
+
+    run = _confirmation_run(
+        tmp_path,
+        overrides="canonical_fields:\n  lifecycle_stage: ns_lifecycle_stage\n  original_source: ns_original_source\n",
+    )
+    ids = [q["id"] for q in build_confirmation(run)["questions"]]
+    assert ids == ["journey_mapping"]
+
+
+def test_drafts_parse_and_confirmation_stamps_and_saves(tmp_path):
+    import yaml
+
+    from core.client_config import DRAFT_DIR, write_client_config_drafts
+    from scripts.confirm_client_config import confirm
+
+    run = _confirmation_run(tmp_path)
+    write_client_config_drafts(run)
+    draft = (run / DRAFT_DIR / "journey_mapping.yaml").read_text()
+    assert "CONFIRM · 12 deals · keyword: import" in draft
+    assert yaml.safe_load(draft)["fields"]["hs_object_source"]["import"] == "outbound_sales_led"
+    assert json.loads((run / DRAFT_DIR / "questions.json").read_text())["questions"]
+
+    # The owner says imports say nothing about the journey.
+    (run / DRAFT_DIR / "journey_mapping.yaml").write_text(
+        draft.replace('"import": outbound_sales_led', '"import": unassigned')
+    )
+    saved = confirm(run, "Alice, RevOps", tmp_path / "client_config", ["field_overrides.yaml", "journey_mapping.yaml"])
+    mapping = yaml.safe_load(saved["journey_mapping.yaml"].read_text())
+    assert mapping["confirmed_by"] == "Alice, RevOps" and mapping["confirmed_on"]
+    assert mapping["fields"]["hs_object_source"]["import"] == "unassigned"
+    assert "# CONFIRM" in saved["journey_mapping.yaml"].read_text()  # comments kept
+
+
+def test_confirmation_refuses_unknown_fields_and_anonymous_owners(tmp_path):
+    from core.client_config import DRAFT_DIR, write_client_config_drafts
+    from scripts.confirm_client_config import confirm
+
+    run = _confirmation_run(tmp_path)
+    write_client_config_drafts(run)
+    with pytest.raises(ClientConfigError, match="must name the owner"):
+        confirm(run, "  ", tmp_path / "out", ["field_overrides.yaml"])
+    path = run / DRAFT_DIR / "field_overrides.yaml"
+    path.write_text(path.read_text().replace("original_source: hs_analytics_source", "original_source: nope"))
+    with pytest.raises(ClientConfigError, match="not a contact property"):
+        confirm(run, "Alice", tmp_path / "out", ["field_overrides.yaml"])
+    assert not (tmp_path / "out").exists()
+
+
+def test_confirm_command_rebuilds_with_the_confirmed_files(tmp_path):
+    from core.client_config import DRAFT_DIR, write_client_config_drafts
+    from scripts.confirm_client_config import main
+    from lifecycle_test_support import build_lifecycle_run
+
+    source, _ = build_lifecycle_run(tmp_path / "out", "complex_lifecycle_demo")
+    write_client_config_drafts(source)
+    assert (source / DRAFT_DIR / "field_overrides.yaml").exists()
+    assert main(["--run", str(source), "--confirmed-by", "Test Owner"]) == 0
+    saved = source.parent / "client_config"
+    assert (saved / "field_overrides.yaml").exists() and (saved / "journey_mapping.yaml").exists()
+    rebuilt = [p for p in source.parent.iterdir() if p.name.startswith("run_") and p != source]
+    assert len(rebuilt) == 1
+    manifest = json.loads((rebuilt[0] / "manifest.json").read_text())
+    assert manifest["rebuilt_from"] == source.name
+    assert manifest["client_config"]["field_overrides.yaml"]["confirmed_by"] == "Test Owner"
+    import yaml
+
+    context = yaml.safe_load((rebuilt[0] / "crm_context.yaml").read_text())
+    assert context["client_config"]["field_overrides"] is True
+    assert (rebuilt[0] / "config" / "journey_mapping.yaml").exists()

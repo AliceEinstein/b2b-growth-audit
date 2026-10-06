@@ -137,3 +137,23 @@ def test_affirmative_write_recommendation_cannot_be_cleared(tmp_path):
         row["file"] == "findings.json" and row["phrase"] == "automatically update"
         for row in gate["uncleared_phrases"]
     )
+
+
+def test_report_lists_owner_questions_and_writes_config_drafts(tmp_path):
+    import yaml
+
+    run_dir, _ = build_lifecycle_run(tmp_path, "broken_association_sample")
+    write_judgment_artifacts(run_dir, "deals_without_company")
+    generate_reports_and_clear_safety(run_dir)
+    report = (run_dir / "lifecycle_integrity_report.md").read_text(encoding="utf-8")
+    assert "### Questions to Confirm" in report
+    assert "Questions to Confirm" in (run_dir / "lifecycle_integrity_report.html").read_text(encoding="utf-8")
+    drafts = run_dir / "client_config_draft"
+    for name in ("field_overrides.yaml", "journey_mapping.yaml"):
+        data = yaml.safe_load((drafts / name).read_text(encoding="utf-8"))
+        assert data["confirmed_by"] is None
+    questions = json.loads((drafts / "questions.json").read_text(encoding="utf-8"))
+    handoff = (run_dir / "agent_handoff.md").read_text(encoding="utf-8")
+    if questions["questions"]:
+        assert "confirm_client_config" in handoff and "never answer them yourself" in handoff
+    assert run_lifecycle_final_gate(run_dir)["passed"] is True

@@ -280,3 +280,266 @@ def resolve_canonical_fields(
 def canonical_field(canonical: Dict[str, Dict[str, Any]], role: str) -> str:
     """Field a measurement reads for ``role``; falls back to the HubSpot default."""
     return str((canonical.get(role) or {}).get("field") or CANONICAL_ROLES[role]["default"])
+
+
+# -- drafts and owner questions ------------------------------------------------------
+
+DRAFT_DIR = "client_config_draft"
+QUESTIONS_FILE = "questions.json"
+SCHEMA_DISCOVERY_OUTPUT = Path("agent_workspace") / "analysis" / "schema_discovery_agent.json"
+MAX_EVIDENCE_LEN = 200
+
+ROLE_QUESTIONS = {
+    "lifecycle_stage": "Which contact property does your team use as the lifecycle stage?",
+    "company_lifecycle_stage": "Which company property does your team use as the lifecycle stage?",
+    "original_source": "Which contact property records where a contact originally came from?",
+}
+JOURNEY_QUESTION = (
+    "Which selling motion does each of these source values belong to? "
+    "Use unassigned when a value says nothing about how the buyer arrived."
+)
+
+
+def _one_line(text: Any) -> str:
+    line = re.sub(r"\s+", " ", str(text or "")).strip()
+    return line if len(line) <= MAX_EVIDENCE_LEN else line[: MAX_EVIDENCE_LEN - 1] + "…"
+
+
+def _agent_proposal(run_dir: Path) -> Tuple[Dict[str, Dict[str, str]], Dict[Tuple[str, str], Dict[str, str]]]:
+    """Field and journey suggestions the schema discovery role proposed, if any."""
+    path = Path(run_dir) / SCHEMA_DISCOVERY_OUTPUT
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}, {}
+    proposal = data.get("proposed_client_config") if isinstance(data, dict) else None
+    if not isinstance(proposal, dict):
+        return {}, {}
+    fields: Dict[str, Dict[str, str]] = {}
+    for role, entry in (proposal.get("canonical_fields") or {}).items():
+        if role not in CANONICAL_ROLES:
+            continue
+        if isinstance(entry, str):
+            entry = {"field": entry}
+        if isinstance(entry, dict) and str(entry.get("field") or "").strip():
+            fields[role] = {
+                "field": str(entry["field"]).strip(),
+                "evidence": _one_line(entry.get("evidence")),
+            }
+    journeys: Dict[Tuple[str, str], Dict[str, str]] = {}
+    for entry in proposal.get("journey_mapping") or []:
+        if not isinstance(entry, dict) or entry.get("journey") not in MAPPABLE_JOURNEYS:
+            continue
+        key = (str(entry.get("field") or ""), normalize_value(entry.get("value")))
+        if all(key):
+            journeys[key] = {"journey": entry["journey"], "evidence": _one_line(entry.get("evidence"))}
+    return fields, journeys
+
+
+def build_confirmation(run_dir: Path) -> Dict[str, Any]:
+    """What the owner should confirm, with a suggested answer for each question.
+
+    Suggestions come from, in order: the owner's installed config, the schema
+    discovery role's proposal (only fields the audit saw as candidates), and the
+    measured default or keyword match.
+    """
+    run_dir = Path(run_dir)
+    try:
+        context = yaml.safe_load((run_dir / "crm_context.yaml").read_text(encoding="utf-8")) or {}
+    except (OSError, yaml.YAMLError):
+        context = {}
+    canonical = context.get("canonical_fields") or {}
+    candidates = context.get("candidate_fields") or {}
+    known_fields = {
+        str(entry.get("field"))
+        for entries in candidates.values()
+        for entry in entries or []
+        if isinstance(entry, dict)
+    }
+    overrides = load_field_overrides(run_dir)
+    mapping = load_journey_mapping(run_dir)
+    agent_fields, agent_journeys = _agent_proposal(run_dir)
+
+    field_rows: List[Dict[str, Any]] = []
+    for role, spec in CANONICAL_ROLES.items():
+        current = canonical.get(role) or {}
+        proposed = agent_fields.get(role)
+        if not current and role not in overrides and not proposed:
+            continue  # the snapshot has no such field to measure or confirm
+        measured = str(current.get("field") or spec["default"])
+        competing = [str(f) for f in current.get("competing_fields") or []]
+        suggested, basis, evidence = measured, "measured default", _one_line(current.get("evidence"))
+        if role in overrides:
+            suggested, basis = overrides[role], "confirmed by the owner"
+        elif proposed and proposed["field"] in known_fields | set(competing) | {measured}:
+            suggested, basis = proposed["field"], "schema discovery proposal"
+            evidence = proposed["evidence"] or evidence
+        field_rows.append(
+            {
+                "role": role,
+                "object": spec["object"],
+                "question": ROLE_QUESTIONS[role],
+                "measured_with": measured,
+                "suggested": suggested,
+                "alternatives": [f for f in competing if f != suggested]
+                + ([measured] if suggested != measured else []),
+                "basis": basis,
+                "evidence": evidence,
+                "needs_confirmation": role not in overrides
+                and (bool(current.get("requires_confirmation")) or suggested != measured),
+            }
+        )
+
+    value_rows: List[Dict[str, Any]] = []
+    for row in context.get("source_values") or []:
+        field, value = str(row.get("field")), normalize_value(row.get("value"))
+        confirmed = mapping.lookup(field, value) if mapping else None
+        proposed = agent_journeys.get((field, value))
+        if confirmed is not None:
+            suggested, basis = confirmed, "confirmed by the owner"
+        elif proposed:
+            suggested = proposed["journey"]
+            basis = "schema discovery proposal" + (f": {proposed['evidence']}" if proposed["evidence"] else "")
+        else:
+            suggested, basis = str(row.get("keyword_journey") or "unassigned"), str(row.get("keyword_basis") or "")
+        value_rows.append(
+            {
+                "field": field,
+                "value": value,
+                "deal_count": int(row.get("deal_count") or 0),
+                "suggested": suggested,
+                "basis": basis,
+                "needs_confirmation": confirmed is None,
+            }
+        )
+
+    questions: List[Dict[str, Any]] = [
+        {"id": "field." + row["role"], "kind": "canonical_field", **row}
+        for row in field_rows
+        if row["needs_confirmation"]
+    ]
+    open_values = [row for row in value_rows if row["needs_confirmation"]]
+    if open_values:
+        questions.append(
+            {
+                "id": "journey_mapping",
+                "kind": "journey_mapping",
+                "question": JOURNEY_QUESTION,
+                "values": open_values,
+                "unassigned_deals": int(context.get("unassigned_deals") or 0),
+            }
+        )
+    return {
+        "draft_dir": DRAFT_DIR,
+        "questions": questions,
+        "field_overrides": field_rows,
+        "journey_values": value_rows,
+        "confirmed": {
+            "field_overrides": bool(overrides),
+            "journey_mapping": bool(mapping),
+        },
+    }
+
+
+def _yaml_key(text: str) -> str:
+    return json.dumps(text, ensure_ascii=False)
+
+
+def _draft_header(run_dir: Path, what: str) -> List[str]:
+    return [
+        f"# Draft {what} from audit run {Path(run_dir).name}.",
+        "# Check each line against how your team actually works and edit it if needed.",
+        "# Lines marked CONFIRM are the open questions in the report.",
+        "# Then confirm (this stamps confirmed_by/confirmed_on and rebuilds the audit):",
+        f"#   python -m scripts.confirm_client_config --run {Path(run_dir)} --confirmed-by \"<name>\"",
+    ]
+
+
+def _field_overrides_draft(run_dir: Path, rows: List[Dict[str, Any]]) -> str:
+    lines = _draft_header(run_dir, "canonical fields") + ["canonical_fields:"]
+    for row in rows:
+        note = f"{row['object']} {row['role'].replace('_', ' ')} · {row['basis']}"
+        if row["alternatives"]:
+            note += " · alternatives: " + ", ".join(row["alternatives"])
+        if row["needs_confirmation"]:
+            note = "CONFIRM · " + note
+        lines.append(f"  {row['role']}: {row['suggested']}    # {note}")
+    lines += ["confirmed_by: null", "confirmed_on: null"]
+    return "\n".join(lines) + "\n"
+
+
+def _journey_mapping_draft(run_dir: Path, rows: List[Dict[str, Any]]) -> str:
+    installed_path = Path(run_dir) / CONFIG_DIR / JOURNEY_MAPPING_FILE
+    installed = _read_yaml(installed_path) if installed_path.exists() else {}
+    fields: Dict[str, Dict[str, Tuple[str, str]]] = {}
+    for prop, table in (installed.get("fields") or {}).items():
+        for value, journey in (table or {}).items():
+            fields.setdefault(str(prop), {})[normalize_value(value)] = (journey, "confirmed")
+    for row in rows:
+        if not row["needs_confirmation"]:
+            continue
+        note = f"CONFIRM · {row['deal_count']} deals · {row['basis']}"
+        fields.setdefault(row["field"], {})[row["value"]] = (row["suggested"], note)
+    lines = _draft_header(run_dir, "journey mapping")
+    lines.append("# Journeys: " + ", ".join(JOURNEY_TYPES) + ", unassigned.")
+    lines.append("fields:" if fields else "fields: {}")
+    for prop in sorted(fields):
+        lines.append(f"  {_yaml_key(prop)}:")
+        for value, (journey, note) in fields[prop].items():
+            lines.append(f"    {_yaml_key(value)}: {journey}    # {note}")
+    values = installed.get("values") or {}
+    lines.append("values:" if values else "values: {}")
+    for value, journey in values.items():
+        lines.append(f"  {_yaml_key(normalize_value(value))}: {journey}    # confirmed")
+    lines += ["confirmed_by: null", "confirmed_on: null"]
+    return "\n".join(lines) + "\n"
+
+
+def write_client_config_drafts(run_dir: Path) -> Dict[str, Any]:
+    """Write ready-to-confirm config drafts and the owner's questions into the run."""
+    run_dir = Path(run_dir)
+    confirmation = build_confirmation(run_dir)
+    draft_dir = run_dir / DRAFT_DIR
+    draft_dir.mkdir(parents=True, exist_ok=True)
+    field_text = _field_overrides_draft(run_dir, confirmation["field_overrides"])
+    journey_text = _journey_mapping_draft(run_dir, confirmation["journey_values"])
+    # A draft that cannot be parsed back is a bug here, never the owner's problem.
+    parse_field_overrides(yaml.safe_load(field_text))
+    parse_journey_mapping(yaml.safe_load(journey_text))
+    (draft_dir / FIELD_OVERRIDES_FILE).write_text(field_text, encoding="utf-8")
+    (draft_dir / JOURNEY_MAPPING_FILE).write_text(journey_text, encoding="utf-8")
+    (draft_dir / QUESTIONS_FILE).write_text(
+        json.dumps(confirmation, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
+    return confirmation
+
+
+# -- confirmation ---------------------------------------------------------------------
+
+
+def stamp_confirmation(text: str, confirmed_by: str, confirmed_on: str) -> str:
+    """Set confirmed_by / confirmed_on in a config file, keeping its comments."""
+    for key, value in (("confirmed_by", confirmed_by), ("confirmed_on", confirmed_on)):
+        line = f"{key}: {_yaml_key(value)}"
+        text, count = re.subn(rf"(?m)^{key}:.*$", line, text)
+        if not count:
+            text = text.rstrip("\n") + "\n" + line + "\n"
+    return text
+
+
+def check_against_snapshot(run_dir: Path, overrides: Dict[str, str]) -> List[str]:
+    """Every overridden field must be a property of its object in the snapshot."""
+    problems = []
+    for role, prop in overrides.items():
+        object_type = CANONICAL_ROLES[role]["object_type"]
+        path = Path(run_dir) / "raw" / f"properties_{object_type}.json"
+        try:
+            names = {str(d.get("name")) for d in json.loads(path.read_text(encoding="utf-8"))}
+        except (OSError, json.JSONDecodeError):
+            continue
+        if prop not in names:
+            problems.append(
+                f"canonical_fields.{role} names '{prop}', which is not a "
+                f"{CANONICAL_ROLES[role]['object']} property in this snapshot"
+            )
+    return problems

@@ -277,3 +277,58 @@ def test_report_uses_business_name_typed_hubspot_assets_and_safe_record_links(tm
     assert "123456" not in record_csv
     assert ",co001," not in record_csv
     assert ",d001," not in record_csv
+
+
+def _write_overrides(path: Path, source_field: str = "hs_analytics_source") -> Path:
+    path.write_text(
+        "canonical_fields:\n"
+        "  lifecycle_stage: lifecyclestage\n"
+        f"  original_source: {source_field}\n"
+        "confirmed_by: RevOps owner\nconfirmed_on: 2026-10-06\n",
+        encoding="utf-8",
+    )
+    return path
+
+
+def test_confirmed_fields_reopen_schema_discovery_and_bind_crm_context(tmp_path):
+    from harness.cli import main as harness_main
+    from harness.state import RunState
+
+    run = _copy_fixture(tmp_path)
+    advance(run)
+    assert RunState.load(run).stage("schema_discovery").status == "passed"
+    # A run without the file keeps its hashes: nothing reopens on resume.
+    assert not any(s.startswith("schema") for s in advance(run)["ready_tasks"])
+
+    overrides = _write_overrides(tmp_path / "field_overrides.yaml", "lead_source")
+    assert harness_main(["init", "--run", str(run), "--field-overrides", str(overrides)]) == 0
+    assert (run / "config" / "field_overrides.yaml").exists()
+    assert RunState.load(run).stage("schema_discovery").status == "ready"
+    packet = json.loads((run / "harness" / "tasks" / "schema_discovery.json").read_text())
+    assert any(path.endswith("config/field_overrides.yaml") for path in packet["allowed_inputs"])
+
+    # The old crm_context.yaml moved to stale; restoring it unchanged fails
+    # because the owner confirmed a different source field.
+    stale_root = run / "harness" / "stale"
+    for name in ("crm_context.yaml", "schema_discovery_report.md"):
+        shutil.copyfile(next(stale_root.rglob(name)), run / name)
+    problems = validate_stage_output(run, "schema_discovery")
+    assert any("owner confirmed contact.lead_source" in p for p in problems)
+
+    context = yaml.safe_load((run / "crm_context.yaml").read_text())
+    context["canonical_fields"]["original_source"].update(
+        field="lead_source", confidence="high", requires_confirmation=False,
+        evidence="Confirmed by RevOps owner in config/field_overrides.yaml",
+    )
+    context["canonical_fields"]["lifecycle_stage"].update(confidence="high", requires_confirmation=False)
+    (run / "crm_context.yaml").write_text(yaml.safe_dump(context), encoding="utf-8")
+    assert validate_stage_output(run, "schema_discovery") == []
+
+
+def test_field_overrides_must_name_snapshot_properties(tmp_path):
+    from harness.cli import main as harness_main
+
+    run = _copy_fixture(tmp_path)
+    overrides = _write_overrides(tmp_path / "field_overrides.yaml", "invented_source")
+    assert harness_main(["init", "--run", str(run), "--field-overrides", str(overrides)]) == 1
+    assert not (run / "config" / "field_overrides.yaml").exists()

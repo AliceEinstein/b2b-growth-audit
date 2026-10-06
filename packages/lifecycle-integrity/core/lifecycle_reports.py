@@ -8,6 +8,7 @@ from typing import Dict, Iterable, List
 from connectors.hubspot.normalize import write_json
 
 from .adjudication import adjudicate_findings
+from .client_config import write_client_config_drafts
 from .automation_integrity import build_automation_integrity_artifacts
 from .lifecycle_human_report import (
     build_view,
@@ -53,6 +54,30 @@ def _items(
             )
         values.append(line)
     return values or ["- None."]
+
+
+def _confirmation_handoff(confirmation: dict) -> List[str]:
+    """The owner's open config questions, and how to record the answers."""
+    questions = confirmation.get("questions") or []
+    if not questions:
+        return ["- Canonical fields and source-value journeys are confirmed or unambiguous."]
+    lines = [
+        f"- {question['question']} (suggested in client_config_draft/: "
+        + (
+            question["suggested"]
+            if question["kind"] == "canonical_field"
+            else f"{len(question.get('values') or [])} source values"
+        )
+        + ")"
+        for question in questions
+    ]
+    lines.append(
+        "- Ask the owner these questions; never answer them yourself. Write the "
+        "owner's answers into client_config_draft/, then run "
+        "`python -m scripts.confirm_client_config --run <run_dir> --confirmed-by \"<owner>\"` "
+        "and finish the judgment phase on the rebuilt run."
+    )
+    return lines
 
 
 def generate_lifecycle_reports(run_dir: Path) -> Dict[str, object]:
@@ -107,6 +132,7 @@ def generate_lifecycle_reports(run_dir: Path) -> Dict[str, object]:
         lanes.setdefault(row["action_lane"], []).append(row)
     pattern_rows = [pattern for pattern in registry.patterns if pattern.exists]
     view = build_view(run_dir, score, registry, adjudicated, plan_by_lane)
+    view["client_confirmation"] = write_client_config_drafts(run_dir)
     markdown_text = render_markdown(view)
     (run_dir / "lifecycle_integrity_report.md").write_text(markdown_text, encoding="utf-8")
     (run_dir / "lifecycle_integrity_report.html").write_text(
@@ -189,7 +215,8 @@ def generate_lifecycle_reports(run_dir: Path) -> Dict[str, object]:
         "",
         "## Questions to Ask Human Owner Before Any Write Action",
         "",
-        "- Which source, lifecycle, deal-type, and pipeline fields are canonical?\n- Which journeys intentionally skip MQL?\n- Which exceptions are valid business behavior?",
+        *_confirmation_handoff(view["client_confirmation"]),
+        "- Which journeys intentionally skip MQL?\n- Which exceptions are valid business behavior?",
     ]
     (run_dir / "agent_handoff.md").write_text("\n".join(handoff) + "\n", encoding="utf-8")
     return {"score": score, "findings": adjudicated, "lanes": lanes}

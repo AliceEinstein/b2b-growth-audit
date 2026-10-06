@@ -9,6 +9,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Dict, Iterable, List, Optional, Tuple
 
+from core.client_config import FIELD_OVERRIDES_PATH
 from core.profiler import PROCESSED_FILES
 from core.rules import MODULES
 from core.validators import REVIEWERS
@@ -24,6 +25,8 @@ class StageSpec:
     role_file: Optional[str] = None
     module: Optional[str] = None
     conditional: bool = False
+    # Read when present; a missing optional input leaves the hash unchanged.
+    optional_inputs: Tuple[str, ...] = ()
 
 
 def _tuple(values: Iterable[str]) -> Tuple[str, ...]:
@@ -94,6 +97,7 @@ def _build_stages() -> List[StageSpec]:
             input_patterns=_context_inputs(),
             output_paths=("crm_context.yaml", "schema_discovery_report.md"),
             role_file=_role("schema_discovery_agent.md"),
+            optional_inputs=(FIELD_OVERRIDES_PATH,),
         ),
         StageSpec(
             id="business_context",

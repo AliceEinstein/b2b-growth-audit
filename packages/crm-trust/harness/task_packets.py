@@ -8,7 +8,7 @@ from typing import Any, Dict, Iterable, List, Optional
 
 from core.revisions import original_findings, revise_requests
 
-from .state import RunState, expand_input_patterns, state_path, task_dir
+from .state import RunState, stage_inputs, state_path, task_dir
 from .workflow import StageSpec
 
 
@@ -21,7 +21,11 @@ def _absolute_inputs(run_dir: Path, relative_paths: Iterable[str]) -> List[str]:
 
 def _contract_for(stage: StageSpec) -> str:
     if stage.id == "schema_discovery":
-        return "Write crm_context.yaml and schema_discovery_report.md. Validate with validate_stage schema_discovery."
+        return (
+            "Write crm_context.yaml and schema_discovery_report.md. When config/field_overrides.yaml "
+            "is an input, use each field it names as canonical with high confidence and "
+            "requires_confirmation: false. Validate with validate_stage schema_discovery."
+        )
     if stage.id == "business_context":
         return "Write business_context.json matching core.schemas.BusinessContext."
     if stage.id == "audit_profile":
@@ -83,7 +87,7 @@ def create_task_packet(
 ) -> Dict[str, Any]:
     """Write a JSON task contract and a concise Markdown handoff."""
     run_dir = Path(run_dir)
-    inputs = expand_input_patterns(run_dir, stage.input_patterns)
+    inputs = stage_inputs(run_dir, stage)
     output_paths = [str((run_dir / path).resolve()) for path in stage.output_paths]
     attempt = state.stage(stage.id).attempts
     task_id = stage.id + "_attempt_" + str(attempt)

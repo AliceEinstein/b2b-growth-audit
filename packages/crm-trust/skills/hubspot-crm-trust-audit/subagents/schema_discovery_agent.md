@@ -21,6 +21,17 @@ exist.
 - `activity_summary.json` — operational recency buckets based on last-modified
   timestamps; this is not proof of human or marketing activity
 
+## Owner-confirmed fields
+
+When `config/field_overrides.yaml` is among your inputs, the owner has
+already confirmed those fields (usually while answering the lifecycle audit's
+questions). Use each field it names as canonical for its role
+(`lifecycle_stage`, `company_lifecycle_stage`, `original_source`) with
+`confidence: high`, `requires_confirmation: false`, and evidence naming the
+file and its `confirmed_by`. Do not second-guess them; if the data looks
+inconsistent with a confirmed field, record that under Open Questions. The
+validator rejects a `crm_context.yaml` that departs from the file.
+
 ## Your task
 
 Infer, with confidence and evidence:

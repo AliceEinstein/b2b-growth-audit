@@ -282,6 +282,69 @@ def _tier_evidence(
     return mapped, _safe_text(values)
 
 
+# Values that tell the owner how deals are classified: every property the
+# classifier reads except lifecycle-state fields, which describe state rather
+# than how a buyer arrived.
+JOURNEY_VALUE_SIGNAL_FIELDS = {"hs_analytics_source", "hs_latest_source", "hs_object_source", "dealtype"}
+MIN_VALUE_DEALS = 3
+MAX_SOURCE_VALUES = 40
+MAX_SOURCE_VALUE_LEN = 60
+
+
+def _journey_value_fields(fields: Dict[str, List[Dict[str, Any]]]) -> set[str]:
+    return {
+        entry["field"]
+        for kind, entries in fields.items()
+        if kind != "lifecycle"
+        for entry in entries
+    } | JOURNEY_VALUE_SIGNAL_FIELDS
+
+
+def keyword_journey(field: str, value: Any) -> Tuple[str, str]:
+    """The journey keyword matching gives one property value, and why."""
+    text = _safe_text([field, value] if _name_counts(value) else [value])
+    for journey in JOURNEY_CHECK_ORDER:
+        matched = _matched_keywords(text, JOURNEY_KEYWORDS[journey])
+        if matched:
+            return journey, "keyword: " + ", ".join(matched[:3])
+    return "unassigned", "no journey keyword"
+
+
+def summarize_source_values(
+    value_deals: Dict[Tuple[str, str], set],
+    mapping: Optional[JourneyMapping],
+) -> List[Dict[str, Any]]:
+    """Material source values on deals and their linked records, for owner review.
+
+    Only short text values seen on at least ``MIN_VALUE_DEALS`` deals are
+    listed, so a value names a category rather than one record. Dates,
+    numbers, emails, URLs, IDs and redacted text are left out.
+    """
+    rows = []
+    for (field, value), deals in value_deals.items():
+        if len(deals) < MIN_VALUE_DEALS or len(value) > MAX_SOURCE_VALUE_LEN:
+            continue
+        safe = sanitize_untrusted_value(value)
+        if safe is None or safe.startswith("[REDACTED"):
+            continue
+        journey, basis = keyword_journey(field, value)
+        confirmed = mapping.lookup(field, value) if mapping else None
+        rows.append(
+            {
+                "field": field,
+                # Labelled like every CRM value in LLM-facing artifacts;
+                # normalize_value() strips the label for mapping keys.
+                "value": safe,
+                "deal_count": len(deals),
+                "keyword_journey": journey,
+                "keyword_basis": basis,
+                "confirmed_journey": confirmed,
+            }
+        )
+    rows.sort(key=lambda row: (-row["deal_count"], row["field"], row["value"]))
+    return rows[:MAX_SOURCE_VALUES]
+
+
 def _classify_tiers(
     tiers: List[Tuple[str, List[Tuple[str, str]], str, str]],
     *,
@@ -521,6 +584,8 @@ def build_journey_evidence_store(run_dir: Path) -> Dict[str, Any]:
     assignment_counts: Counter[str] = Counter()
     contact_assignment_counts: Counter[str] = Counter()
     high_intent_rows: List[Dict[str, Any]] = []
+    value_fields = _journey_value_fields(fields)
+    value_deals: Dict[Tuple[str, str], set] = defaultdict(set)
     for deal in records["deals"]:
         deal_id = str(deal.get("id"))
         linked_contacts = [
@@ -533,6 +598,10 @@ def build_journey_evidence_store(run_dir: Path) -> Dict[str, Any]:
             for i in (deal_company or {}).get(deal_id, [])
             if i in by_id["companies"]
         ]
+        for record in [deal, *linked_contacts, *linked_companies]:
+            for field, value in _record_values(record, candidate_names):
+                if field in value_fields and _name_counts(value):
+                    value_deals[(field, normalize_value(value))].add(deal_id)
         journey, confidence, evidence = classify_deal(
             deal,
             linked_contacts=linked_contacts,
@@ -757,6 +826,7 @@ def build_journey_evidence_store(run_dir: Path) -> Dict[str, Any]:
         "currency_amount_available": False,
         "contains_raw_values": False,
     }
+    source_values = summarize_source_values(value_deals, journey_mapping)
     store = {
         "run_id": run_dir.name,
         "date_window_days": manifest.get("days"),
@@ -779,6 +849,7 @@ def build_journey_evidence_store(run_dir: Path) -> Dict[str, Any]:
         "stage_transition_summary": stage_transitions,
         "journey_signals": journey_signals,
         "assignment_counts": dict(assignment_counts),
+        "source_values": source_values,
         "assignment_counts_by_object": {
             "deals": dict(assignment_counts),
             "high_intent_contacts": dict(contact_assignment_counts),
@@ -851,6 +922,8 @@ def build_journey_evidence_store(run_dir: Path) -> Dict[str, Any]:
             "journey_mapping": bool(journey_mapping),
         },
         "candidate_fields": fields,
+        "source_values": source_values,
+        "unassigned_deals": assignment_counts.get("unassigned", 0),
         "suspected_legacy_fields": sorted(
             {
                 entry["field"]

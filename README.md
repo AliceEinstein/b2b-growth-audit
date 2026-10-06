@@ -66,6 +66,15 @@ outputs in this order:
    journeys.
 4. Existing deal exposure and recoverable populations — the action layer.
 
+Neither audit needs configuring before its first run. Where the CRM data
+alone cannot settle how the business works (which of two competing lifecycle
+fields the team uses, or which selling motion a source value belongs to), the
+Lifecycle Integrity report lists "Questions to Confirm" with suggested answers
+and writes them as draft config files. Once the CRM owner answers,
+`scripts.confirm_client_config` records who confirmed, saves the files outside
+the repository, and rebuilds the audit from the same snapshot. Later runs of
+both audits reuse the confirmed `field_overrides.yaml`.
+
 The lifecycle classifier currently evaluates inbound, outbound, ABM, partner,
 expansion/renewal, and mixed-motion behavior. Mixed-motion is evaluated only
 after the other motion hypotheses are available. An unclassified motion is

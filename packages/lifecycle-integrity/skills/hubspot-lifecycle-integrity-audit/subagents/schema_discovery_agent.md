@@ -23,10 +23,30 @@ with them, record the disagreement in `contradictions` or
 `human_confirmation_needed`. Every mapping has a confidence and evidence;
 anything below high confidence requires confirmation.
 
-Also return `proposed_client_config` with two drafts for the owner to confirm,
-in the shape of `examples/client_config/`: `field_overrides` (the canonical
-`lifecycle_stage`, `company_lifecycle_stage` and `original_source` you
-recommend, each with the evidence) and `journey_mapping` (a journey, or
-`unassigned`, for every material source value, each with the evidence). These
-are drafts: the code uses them only after the owner confirms a file and the run
-is rebuilt with `--field-overrides` / `--journey-mapping`.
+Also return `proposed_client_config`, your suggested answers to the owner's
+config questions. The harness writes them into ready-to-confirm drafts in
+`client_config_draft/` and lists them in the report; the code uses them only
+after the owner confirms. Shape:
+
+```json
+"proposed_client_config": {
+  "canonical_fields": {
+    "lifecycle_stage": {"field": "<contact property>", "evidence": "<why>"},
+    "company_lifecycle_stage": {"field": "<company property>", "evidence": "<why>"},
+    "original_source": {"field": "<contact property>", "evidence": "<why>"}
+  },
+  "journey_mapping": [
+    {"field": "<property>", "value": "<value>", "journey": "<journey or unassigned>", "evidence": "<why>"}
+  ]
+}
+```
+
+- Propose a field only from `crm_context.yaml` `candidate_fields` or a
+  canonical field's `competing_fields`; anything else is ignored.
+- Propose journeys for the values in `crm_context.yaml` `source_values`,
+  the material values the classifier reads. Journeys:
+  `inbound_new_business`, `outbound_sales_led`, `abm_account_based`,
+  `partner_led`, `expansion_renewal`, or `unassigned` when a value says
+  nothing about how the buyer arrived (for example how a record was created).
+- Keep evidence to one sentence citing processed artifacts; never quote raw
+  record content.

@@ -95,6 +95,12 @@ an unrelated project merely because the skill is globally discoverable.
    This runs deterministic profiling and pauses with task packets under
    `<run_dir>/harness/tasks/`. Have Codex or Claude Code perform each task,
    writing only the declared artifact. No model API key is required.
+   If the owner has confirmed canonical fields (for example by answering the
+   lifecycle audit's "Questions to Confirm"), pass the confirmed file:
+   `init --run <run_dir> --field-overrides <client_config>/field_overrides.yaml`.
+   Schema discovery must then use those fields. Adding the file to a run that
+   already finished schema discovery re-opens schema discovery and every later
+   stage.
 4. After an agent task is complete, resume the harness:
 
    ```bash
