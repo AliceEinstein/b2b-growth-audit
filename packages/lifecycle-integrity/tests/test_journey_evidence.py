@@ -258,3 +258,23 @@ def test_property_name_counts_only_beside_free_text():
     assert classify_contact(email_only, linked_companies=[], candidate_names=names, intent_signals=[])[0] == "unassigned"
     dated = {"properties": {"ns_renewal_date": "2027-03-01"}}
     assert classify_contact(dated, linked_companies=[], candidate_names=names, intent_signals=[])[0] == "unassigned"
+
+
+def test_high_intent_field_pattern_needs_whole_words():
+    from core.journey_evidence import INTENT_PATTERNS
+
+    pattern = INTENT_PATTERNS["high_intent"]
+    for name in (
+        "hs_calculated_form_submissions", "hs_form_id", "smartify_demo_recency_date",
+        "engagements_last_meeting_booked", "hs_last_booked_meeting_date",
+        "hs_latest_qualified_lead_date", "hs_intent_signals_enabled", "num_conversion_events",
+        "lead_mql_date",
+    ):
+        assert pattern.search(name), name
+    for name in (
+        "ns_erp_platform Erp Platform", "ns_commerce_platform", "hs_facebookid",
+        "hs_price_book_reassignment_status", "hs_calculated_phone_number International Format",
+        "hs_was_imported Performed in an import", "company_information", "demographic_segment",
+        "mysql_host",
+    ):
+        assert not pattern.search(name), name

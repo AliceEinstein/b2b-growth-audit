@@ -324,3 +324,14 @@ def test_confirm_command_rebuilds_with_the_confirmed_files(tmp_path):
     context = yaml.safe_load((rebuilt[0] / "crm_context.yaml").read_text())
     assert context["client_config"]["field_overrides"] is True
     assert (rebuilt[0] / "config" / "journey_mapping.yaml").exists()
+
+
+def test_latest_source_fields_do_not_compete_with_original_source(tmp_path):
+    candidates = _candidates()
+    candidates["source"].append(
+        {"object_type": "contacts", "field": "ns_latest_source", "hubspot_defined": False,
+         "fill_rate": 95.0, "top_values": candidates["source"][0]["top_values"]}
+    )
+    defs = {**PROP_DEFS, "contacts": PROP_DEFS["contacts"] + [{"name": "ns_latest_source"}]}
+    canonical, _ = resolve_canonical_fields(tmp_path, defs, candidates)
+    assert canonical["original_source"]["competing_fields"] == ["ns_original_source"]

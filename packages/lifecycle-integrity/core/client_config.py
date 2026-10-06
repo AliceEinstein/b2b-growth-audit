@@ -51,6 +51,9 @@ SOURCE_VOCABULARY = re.compile(
     re.I,
 )
 COMPETING_MIN_FILL_RATE = 50.0
+# A latest- or last-touch source field records a different fact from the
+# original source, so it never competes for that role.
+NOT_A_COMPETITOR = {"original_source": re.compile(r"latest|recent|last", re.I)}
 
 
 class ClientConfigError(ValueError):
@@ -219,9 +222,12 @@ def resolve_canonical_fields(
     for role, spec in CANONICAL_ROLES.items():
         object_type = spec["object_type"]
         available = names.get(object_type, set())
+        excluded = NOT_A_COMPETITOR.get(role)
         competitors = [
             entry for entry in candidate_fields.get(spec["kind"], [])
-            if entry.get("object_type") == object_type and _competes(entry, spec["kind"])
+            if entry.get("object_type") == object_type
+            and _competes(entry, spec["kind"])
+            and not (excluded and excluded.search(str(entry.get("field"))))
         ]
         if role in overrides:
             chosen = overrides[role]

@@ -39,9 +39,14 @@ INTENT_PATTERNS = {
     "account_tier": re.compile(r"account.?tier|target.?account|named.?account|\babm\b", re.I),
     "partner": re.compile(r"partner|referr|reseller|channel", re.I),
     "expansion": re.compile(r"renew|expansion|upsell|cross.?sell", re.I),
+    # Short stems must be whole words: "form" in platform, information,
+    # format or performed, "book" in facebook or price book, and "demo" in
+    # demographic say nothing about buyer intent.
     "high_intent": re.compile(
-        r"intent|hand.?rais|demo|contact.?sales|sales.?request|meeting|book|"
-        r"positive.?reply|response|conversion|form|inquir|qualif|mql|sql",
+        r"intent|hand.?rais|(?<![a-z0-9])demos?(?![a-z0-9])|contact.?sales|sales.?request|"
+        r"meeting|(?<![a-z0-9])book(?:ed|ings?)(?![a-z0-9])|positive.?reply|response|"
+        r"conversion|(?<![a-z0-9])forms?(?![a-z0-9])|form.?submission|inquir|qualif|"
+        r"(?<![a-z0-9])[ms]ql(?![a-z0-9])",
         re.I,
     ),
 }
